@@ -5,17 +5,78 @@
     <url>/2021/12/31/hello-world/</url>
     <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
 <h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
 <p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
+<span id="more"></span>
 <h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
 <p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
 <h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
 <p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
 <h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
 <p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
 ]]></content>
+  </entry>
+  <entry>
+    <title>SLAM经典综述学习</title>
+    <url>/2022/01/27/SLAM%E7%BB%8F%E5%85%B8%E7%BB%BC%E8%BF%B0%E5%AD%A6%E4%B9%A0/</url>
+    <content><![CDATA[<h1 id="SLAM方面经典综述"><a href="#SLAM方面经典综述" class="headerlink" title="SLAM方面经典综述"></a>SLAM方面经典综述</h1><blockquote>
+<p><strong>前言：</strong></p>
+<p>近期稍有时间，简单过了一遍2016年之前的SLAM方面的经典综述，第一次阅读外文文献，困难颇多，现打算精度一遍，做好相应笔记、总结。</p>
+<p>本次整理共计四篇综述如下：</p>
+<ol>
+<li>Simultaneous localization and mapping(SLAM)-Part I The Essential Algorithms</li>
+<li>2006_Simultaneous Localisation and Mapping (SLAM)-Part II State of the Art</li>
+<li>基于单目视觉的同时定位与地图构建方法综述</li>
+<li>Past, Present, and Future of Simultaneous Localization and Mapping- Toward the Robust-Perception Age</li>
+</ol>
+<p>阅读顺序也是如上顺序，但鉴于当前SLAM方面的后端优化主要采用<strong>图优化</strong>的方式，故本次先总结2016年发表的两篇，后面在对2006年滤波方法两篇做总结<del>（推导太多看不懂）</del></p>
+</blockquote>
+<hr>
+<span id="more"></span>
+<h2 id="基于单目视觉的同时定位与地图构建方法综述"><a href="#基于单目视觉的同时定位与地图构建方法综述" class="headerlink" title="基于单目视觉的同时定位与地图构建方法综述"></a>基于单目视觉的同时定位与地图构建方法综述</h2><h3 id="一、写作目的"><a href="#一、写作目的" class="headerlink" title="一、写作目的"></a>一、写作目的</h3><p>室内导航定位的需求以及计算机视觉方面的变革促进出SLAM（simultaneous localization and  mapping）的进一步发展，尤其是低成本的视觉SLAM（V-SLAM）方面更是如此，但在2016年前的综述文献均偏向基于<strong>滤波</strong>的SLAM技术，不能反映如今SLAM技术发展潮流，故针对单目V-SLAM方法进行介绍，同时对V-SLAM最新的研究热点和发展趋势进行总结和展望。</p>
+<h3 id="二、V-SLAM基本原理"><a href="#二、V-SLAM基本原理" class="headerlink" title="二、V-SLAM基本原理"></a>二、V-SLAM基本原理</h3><p>通过<strong>多视图几何原理</strong>将三维空间中的三维点变换至相机运动的<strong>运动局部坐标系</strong>中，通过变换后的投影点与图像点进行<strong>最优匹配（最小二乘）</strong>来得到最优的空间三维点和相机运动。</p>
+<p>求解最优目标方程的过程也称为<strong>集束调整（BA）</strong>，对其求解通常可利用其系数结构进行高效求解。<em>（注：该部分可参考《机器人感知-因子图在SLAM中的应用》一书，后面再做这本书的学习总结）</em></p>
+<p><img src="/2022/01/27/SLAM%E7%BB%8F%E5%85%B8%E7%BB%BC%E8%BF%B0%E5%AD%A6%E4%B9%A0/image-20220127114803347.png" alt="image-20220127114803347" style="zoom:80%;"></p>
+<p>​    由于单一视觉对于运动的局限性，所以引入了<strong>IMU</strong>来准确反馈相机的运动，成为了一种新的SLAM——VI-SLAM。</p>
+<p>VI-SLAM在V-SLAM的基础上，引入了一个新的运动方程，使得待优化的目标函数从原来的：</p>
+<script type="math/tex; mode=display">
+\underset{C_1\cdots C_m,X_1\cdots X_n}{\mathrm{argmin}} \sum_{i=1}^m \sum_{j=1}^n\|h(C_i,X_j)-\hat x_{ij}\|_{\sum_{ij}}</script><p>​    引入运动方程后变为：</p>
+<script type="math/tex; mode=display">
+\underset{C_1\cdots C_m,X_1\cdots X_n}{\mathrm{argmin}} \sum_{i=1}^m \sum_{j=1}^n\|h(C_i,X_j)-\hat x_{ij}\|_{\sum_{ij}} + \sum_{i=1}^{m-1}\|f(C_i,Z_i)-C_{i+1}\|_{\Gamma_i}</script><p>​    同理，若融合GPS数据，则再引入一项，且均假设数据观测符合<strong>高斯分布</strong>。</p>
+<h3 id="三、代表性单目V-SLAM系统"><a href="#三、代表性单目V-SLAM系统" class="headerlink" title="三、代表性单目V-SLAM系统"></a>三、代表性单目V-SLAM系统</h3><h4 id="3-1基于滤波器的V-SLAM"><a href="#3-1基于滤波器的V-SLAM" class="headerlink" title="3.1基于滤波器的V-SLAM"></a>3.1基于滤波器的V-SLAM</h4><h5 id="3-1-1-MonoSLAM"><a href="#3-1-1-MonoSLAM" class="headerlink" title="3.1.1 MonoSLAM"></a>3.1.1 MonoSLAM</h5><p>单目视觉SLAM，基于<strong>卡尔曼滤波优化模型</strong>，概率预测时体现为椭圆球的概率范围，采取每帧图片中的<strong>Shi-Tomasi</strong>角点为特征点进行匹配。</p>
+<p><img src="/2022/01/27/SLAM%E7%BB%8F%E5%85%B8%E7%BB%BC%E8%BF%B0%E5%AD%A6%E4%B9%A0/image-20220127143446455.png" alt="image-20220127143446455" style="zoom:80%;"></p>
+<p><strong>缺点：</strong>受限于EKF的局限性：</p>
+<ol>
+<li>如果预测函数和更新函数为非线性(通常 V-SLAM 问题都是非线性的)，那么 EKF 并不能保证全局最优，与 Levenberg-Marquardt[20]等迭代的非线性优化技术相比，更容易造成误差累积。</li>
+<li>若将三维点引入状态变量，则每一时刻的计算复杂度为$O(n^3)$，因此只能处理几百个点的小场景。</li>
+</ol>
+<h5 id="3-1-2-MSCKF"><a href="#3-1-2-MSCKF" class="headerlink" title="3.1.2 MSCKF"></a>3.1.2 MSCKF</h5><p>缓解了EKF方法的计算复杂度问题的一种VI-SLAM</p>
+<ol>
+<li><strong>更新阶段</strong>改进为包含临近 $l$ 帧的状态集合进行优化；</li>
+<li>对所有三维点进行消元使原来的二元约束转化为多元约束，计算复杂度降低至$O(nl^3)$</li>
+</ol>
+<h4 id="3-2基于关键帧BA的V-SLAM"><a href="#3-2基于关键帧BA的V-SLAM" class="headerlink" title="3.2基于关键帧BA的V-SLAM"></a>3.2基于关键帧BA的V-SLAM</h4><h5 id="3-2-1-PTAM"><a href="#3-2-1-PTAM" class="headerlink" title="3.2.1 PTAM"></a>3.2.1 PTAM</h5><p>基本思想： 将相机跟踪(Tracking)和地图构建(Mapping)作为 2 个独立的任务在 2 个线程并行执行。地图构建线程仅维护原视频流中稀疏抽取的关键帧(如图 a 所示)及关键帧中可见的三维点(如图 b 所示)，这样就可以非常高效地求解目标函数(即 BA)；有了 BA 恢复的精确三维结构，相机跟踪线程作为前台线程，仅需优化当前帧运动参数 $C_i$， 足以达到实时的计算效率。</p>
+<p><img src="/2022/01/27/SLAM%E7%BB%8F%E5%85%B8%E7%BB%BC%E8%BF%B0%E5%AD%A6%E4%B9%A0/image-20220127144005880.png" alt="image-20220127144005880" style="zoom:80%;"></p>
+<p>​    追踪<strong>FAST角点</strong>作为主要特征点。</p>
+<h5 id="3-2-2-ORB-SLAM"><a href="#3-2-2-ORB-SLAM" class="headerlink" title="3.2.2 ORB-SLAM"></a>3.2.2 ORB-SLAM</h5><p>在PTAM基础上改进的目前性能最好的单目V-SLAM系统之一：</p>
+<ol>
+<li>采用<strong>ORB</strong>特征；</li>
+<li>加入<strong>循环回路</strong>和<strong>闭合机制</strong>;</li>
+<li>可自动选择初始化的2帧图片；</li>
+<li>先宽松判断条件使系统尽可能多的加入新的关键帧及三维点，保证后续帧的鲁棒跟踪，再用彦哥的判断条件删除冗余的关键帧和不稳定的三维点。</li>
+</ol>
+<p><em>（注：ORB-SLAM相关内容后续根据ORB-SLAM2框架进行总结）</em></p>
+<h4 id="3-3-基于直接跟踪的V-SLAM"><a href="#3-3-基于直接跟踪的V-SLAM" class="headerlink" title="3.3 基于直接跟踪的V-SLAM"></a>3.3 基于直接跟踪的V-SLAM</h4>]]></content>
+      <tags>
+        <tag>SLAM</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>text</title>
+    <url>/2022/01/27/text/</url>
+    <content><![CDATA[<p>try</p>
+]]></content>
+      <tags>
+        <tag>ok</tag>
+      </tags>
   </entry>
 </search>
