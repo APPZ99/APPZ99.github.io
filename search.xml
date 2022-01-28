@@ -1,6 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Dr_CAN课程学习——工程数学基础</title>
+    <url>/2022/01/27/DR_CAN%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%E5%B7%A5%E7%A8%8B%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/</url>
+    <content><![CDATA[<blockquote>
+<p><strong>前言</strong></p>
+<p>基于B站UP主<strong>DR_CAN</strong>视频所作的总结笔记</p>
+<p>视频链接：<a href="https://space.bilibili.com/230105574/channel/seriesdetail?sid=1569595">DR_CAN——工程数学基础</a></p>
+</blockquote>
+<h2 id="特征值与特征向量"><a href="#特征值与特征向量" class="headerlink" title="特征值与特征向量"></a>特征值与特征向量</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>对于一个给定的线性变换 $A$ ，它的特征向量 $v$ 经过这个线性变换的作用后，得到的新向量仍然与原来的 $v$ 保持在同一直线上，但其长度或方向或许会改变，即：</p>
+<script type="math/tex; mode=display">
+Av = \lambda v</script><p>其中 $\lambda$ 为标量，即特征向量的长度在该线性变换下缩放的比例，称为其特征值。</p>
+<span id="more"></span>
+<p>$e.g.$</p>
+<p>将线性变换矩阵 $A$ 分别与向量 $v_1、v_2$ 相乘，看变换后向量是否与原向量保持同一直线上。</p>
+<script type="math/tex; mode=display">
+A=
+\begin{pmatrix} 
+1 & 1  \\ 
+4 & -2  \\ 
+\end{pmatrix} 、 
+
+v_1 = 
+\begin{pmatrix} 
+1 \\ 
+2 \\
+\end{pmatrix}、
+
+v_2 = 
+\begin{pmatrix} 
+1 \\ 
+1 \\
+\end{pmatrix}</script><p>可以发现 $v_2$ 在 $A$ 的作用下变换成 $2v_2$ 故满足其上述定义。</p>
+<h3 id="求解特征值、特征向量"><a href="#求解特征值、特征向量" class="headerlink" title="求解特征值、特征向量"></a>求解特征值、特征向量</h3><script type="math/tex; mode=display">
+Av = \lambda v \\
+Av - \lambda v = 0 \\
+(A - \lambda I)v = 0 (\ast)\\
+|A - \lambda I| = 0</script><p><em>注：上式中 $(\ast)$式需要有非零解，则其行列式需为零</em></p>
+<h3 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h3><h4 id="化对角矩阵"><a href="#化对角矩阵" class="headerlink" title="化对角矩阵"></a>化对角矩阵</h4><p><img src="/2022/01/27/DR_CAN%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%E5%B7%A5%E7%A8%8B%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/image-20220128090348822.png" alt="image-20220128090348822" style="zoom:67%;"></p>
+<h4 id="解耦"><a href="#解耦" class="headerlink" title="解耦"></a>解耦</h4><p><img src="/2022/01/27/DR_CAN%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%E5%B7%A5%E7%A8%8B%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/image-20220128090433204.png" alt="image-20220128090433204" style="zoom:67%;"></p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><ol>
+<li>加深了对于特征向量、特征值的理解</li>
+<li>重温了特征值求解方法</li>
+<li>理解了对角化公式的由来</li>
+<li>理解了对角化在解耦过程中的应用</li>
+</ol>
+<hr>
+<h2 id="线性化、泰勒级数、泰勒公式"><a href="#线性化、泰勒级数、泰勒公式" class="headerlink" title="线性化、泰勒级数、泰勒公式"></a>线性化、泰勒级数、泰勒公式</h2><h3 id="线性系统"><a href="#线性系统" class="headerlink" title="线性系统"></a>线性系统</h3><p>条件：满足叠加原理</p>
+<ol>
+<li>$x_1、x_2$ 为系统方程的解</li>
+<li>$x_3 = k_1 x_1 + k_2 x_2$ （$k_1、k_2$ 为常数）</li>
+<li>$x_3$ 为系统方程的解</li>
+</ol>
+<h3 id="泰勒级数"><a href="#泰勒级数" class="headerlink" title="泰勒级数"></a>泰勒级数</h3><p><img src="/2022/01/27/DR_CAN%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%E5%B7%A5%E7%A8%8B%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/image-20220128092750222.png" alt="image-20220128092750222"></p>
+<h3 id="线性化"><a href="#线性化" class="headerlink" title="线性化"></a>线性化</h3><p><img src="/2022/01/27/DR_CAN%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%E5%B7%A5%E7%A8%8B%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/工程数学-4.jpg" alt="工程数学-4" style="zoom:67%;"></p>
+<h3 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h3><hr>
+<h2 id="卷积含义、LTI的冲激响应及卷积"><a href="#卷积含义、LTI的冲激响应及卷积" class="headerlink" title="卷积含义、LTI的冲激响应及卷积"></a>卷积含义、LTI的冲激响应及卷积</h2><h3 id="LTI-System"><a href="#LTI-System" class="headerlink" title="LTI System"></a>LTI System</h3><p>满足<strong>叠加原理、时不变原理</strong>的系统称为线性时不变系统。</p>
+<h3 id="LTI-中拉普拉斯变换与卷积的关系"><a href="#LTI-中拉普拉斯变换与卷积的关系" class="headerlink" title="LTI 中拉普拉斯变换与卷积的关系"></a>LTI 中拉普拉斯变换与卷积的关系</h3><p>系统表达</p>
+<script type="math/tex; mode=display">
+F(s)H(s)=X(s)</script><p>进行拉氏逆变换后，等于<strong>系统时域上输出与传函的卷积</strong></p>
+<script type="math/tex; mode=display">
+f(t)\ast h(t) = x(t)</script><h3 id="LTI-中冲激响应"><a href="#LTI-中冲激响应" class="headerlink" title="LTI 中冲激响应"></a>LTI 中冲激响应</h3><p>根据 LTI 的叠加性质，任意的输出可以视为<strong>多个冲激响应的叠加</strong></p>
+<p>时间 $t$ 为第$i$ 个时刻冲激响应时间$i\Delta_T$，则系统输出：</p>
+<script type="math/tex; mode=display">
+X(t) = \sum_{i=0}^i \Delta_Tf(i\Delta_T)h_\Delta(t - i\Delta_T)</script><p>将$\Delta_T$ 趋向0取极限，则$\Delta_T = d\tau, i\Delta_T=\tau$</p>
+<p>则此时有输出函数：</p>
+<script type="math/tex; mode=display">
+X(t) = \int_0^t f(\tau)h(t-\tau)d\tau \\
+即:X(t)=f(t)\ast h(t)</script><h3 id="小结-2"><a href="#小结-2" class="headerlink" title="小结"></a>小结</h3><p>根据本节的内容，其实任意的LTI 系统都可以由一系列的冲激响应去定义整个系统。那么如果我们在一个LTI 系统下输入一段信号并与一种近似冲激响应的信号做卷积处理，就可以理解为——我们把输入信号放在了对应的冲激响应的系统中。<em>（注：这部分MATLAB实践放在后续章节中去分析）</em></p>
+<p>思考过程：连续的输入信号切割成每一个单位冲激响应与某一时刻输入信号大小的乘积，即$t$ 时刻的输入可以看作是$\Delta_Tf(t)$ 大小的单位冲击响应，然后根据LTI 系统的叠加原理，将$t$ 时刻前的所有输入响应进行叠加，即可得到$t$ 时刻的输出信号，$\Delta_T$ 去极限就是积分，也就得到最终的卷积形式。</p>
+<p>视频最后的例子的理解：每一时刻说话的声音由一个个浴室帘后声音的冲激响应叠加组成，其冲激响应特点是沉闷的回声，所有进行卷积后得到了人躲在浴室帘后说话的感觉。</p>
+<hr>
+<h2 id="欧拉公式证明"><a href="#欧拉公式证明" class="headerlink" title="欧拉公式证明"></a>欧拉公式证明</h2><p><img src="/2022/01/27/DR_CAN%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%E5%B7%A5%E7%A8%8B%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/image-20220128154702016.png" alt="image-20220128154702016"></p>
+<hr>
+<h2 id="卷积的拉普拉斯变换"><a href="#卷积的拉普拉斯变换" class="headerlink" title="卷积的拉普拉斯变换"></a>卷积的拉普拉斯变换</h2><p><img src="/2022/01/27/DR_CAN%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%E5%B7%A5%E7%A8%8B%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/image-20220128154518972.png" alt="image-20220128154518972" style="zoom:100%;"></p>
+<hr>
+<h2 id="Sinx-2-的证明"><a href="#Sinx-2-的证明" class="headerlink" title="Sinx = 2 的证明"></a>Sinx = 2 的证明</h2><p><img src="/2022/01/27/DR_CAN%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%E5%B7%A5%E7%A8%8B%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/image-20220128154552178.png" alt="image-20220128154552178"></p>
+<hr>
+<h2 id="复数的三种表示"><a href="#复数的三种表示" class="headerlink" title="复数的三种表示"></a>复数的三种表示</h2><h3 id="一般型"><a href="#一般型" class="headerlink" title="一般型"></a>一般型</h3><script type="math/tex; mode=display">
+z = a + bi</script><h3 id="三角型"><a href="#三角型" class="headerlink" title="三角型"></a>三角型</h3><script type="math/tex; mode=display">
+z = |z|cos(\theta) +|z|sin(\theta)i</script><h3 id="指数型"><a href="#指数型" class="headerlink" title="指数型"></a>指数型</h3><script type="math/tex; mode=display">
+z = |z|e^{i\theta}</script><h3 id="欧拉恒等式"><a href="#欧拉恒等式" class="headerlink" title="欧拉恒等式"></a>欧拉恒等式</h3><p>当$\theta = \pi$  ，$|z|=1$有：</p>
+<script type="math/tex; mode=display">
+e^{i\pi} + 1 = 0</script><h3 id="小结-3"><a href="#小结-3" class="headerlink" title="小结"></a>小结</h3><p>通过数形转换的方式，加深对这三种形式的理解</p>
+<hr>
+<h2 id="如何选取阈值"><a href="#如何选取阈值" class="headerlink" title="如何选取阈值"></a>如何选取阈值</h2><h3 id="Six-Sigma-选取原则"><a href="#Six-Sigma-选取原则" class="headerlink" title="Six Sigma 选取原则"></a>Six Sigma 选取原则</h3><p>工业生产中，对于产品的品质把控一般采用<strong>Six Sigma</strong>的原则。</p>
+<p><img src="/2022/01/27/DR_CAN%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%E5%B7%A5%E7%A8%8B%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/image-20220128153711471.png" alt="image-20220128153711471" style="zoom:67%;"></p>
+<h3 id="工程选择两种准则"><a href="#工程选择两种准则" class="headerlink" title="工程选择两种准则"></a>工程选择两种准则</h3><p>当合格与不合格的Six Sigma存在重叠部分，那么根据实际情况选择<strong>宁纵无枉</strong>还是<strong>宁枉无纵</strong></p>
+<p><img src="/2022/01/27/DR_CAN%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%E5%B7%A5%E7%A8%8B%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/image-20220128153947372.png" alt="image-20220128153947372" style="zoom:67%;"></p>
+]]></content>
+      <tags>
+        <tag>Theoretical Learning</tag>
+        <tag>DR_CAN</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/2021/12/31/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
+<span id="more"></span>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+]]></content>
+  </entry>
+  <entry>
     <title>SLAM经典综述学习</title>
     <url>/2022/01/27/SLAM%E7%BB%8F%E5%85%B8%E7%BB%BC%E8%BF%B0%E5%AD%A6%E4%B9%A0/</url>
     <content><![CDATA[<h1 id="SLAM方面经典综述"><a href="#SLAM方面经典综述" class="headerlink" title="SLAM方面经典综述"></a>SLAM方面经典综述</h1><blockquote>
@@ -83,20 +192,5 @@
         <tag>SLAM</tag>
         <tag>Paper Reading</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>Hello World</title>
-    <url>/2021/12/31/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<span id="more"></span>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-]]></content>
   </entry>
 </search>
