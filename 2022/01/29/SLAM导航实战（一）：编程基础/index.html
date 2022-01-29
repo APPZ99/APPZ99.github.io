@@ -29,7 +29,7 @@
 <meta property="og:description" content="前言 本系列主要基于《机器人SLAM导航——核心技术与实战》一书进行学习总结，根据作者对本书的章节规划，预计共分为四个部分：  编程基础篇 硬件基础篇 SLAM篇 自主导航篇  本系列笔记也将基于上述四个部分进行归纳总结  简介当前SLAM系统主要是在Linux系统进行开发的，其中应用最广的当属Ubuntu，掌握Linux系统的基本操作是进行SLAM开发的前提条件。除了操作系统外，进行SLAM学">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-01-29T01:45:55.000Z">
-<meta property="article:modified_time" content="2022-01-29T03:15:31.936Z">
+<meta property="article:modified_time" content="2022-01-29T09:15:40.332Z">
 <meta property="article:author" content="AppZ99">
 <meta property="article:tag" content="ROS">
 <meta property="article:tag" content="c++">
@@ -222,7 +222,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2022-01-29 09:45:55 / 修改时间：11:15:31" itemprop="dateCreated datePublished" datetime="2022-01-29T09:45:55+08:00">2022-01-29</time>
+              <time title="创建时间：2022-01-29 09:45:55 / 修改时间：17:15:40" itemprop="dateCreated datePublished" datetime="2022-01-29T09:45:55+08:00">2022-01-29</time>
             </span>
 
           <br>
@@ -231,14 +231,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>2.4k</span>
+              <span>3.5k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
+              <span>3 分钟</span>
             </span>
 
         </div>
@@ -288,7 +288,7 @@
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;ros/ros.h&quot;</span> </span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;std_msgs/String.h&quot;</span> </span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sstream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  ros::<span class="built_in">init</span>(argc, argv, <span class="string">&quot;publish_node&quot;</span>);</span><br><span class="line">  ros::NodeHandle nh;</span><br><span class="line"></span><br><span class="line">  ros::Publisher chatter_pub = nh.advertise&lt;std_msgs::String&gt;(<span class="string">&quot;chatter&quot;</span>, <span class="number">1000</span>);</span><br><span class="line">  <span class="function">ros::Rate <span class="title">loop_rate</span><span class="params">(<span class="number">10</span>)</span></span>;<span class="comment">//自循环的频率需要配合27行的sleep()方法使用</span></span><br><span class="line">  <span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">while</span> (ros::<span class="built_in">ok</span>()) </span><br><span class="line">  &#123;</span><br><span class="line">    std_msgs::String msg;</span><br><span class="line"></span><br><span class="line">    std::stringstream ss; </span><br><span class="line">    ss &lt;&lt; <span class="string">&quot;hello &quot;</span> &lt;&lt; count; </span><br><span class="line">    msg.data = ss.<span class="built_in">str</span>();</span><br><span class="line">    <span class="built_in">ROS_INFO</span>(<span class="string">&quot;%s&quot;</span>, msg.data.<span class="built_in">c_str</span>());</span><br><span class="line">  </span><br><span class="line">    chatter_pub.<span class="built_in">publish</span>(msg);</span><br><span class="line">  </span><br><span class="line">    ros::<span class="built_in">spinOnce</span>();<span class="comment">//让回调函数有机会被执行的声明</span></span><br><span class="line">    loop_rate.<span class="built_in">sleep</span>();</span><br><span class="line">    ++count;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>订阅者</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;ros/ros.h&quot;</span> </span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;std_msgs/String.h&quot;</span> </span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">chatterCallback</span><span class="params">(<span class="keyword">const</span> std_msgs::String::ConstPtr&amp; msg)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="built_in">ROS_INFO</span>(<span class="string">&quot;I heard: [%s]&quot;</span>,msg-&gt;data.<span class="built_in">c_str</span>());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  ros::<span class="built_in">init</span>(argc, argv, <span class="string">&quot;subscribe_node&quot;</span>);</span><br><span class="line">  ros::NodeHandle nh;</span><br><span class="line"></span><br><span class="line">  ros::Subscriber chatter_sub = nh.<span class="built_in">subscribe</span>(<span class="string">&quot;chatter&quot;</span>, <span class="number">1000</span>,chatterCallback);</span><br><span class="line"></span><br><span class="line">  ros::<span class="built_in">spin</span>();<span class="comment">//让程序进入自循环的挂起状态</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="服务通信"><a href="#服务通信" class="headerlink" title="服务通信"></a>服务通信</h3><p><strong>自定义服务基本步骤：</strong></p>
+<h4 id="服务通信"><a href="#服务通信" class="headerlink" title="服务通信"></a>服务通信</h4><p><strong>自定义服务基本步骤：</strong></p>
 <ol>
 <li>创建srv文件夹，创建 <strong>.srv</strong> 格式文件，编写消息类型</li>
 <li>功能包CMakeLists.txt文件中<strong>find_package</strong>中添加<strong>std_msgs、message_generation</strong>依赖项</li>
@@ -297,12 +297,83 @@
 <li><strong>package.xml</strong>中添加<strong>message_generation、message_runtime</strong>依赖</li>
 </ol>
 <p><strong>编译运行注意：</strong>由于自定义了服务消息类型，需在<strong>add_dependencies</strong>中配置<strong>自定义功能包命_gencpp</strong>，若为python则<strong>_genpy</strong></p>
-<h3 id="动作通信"><a href="#动作通信" class="headerlink" title="动作通信"></a>动作通信</h3><p><strong>基本步骤：</strong> <strong>find_package</strong>中需添加<strong>Boost库</strong>，其余参照服务通信配置方法</p>
+<h4 id="动作通信"><a href="#动作通信" class="headerlink" title="动作通信"></a>动作通信</h4><p><strong>基本步骤：</strong> <strong>find_package</strong>中需添加<strong>Boost库</strong>，其余参照服务通信配置方法</p>
 <h3 id="ROS其他重要概念"><a href="#ROS其他重要概念" class="headerlink" title="ROS其他重要概念"></a>ROS其他重要概念</h3><p><strong>parameter：</strong> getParam()、setParam()</p>
 <p><strong>tf：</strong> 右手坐标系；由<strong>广播tf变换和监听tf变换</strong>组成节点</p>
 <p><strong>nodelet：</strong>该节点可以在单个进程下以多个线程形式运行</p>
 <hr>
-<h2 id="C-编程规范"><a href="#C-编程规范" class="headerlink" title="C++编程规范"></a>C++编程规范</h2>
+<h2 id="C-编程规范"><a href="#C-编程规范" class="headerlink" title="C++编程规范"></a>C++编程规范</h2><h3 id="相关学习资料-1"><a href="#相关学习资料-1" class="headerlink" title="相关学习资料"></a>相关学习资料</h3><p>书籍：CMake Practice</p>
+<h3 id="编译方式及规范"><a href="#编译方式及规范" class="headerlink" title="编译方式及规范"></a>编译方式及规范</h3><p><strong>编译方式：</strong></p>
+<ol>
+<li>g++</li>
+<li>Make</li>
+<li>CMake</li>
+</ol>
+<p><strong>编程规范：</strong></p>
+<p><a target="_blank" rel="noopener" href="https://zh-google-styleguide.readthedocs.io/en/latest/google-cpp-styleguide/contents/">谷歌C++编程风格指南</a></p>
+<hr>
+<h2 id="OpenCV图像处理"><a href="#OpenCV图像处理" class="headerlink" title="OpenCV图像处理"></a>OpenCV图像处理</h2><h3 id="相关学习资料-2"><a href="#相关学习资料-2" class="headerlink" title="相关学习资料"></a>相关学习资料</h3><p>入门书籍：<a target="_blank" rel="noopener" href="http://product.dangdang.com/11058134396.html">OpenCV3编程入门</a></p>
+<p>经典书籍（中文翻译版也可以）：<a target="_blank" rel="noopener" href="http://product.dangdang.com/27693398.html">Learning Opencv: Computer Vision with the Opencv Library</a></p>
+<h3 id="图像数据"><a href="#图像数据" class="headerlink" title="图像数据"></a>图像数据</h3><p><strong>Mat类组成：</strong>矩阵头——存放矩阵尺寸、存储方式、存储地址等信息；矩阵指针——指向内存区域</p>
+<p><strong>默认图片存储顺序：</strong>BGR</p>
+<h3 id="图像滤波"><a href="#图像滤波" class="headerlink" title="图像滤波"></a>图像滤波</h3><h4 id="线性滤波"><a href="#线性滤波" class="headerlink" title="线性滤波"></a>线性滤波</h4><ul>
+<li>均值滤波（blur）</li>
+<li>高斯滤波（GaussianBlur）</li>
+</ul>
+<h4 id="非线性滤波"><a href="#非线性滤波" class="headerlink" title="非线性滤波"></a>非线性滤波</h4><ul>
+<li>中值滤波（medianBlur）</li>
+<li>双边滤波（bilateralFilter）：与空间位置、像素值相似度有关，能保留细节信息</li>
+</ul>
+<h4 id="形态学滤波"><a href="#形态学滤波" class="headerlink" title="形态学滤波"></a>形态学滤波</h4><ul>
+<li>膨胀（dilate）</li>
+<li>腐蚀（erode）</li>
+</ul>
+<p>不同组合形成新的滤波算法</p>
+<ul>
+<li>开运算（open）</li>
+<li>闭运算（close）</li>
+<li>形态学梯度（morphgrad）</li>
+<li>顶帽运算（tophat）</li>
+<li>黑帽运算（blackhat）</li>
+</ul>
+<h3 id="图像变换"><a href="#图像变换" class="headerlink" title="图像变换"></a>图像变换</h3><h4 id="射影变换"><a href="#射影变换" class="headerlink" title="射影变换"></a>射影变换</h4><ul>
+<li>欧氏变换</li>
+<li>相似变换</li>
+<li>仿射变换</li>
+<li>射影变换（上述三种变换均为射影变换的特例）</li>
+</ul>
+<h4 id="霍夫变换"><a href="#霍夫变换" class="headerlink" title="霍夫变换"></a>霍夫变换</h4><p><strong>检测直线</strong>的一种常用方法</p>
+<p><strong>基本原理：</strong>过某一点存在<strong>直线簇</strong>，其对应参数$r、\theta$ 可以绘制一条正弦曲线，若多个点绘制的正弦曲线为同一条曲线，则三点位于同一条直线上</p>
+<p><strong>封装函数：</strong>HoughLines、HoughLinesP（累计概率霍夫变换，具有更高的执行效率）</p>
+<h4 id="边缘检测"><a href="#边缘检测" class="headerlink" title="边缘检测"></a>边缘检测</h4><p><strong>sobel算法：</strong> x、y方向的卷积核对图像卷积，得到两个方向的梯度后合成为某点的近似梯度</p>
+<p><strong>canny算法：</strong> 在sobel基础上先用高斯滤波去除噪声，然后sobel算法，最后采用滞后阈值讲边缘提取出来</p>
+<h4 id="直方图均衡"><a href="#直方图均衡" class="headerlink" title="直方图均衡"></a>直方图均衡</h4><p><strong>图像直方图：</strong>横坐标为亮度值，纵坐标为每个亮度值对应的像素总数量</p>
+<h3 id="图像特征点提取"><a href="#图像特征点提取" class="headerlink" title="图像特征点提取"></a>图像特征点提取</h3><h4 id="SIFT特征点"><a href="#SIFT特征点" class="headerlink" title="SIFT特征点"></a>SIFT特征点</h4><p><strong>尺度空间：</strong>模拟人眼<strong>远近观察</strong>的成像特点，可图区图像中<strong>尺度不变性</strong>的特征</p>
+<ul>
+<li>图像金字塔</li>
+<li>高斯金字塔</li>
+<li>高斯差分金字塔（由于<strong>尺度归一化高斯拉普拉斯函数</strong>与<strong>高斯差分函数</strong>非常近似，且差分计算量少）</li>
+</ul>
+<p><strong>特征点定位：</strong>在<strong>高斯差分金字塔</strong>中完成，<strong>DoG空间进行</strong></p>
+<ul>
+<li>极值点检测</li>
+<li>特征点定位</li>
+<li>特征点筛选</li>
+</ul>
+<p><strong>特征点方向提取：</strong>在<strong>高斯金字塔</strong>中完成</p>
+<ul>
+<li>特征点主方向</li>
+<li>特征点邻域方向</li>
+<li>特征点描述子<strong>（4 x 4 x 8 = 128维向量描述）</strong></li>
+</ul>
+<h4 id="SURF特征点"><a href="#SURF特征点" class="headerlink" title="SURF特征点"></a>SURF特征点</h4><p><strong>尺度空间：</strong>在SIFT基础上讲高斯滤波用<strong>Hessian矩阵的盒式滤波</strong>代替，大幅降低运算耗时；尺度不同问题由盒式滤波窗口尺寸解决</p>
+<p><strong>特征点定位：</strong> <strong>Hessian矩阵</strong>的决定值中进行</p>
+<p><strong>特征点方向提取：</strong> <strong>Haar小波</strong>特征得到，最终<strong>（4 x 4 x 4 = 64维向量描述）</strong></p>
+<h4 id="ORB特征点"><a href="#ORB特征点" class="headerlink" title="ORB特征点"></a>ORB特征点</h4><p><strong>尺度空间：</strong>直接<strong>图像金字塔</strong>拼接成大图</p>
+<p><strong>特征点提取：</strong> <strong>FAST特征</strong>提取，结合<strong>灰度质心</strong>得到特征点方向的<strong>oFAST</strong>特征</p>
+<p><strong>特征点描述：</strong> 先对图像进行高斯滤波后，采用<strong>BRIEF</strong>描述计算，最后将<strong>BRIEF</strong>中按照高斯分布对特征点方向进行旋转，得到<strong>rBRIEF</strong></p>
+<p>​                    </p>
+
     </div>
 
     
@@ -402,7 +473,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ROS%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F"><span class="nav-text">ROS操作系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99"><span class="nav-text">相关学习资料</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ROS%E7%AE%80%E4%BB%8B"><span class="nav-text">ROS简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ROS%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83"><span class="nav-text">ROS开发环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ROS%E6%A1%86%E6%9E%B6"><span class="nav-text">ROS框架</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ROS%E8%8A%82%E7%82%B9%E9%80%9A%E4%BF%A1"><span class="nav-text">ROS节点通信</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%9D%E9%A2%98%E9%80%9A%E4%BF%A1"><span class="nav-text">话题通信</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E9%80%9A%E4%BF%A1"><span class="nav-text">服务通信</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A8%E4%BD%9C%E9%80%9A%E4%BF%A1"><span class="nav-text">动作通信</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ROS%E5%85%B6%E4%BB%96%E9%87%8D%E8%A6%81%E6%A6%82%E5%BF%B5"><span class="nav-text">ROS其他重要概念</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#C-%E7%BC%96%E7%A8%8B%E8%A7%84%E8%8C%83"><span class="nav-text">C++编程规范</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ROS%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F"><span class="nav-text">ROS操作系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99"><span class="nav-text">相关学习资料</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ROS%E7%AE%80%E4%BB%8B"><span class="nav-text">ROS简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ROS%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83"><span class="nav-text">ROS开发环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ROS%E6%A1%86%E6%9E%B6"><span class="nav-text">ROS框架</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ROS%E8%8A%82%E7%82%B9%E9%80%9A%E4%BF%A1"><span class="nav-text">ROS节点通信</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%9D%E9%A2%98%E9%80%9A%E4%BF%A1"><span class="nav-text">话题通信</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E9%80%9A%E4%BF%A1"><span class="nav-text">服务通信</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8A%A8%E4%BD%9C%E9%80%9A%E4%BF%A1"><span class="nav-text">动作通信</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ROS%E5%85%B6%E4%BB%96%E9%87%8D%E8%A6%81%E6%A6%82%E5%BF%B5"><span class="nav-text">ROS其他重要概念</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#C-%E7%BC%96%E7%A8%8B%E8%A7%84%E8%8C%83"><span class="nav-text">C++编程规范</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99-1"><span class="nav-text">相关学习资料</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E6%96%B9%E5%BC%8F%E5%8F%8A%E8%A7%84%E8%8C%83"><span class="nav-text">编译方式及规范</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#OpenCV%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86"><span class="nav-text">OpenCV图像处理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99-2"><span class="nav-text">相关学习资料</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%BE%E5%83%8F%E6%95%B0%E6%8D%AE"><span class="nav-text">图像数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%BE%E5%83%8F%E6%BB%A4%E6%B3%A2"><span class="nav-text">图像滤波</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BA%BF%E6%80%A7%E6%BB%A4%E6%B3%A2"><span class="nav-text">线性滤波</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%BB%A4%E6%B3%A2"><span class="nav-text">非线性滤波</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BD%A2%E6%80%81%E5%AD%A6%E6%BB%A4%E6%B3%A2"><span class="nav-text">形态学滤波</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%BE%E5%83%8F%E5%8F%98%E6%8D%A2"><span class="nav-text">图像变换</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B0%84%E5%BD%B1%E5%8F%98%E6%8D%A2"><span class="nav-text">射影变换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9C%8D%E5%A4%AB%E5%8F%98%E6%8D%A2"><span class="nav-text">霍夫变换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%B9%E7%BC%98%E6%A3%80%E6%B5%8B"><span class="nav-text">边缘检测</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%B4%E6%96%B9%E5%9B%BE%E5%9D%87%E8%A1%A1"><span class="nav-text">直方图均衡</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%BE%E5%83%8F%E7%89%B9%E5%BE%81%E7%82%B9%E6%8F%90%E5%8F%96"><span class="nav-text">图像特征点提取</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#SIFT%E7%89%B9%E5%BE%81%E7%82%B9"><span class="nav-text">SIFT特征点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SURF%E7%89%B9%E5%BE%81%E7%82%B9"><span class="nav-text">SURF特征点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ORB%E7%89%B9%E5%BE%81%E7%82%B9"><span class="nav-text">ORB特征点</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -479,12 +550,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">7k</span>
+    <span title="站点总字数">8k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">7 分钟</span>
+    <span title="站点阅读时长">8 分钟</span>
 </div>
 
         
@@ -545,6 +616,59 @@
   
 
   
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
 
   
 
