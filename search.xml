@@ -730,4 +730,51 @@ V = 2 \pi R\frac{\dot{n} }{k}</script><p>动力$F$ 与减速箱的参数 $k$ 成
 <p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
 ]]></content>
   </entry>
+  <entry>
+    <title>DR_CAN课程学习——傅里叶级数与变换</title>
+    <url>/2022/02/03/DR-CAN%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%E5%82%85%E9%87%8C%E5%8F%B6%E7%BA%A7%E6%95%B0%E4%B8%8E%E5%8F%98%E6%8D%A2/</url>
+    <content><![CDATA[<blockquote>
+<p><strong>前言</strong></p>
+<p>基于B站UP主<strong>DR_CAN</strong>视频所作总结笔记</p>
+<p>视频链接：<a href="https://space.bilibili.com/230105574/channel/seriesdetail?sid=1569597">DR_CAN——傅里叶级数与变换</a></p>
+<p>先导文章：<a href="https://zhuanlan.zhihu.com/p/19763358">傅里叶分析之掐死教程</a></p>
+</blockquote>
+<span id="more"></span>
+<h2 id="三角函数的正交性"><a href="#三角函数的正交性" class="headerlink" title="三角函数的正交性"></a>三角函数的正交性</h2><p><img src="/2022/02/03/DR-CAN%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%E5%82%85%E9%87%8C%E5%8F%B6%E7%BA%A7%E6%95%B0%E4%B8%8E%E5%8F%98%E6%8D%A2/傅里叶级数与傅里叶变换-2.jpg" alt="傅里叶级数与傅里叶变换-2" style="zoom:67%;"></p>
+<h2 id="周期为2pi的函数展开"><a href="#周期为2pi的函数展开" class="headerlink" title="周期为2pi的函数展开"></a>周期为2pi的函数展开</h2><p><img src="/2022/02/03/DR-CAN%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%E5%82%85%E9%87%8C%E5%8F%B6%E7%BA%A7%E6%95%B0%E4%B8%8E%E5%8F%98%E6%8D%A2/傅里叶级数与傅里叶变换-3.jpg" alt="傅里叶级数与傅里叶变换-3" style="zoom:67%;"></p>
+<h2 id="周期为2L的函数展开"><a href="#周期为2L的函数展开" class="headerlink" title="周期为2L的函数展开"></a>周期为2L的函数展开</h2><p><img src="/2022/02/03/DR-CAN%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%E5%82%85%E9%87%8C%E5%8F%B6%E7%BA%A7%E6%95%B0%E4%B8%8E%E5%8F%98%E6%8D%A2/傅里叶级数与傅里叶变换-4.jpg" alt="傅里叶级数与傅里叶变换-4" style="zoom:67%;"></p>
+<h2 id="傅里叶级数的复数形式"><a href="#傅里叶级数的复数形式" class="headerlink" title="傅里叶级数的复数形式"></a>傅里叶级数的复数形式</h2><p><img src="/2022/02/03/DR-CAN%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%E5%82%85%E9%87%8C%E5%8F%B6%E7%BA%A7%E6%95%B0%E4%B8%8E%E5%8F%98%E6%8D%A2/傅里叶级数与傅里叶变换-5.jpg" alt="傅里叶级数与傅里叶变换-5" style="zoom:67%;"></p>
+<h2 id="从傅里叶级数推导傅里叶变换"><a href="#从傅里叶级数推导傅里叶变换" class="headerlink" title="从傅里叶级数推导傅里叶变换"></a>从傅里叶级数推导傅里叶变换</h2><p><img src="/2022/02/03/DR-CAN%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%E5%82%85%E9%87%8C%E5%8F%B6%E7%BA%A7%E6%95%B0%E4%B8%8E%E5%8F%98%E6%8D%A2/傅里叶级数与傅里叶变换-6.jpg" alt="傅里叶级数与傅里叶变换-6" style="zoom:67%;"></p>
+]]></content>
+      <tags>
+        <tag>DR_CAN</tag>
+        <tag>Theoretical Learning</tag>
+        <tag>Fourier Transform</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>DR_CAN课程学习——现代控制理论</title>
+    <url>/2022/02/03/DR-CAN%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%E7%8E%B0%E4%BB%A3%E6%8E%A7%E5%88%B6%E7%90%86%E8%AE%BA/</url>
+    <content><![CDATA[<blockquote>
+<p><strong>前言</strong></p>
+<p>基于B站UP主<strong>DR_CAN</strong>视频所作总结笔记</p>
+<p>视频链接：<a href="https://space.bilibili.com/230105574/channel/seriesdetail?sid=1569601">DR_CAN——现代控制理论</a></p>
+</blockquote>
+<span id="more"></span>
+<h2 id="状态空间"><a href="#状态空间" class="headerlink" title="状态空间"></a>状态空间</h2><p><img src="/2022/02/03/DR-CAN%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%E7%8E%B0%E4%BB%A3%E6%8E%A7%E5%88%B6%E7%90%86%E8%AE%BA/现代控制理论-2.jpg" alt="现代控制理论-2" style="zoom:67%;"></p>
+<h2 id="相图、相轨迹"><a href="#相图、相轨迹" class="headerlink" title="相图、相轨迹"></a>相图、相轨迹</h2><p><img src="/2022/02/03/DR-CAN%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%E7%8E%B0%E4%BB%A3%E6%8E%A7%E5%88%B6%E7%90%86%E8%AE%BA/现代控制理论-3.jpg" alt="现代控制理论-3" style="zoom:67%;"></p>
+<h2 id="爱情中的数学"><a href="#爱情中的数学" class="headerlink" title="爱情中的数学"></a>爱情中的数学</h2><p><img src="/2022/02/03/DR-CAN%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%E7%8E%B0%E4%BB%A3%E6%8E%A7%E5%88%B6%E7%90%86%E8%AE%BA/现代控制理论-4.jpg" alt="现代控制理论-4" style="zoom:67%;"></p>
+<h2 id="系统的可控性"><a href="#系统的可控性" class="headerlink" title="系统的可控性"></a>系统的可控性</h2><p><img src="/2022/02/03/DR-CAN%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%E7%8E%B0%E4%BB%A3%E6%8E%A7%E5%88%B6%E7%90%86%E8%AE%BA/现代控制理论-5.jpg" alt="现代控制理论-5" style="zoom:67%;"></p>
+<h2 id="稳定性、李雅普诺夫定理"><a href="#稳定性、李雅普诺夫定理" class="headerlink" title="稳定性、李雅普诺夫定理"></a>稳定性、李雅普诺夫定理</h2><p><img src="/2022/02/03/DR-CAN%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%E7%8E%B0%E4%BB%A3%E6%8E%A7%E5%88%B6%E7%90%86%E8%AE%BA/现代控制理论-6.jpg" alt="现代控制理论-6" style="zoom:67%;"></p>
+<h2 id="线性控制器的设计"><a href="#线性控制器的设计" class="headerlink" title="线性控制器的设计"></a>线性控制器的设计</h2><p><img src="/2022/02/03/DR-CAN%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%E7%8E%B0%E4%BB%A3%E6%8E%A7%E5%88%B6%E7%90%86%E8%AE%BA/现代控制理论-7.jpg" alt="现代控制理论-7" style="zoom:67%;"></p>
+<h2 id="LQR控制器"><a href="#LQR控制器" class="headerlink" title="LQR控制器"></a>LQR控制器</h2><p><img src="/2022/02/03/DR-CAN%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%E7%8E%B0%E4%BB%A3%E6%8E%A7%E5%88%B6%E7%90%86%E8%AE%BA/现代控制理论-8.jpg" alt="现代控制理论-8" style="zoom:67%;"></p>
+<h2 id="状态观测器设计"><a href="#状态观测器设计" class="headerlink" title="状态观测器设计"></a>状态观测器设计</h2><p><img src="/2022/02/03/DR-CAN%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%E7%8E%B0%E4%BB%A3%E6%8E%A7%E5%88%B6%E7%90%86%E8%AE%BA/现代控制理论-9.jpg" alt="现代控制理论-9" style="zoom:67%;"></p>
+<h2 id="可观测性与分离原理"><a href="#可观测性与分离原理" class="headerlink" title="可观测性与分离原理"></a>可观测性与分离原理</h2><p><img src="/2022/02/03/DR-CAN%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%E7%8E%B0%E4%BB%A3%E6%8E%A7%E5%88%B6%E7%90%86%E8%AE%BA/现代控制理论-10.jpg" alt="现代控制理论-10" style="zoom:67%;"></p>
+]]></content>
+      <tags>
+        <tag>DR_CAN</tag>
+        <tag>Theoretical Learning</tag>
+        <tag>Modern Control Theory</tag>
+      </tags>
+  </entry>
 </search>
