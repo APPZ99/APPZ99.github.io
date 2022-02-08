@@ -778,4 +778,141 @@ V = 2 \pi R\frac{\dot{n} }{k}</script><p>动力$F$ 与减速箱的参数 $k$ 成
         <tag>Modern Control Theory</tag>
       </tags>
   </entry>
+  <entry>
+    <title>SLAM导航实战（三）：SLAM——数学基础</title>
+    <url>/2022/02/04/SLAM%E5%AF%BC%E8%88%AA%E5%AE%9E%E6%88%98%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9ASLAM%E2%80%94%E2%80%94%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/</url>
+    <content><![CDATA[<blockquote>
+<p><strong>前言</strong></p>
+<p>本系列主要基于《机器人SLAM导航——核心技术与实战》一书进行学习总结。</p>
+<p>由于SLAM部分篇幅较长，且内容较为重要，预计按照作者章节安排从<strong>数学基础、激光SLAM、视觉SLAM、其他SLAM</strong>四个部分对其进行整理归纳。</p>
+</blockquote>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>本章节作者通过介绍SLAM领域相关的<strong>数学基础</strong>部分，为后续SLAM算法的学习做好铺垫，具体数学推导笔者也会跟随作者在本篇总结做详细整理。</p>
+<span id="more"></span>
+<hr>
+<h2 id="SLAM发展简史"><a href="#SLAM发展简史" class="headerlink" title="SLAM发展简史"></a>SLAM发展简史</h2><p>最初，机器人的<strong>定位与建图</strong>是独立的两个问题，后续采用<strong>概率理论框架</strong>对机器人的<strong>不确定性</strong>进行讨论，同时把地图的<strong>位姿和地图路标</strong>做统一估计，才算是SLAM问题研究的起源。</p>
+<p>SLAM也从<strong>基于滤波</strong>的古典时期过渡到现在<strong>基于优化方法</strong>的现代时期。</p>
+<h3 id="数据关联、收敛、一致性"><a href="#数据关联、收敛、一致性" class="headerlink" title="数据关联、收敛、一致性"></a>数据关联、收敛、一致性</h3><p>数据关联：传感器数据与已构建数据进行匹配，闭环反馈就需要数据之间足够的关联性</p>
+<p>收敛：系统数据的收敛性是理论上衡量系统的可行性的指标之一</p>
+<p>一致性：分为<strong>强一致性</strong>和<strong>弱一致性</strong>，主要区别在于弱一致性是将偏差大的值的概率慢慢趋近于0，而强一致性是所有观测值在整个过程严格收敛于目标 $\theta$</p>
+<h3 id="SLAM基本理论"><a href="#SLAM基本理论" class="headerlink" title="SLAM基本理论"></a>SLAM基本理论</h3><p><strong>滤波方法：</strong>可以看成一种增量算法，获取每一时刻的信息，并将其分解至贝叶斯网络的概率分布来估计当前时刻的状态。</p>
+<p><strong>优化方法：</strong>不断累积获取到的信息，并基于此计算机器人轨迹及路标点。其计算信息存储在各个待估计变量间的约束中。通过<strong>近似线性化</strong>或者<strong>迭代</strong>的方法进行求解。</p>
+<p><strong>二者区别：</strong> <strong>最大似然</strong>及<strong>最小二乘</strong>的却别，优化方法之间限制于存储的问题，在约束结构稀疏性的研究下得到了进一步的解决，从而占据当前SLAM研究的主导地位。</p>
+<hr>
+<h2 id="SLAM中的概率理论"><a href="#SLAM中的概率理论" class="headerlink" title="SLAM中的概率理论"></a>SLAM中的概率理论</h2><p>机器人实际运行情况下存在<strong>传感器测量噪声、电机控制偏差、计算机软件计算精度近似</strong>等不确定性，故需要用概率对其不确定性进行描述估计。</p>
+<p>单纯的运动会导致机器人系统整体的不确定性增大，引入观测可以使系统整体的不确定性降低。</p>
+<h3 id="状态估计问题"><a href="#状态估计问题" class="headerlink" title="状态估计问题"></a>状态估计问题</h3><p>SLAM问题本质上属于<strong>状态估计问题</strong>，其估计观测的便是机器人的位姿以及路标点。</p>
+<p>机器人系统运动过程中不断对路标点以及自身位姿进行估计，二者概率描述如下：</p>
+<script type="math/tex; mode=display">
+P(z_k|x_k,m) \\
+P(x_k|x_{k-1},u_k)</script><p>SLAM问题解决的便是对于路标以及机器人位姿的估计问题。<em>（注：SLAM的估计并不是简单的路标估计和位姿估计的乘积）</em></p>
+<script type="math/tex; mode=display">
+P(x_k,m|Z_{0:k},U_{0:k},x_0)</script><h3 id="概率运动模型"><a href="#概率运动模型" class="headerlink" title="概率运动模型"></a>概率运动模型</h3><h4 id="速度运动模型"><a href="#速度运动模型" class="headerlink" title="速度运动模型"></a>速度运动模型</h4><p>在不考虑速度误差的情况下，机器人的状态转移方程可以表示为：</p>
+<script type="math/tex; mode=display">
+x_k=\begin{bmatrix}
+x' \\
+y' \\
+\theta '
+\end{bmatrix}
+=g(x_{k-1},u_k)=
+\begin{bmatrix}
+x \\
+y \\
+\theta 
+\end{bmatrix}+
+\begin{bmatrix}
+cos\theta   & -sin\theta  & 0\\
+sin\theta   & cos\theta  & 0\\
+0  & 0 & 1
+\end{bmatrix}
+\begin{bmatrix}
+v_x \\
+v_y \\
+\omega _z
+\end{bmatrix}
+\Delta t</script><p>上式需要满足两个条件：<em>运动时间很小；实际前馈运动不存在误差</em></p>
+<p>若此时考虑速度的误差，且<strong>$u_k、x_{k-1}、x_k$均服从高斯分布</strong>，此时$u_k$的协方差矩阵表示为：</p>
+<script type="math/tex; mode=display">
+\sum u_k=\begin{bmatrix}
+ \sigma_{v_x}^2  & 0 & 0\\
+ 0 & \sigma_{v_y}^2 & 0\\
+ 0 & 0 & \sigma_{w_z}^2
+\end{bmatrix}</script><p>由此，对状态转移函数进行一阶泰勒级数展开线性化后，计算$x_k$的协方差矩阵</p>
+<script type="math/tex; mode=display">
+\sum x_k=\begin{bmatrix}
+\frac{\partial g}{\partial x_{k-1}}   & \frac{\partial g}{\partial u_k}\\
+\end{bmatrix}
+\begin{bmatrix}
+\sum x_{k-1}  & 0_{3\times3}\\
+0_{3\times3}  & \sum x_{u_k}
+\end{bmatrix}
+\begin{bmatrix}
+\frac{\partial g}{\partial x_{k-1}}   & \frac{\partial g}{\partial u_k}\\
+\end{bmatrix}^T</script><p>同样的，上述模型也是基于两个前提条件：<em>运动时间很小；运动以及状态估计误差服从高斯分布</em></p>
+<h4 id="里程计模型"><a href="#里程计模型" class="headerlink" title="里程计模型"></a>里程计模型</h4><p>由于速度运动模型条件假设过于严格，故主要采用实际工程更加可行的里程计模型</p>
+<p>在考虑里程计误差，且变量服从高斯分布的情况下，其运动协方差表示为：</p>
+<script type="math/tex; mode=display">
+\sum u_k=\begin{bmatrix}
+ \sigma_{\Delta_x}^2 & 0 & 0 & 0 & 0 & 0\\
+ 0 & \sigma_{\Delta_y}^2 & 0 & 0 & 0 & 0\\
+ 0 & 0 & 0 & 0 & 0 & 0\\
+ 0 & 0 & 0 & 0 & 0 & 0 \\
+ 0 & 0 & 0 & 0 & 0 & 0\\
+ 0 & 0 & 0 & 0 & 0 & \sigma_{\Delta_\theta }^2
+\end{bmatrix}</script><p>上式表示机器人<strong>三维空间运动协方差矩阵</strong>，若机器人限制于二维平面，则由上式矩阵内形式表示，式中，各变量表示如下：</p>
+<script type="math/tex; mode=display">
+ \sigma_{\Delta_x}^2 = \xi_{\Delta xy} + \alpha_1 \sqrt[2]{(\Delta x)^2 + (\Delta y)^2}  + \alpha_2 |\Delta  \theta | \\
+  \sigma_{\Delta_y}^2 = \xi_{\Delta xy} + \alpha_1 \sqrt[2]{(\Delta x)^2 + (\Delta y)^2}  + \alpha_2 |\Delta  \theta | \\
+   \sigma_{\Delta_\theta}^2 = \xi_{\Delta \theta} + \alpha_3 \sqrt[2]{(\Delta x)^2 + (\Delta y)^2}  + \alpha_4 |\Delta  \theta |</script><p>观察上式，里程计误差可以用底盘参数$\alpha_1 \sim \alpha_4$进行表示</p>
+<p><strong>误差直接设定为常数的理论依据：</strong>通常里程计数据是固定时间间隔发布，一定时间内的运动和旋转量基本一样</p>
+<h3 id="概率观测模型"><a href="#概率观测模型" class="headerlink" title="概率观测模型"></a>概率观测模型</h3><p>传感器观测两步走：<strong>提取环境路标特征；数据关联</strong></p>
+<h4 id="波束模型"><a href="#波束模型" class="headerlink" title="波束模型"></a>波束模型</h4><p>这部分的误差假设不太明白，所以暂时跳过</p>
+<h4 id="概率图模型"><a href="#概率图模型" class="headerlink" title="概率图模型"></a>概率图模型</h4><p>图结构主要使得概率模型中的各个随机变量关系变得更加直观，也使复杂的概率计算过程得到简化</p>
+<p>这部分主要使关于<strong>因子图</strong>内容，故对其他概念做简要概述</p>
+<p><strong>贝叶斯网络： </strong> <strong>有向无环图</strong>，分为<strong>静态贝叶斯网络、动态贝叶斯网络</strong> <em>（注：SLAM中应用就是动态贝叶斯网络）</em></p>
+<p><strong>马尔可夫网络：</strong> <strong>无向（有环）图</strong>，其中还涉及到<strong>团</strong>的概念</p>
+<p>本质上都是应用<strong>贝叶斯准则</strong>对其分解为各部分条件独立的情况下的随机变量的乘积，再将这些“小”乘积用图的形式表达出来变量之间的关系</p>
+<h4 id="因子图"><a href="#因子图" class="headerlink" title="因子图"></a>因子图</h4><p>引入一个简单的SLAM模型</p>
+<p><img src="/2022/02/04/SLAM%E5%AF%BC%E8%88%AA%E5%AE%9E%E6%88%98%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9ASLAM%E2%80%94%E2%80%94%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/image-20220208214348217.png" alt="image-20220208214348217" style="zoom:67%;"></p>
+<p>其各部分的联合概率分布表示如下：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+P(\boldsymbol{X}, \boldsymbol{m}, \boldsymbol{Z}, \boldsymbol{U})=&\left.\left.P\left(\boldsymbol{m}_{1}\right) P\left(\boldsymbol{m}_{2}\right) P\left(\boldsymbol{u}_{0}\right) P\left(\boldsymbol{u}_{1}\right) P\left(\boldsymbol{u}_{2}\right)\right\} \text { ( 先验, 可忽略) }\right) \times \\
+&\left.\left.P\left(\boldsymbol{x}_{0}\right) P\left(\boldsymbol{x}_{1} \mid \boldsymbol{x}_{0}, \boldsymbol{u}_{1}\right) P\left(\boldsymbol{x}_{2} \mid \boldsymbol{x}_{1}, \boldsymbol{u}_{2}\right) P\left(\boldsymbol{x}_{3} \mid \boldsymbol{x}_{2}, \boldsymbol{u}_{3}\right)\right\} \text { (运动) }\right) \times \\
+&\left.P\left(\boldsymbol{z}_{1} \mid \boldsymbol{x}_{1}, \boldsymbol{m}_{1}\right) P\left(\boldsymbol{z}_{2} \mid \boldsymbol{x}_{2}, \boldsymbol{m}_{1}\right) P\left(\boldsymbol{z}_{3} \mid \boldsymbol{x}_{3}, \boldsymbol{m}_{2}\right)\right\} \text { (观测) }
+\end{aligned}</script><p>上式由<strong>先验（已知，可忽略）、运动、观测</strong>组成，由传感器获得的$U、Z$后对不可测量的$X、m$进行推理估计，一般采用<strong>最大后验估计</strong></p>
+<script type="math/tex; mode=display">
+S_{MAP}=arg \max_S P(S|V) \\
+V=\{Z,U\} \\
+S=\{X,m\}</script><p>通过构建<strong>运动和观测</strong>两个约束构建因子函数</p>
+<script type="math/tex; mode=display">
+P(\boldsymbol{S} \mid \boldsymbol{V}) \propto \psi(\boldsymbol{S})=\prod \psi_{i}(\boldsymbol{X}, \boldsymbol{m}, \boldsymbol{Z}, \boldsymbol{U})</script><p>改写最大后验估计为</p>
+<script type="math/tex; mode=display">
+S_{MAP}=arg \max_S \psi(\boldsymbol{S})</script><p>引入噪声，且噪声符合高斯分布，得到运动和观测的噪声模型</p>
+<script type="math/tex; mode=display">
+\begin{array}{l}
+\boldsymbol{x}_{k}=g\left(\boldsymbol{x}_{k-1}, \boldsymbol{u}_{k}\right)+\boldsymbol{R}_{k} \\
+\boldsymbol{z}_{k}=h\left(\boldsymbol{x}_{k}, \boldsymbol{m}_{j}\right)+\boldsymbol{Q}_{k}
+\end{array}</script><p>用运动误差及观测误差构造两种因子项</p>
+<script type="math/tex; mode=display">
+\begin{array}{l}
+\psi_{i 1}\left(\boldsymbol{x}_{k}, \boldsymbol{x}_{k-1}\right) \propto \mathrm{e}^{-\frac{1}{2}\left(x_{k}-g\left(x_{k-1}, u_{k}\right)\right)^{\mathrm{T}} \Sigma_{R_{k}}^{-1}\left(x_{k}-g\left(x_{k-1}, u_{k}\right)\right)} \\
+\psi_{i 2}\left(\boldsymbol{x}_{k}, \boldsymbol{m}_{j}\right) \propto \mathrm{e}^{-\frac{1}{2}\left(z_{k}-h\left(x_{k}, m_{j}\right)\right)^{\mathrm{T}} \Sigma_{Q_{k}}^{-1}\left(z_{k}-h\left(x_{k}, m_{j}\right)\right)}
+\end{array}</script><p>整理后得到</p>
+<script type="math/tex; mode=display">
+\psi(\boldsymbol{S}) \propto \prod_{i 1} \psi_{i 1}\left(\boldsymbol{x}_{k}, \boldsymbol{x}_{k-1}\right) \cdot \prod_{i 2} \psi_{i 2}\left(\boldsymbol{x}_{k}, \boldsymbol{m}_{j}\right)</script><script type="math/tex; mode=display">
+\begin{aligned}
+\boldsymbol{S}_{\mathrm{MAP}}=& \arg \max _{s} \psi(\boldsymbol{S}) \\
+\propto &\left.\arg \max _{s}\left(\sum_{i 1} \ln \psi_{i 1}\left(\boldsymbol{x}_{k}, \boldsymbol{x}_{k-1}\right)+\sum_{i 2} \ln \psi_{i 2}\left(\boldsymbol{x}_{k}, \boldsymbol{m}_{j}\right)\right)\right) \\
+\propto & \arg \max _{s}\left(-\frac{1}{2} \sum_{i 1}\left(\boldsymbol{x}_{k}-g\left(\boldsymbol{x}_{k-1}, \boldsymbol{u}_{k}\right)\right)^{\mathrm{T}} \boldsymbol{\Sigma}_{\boldsymbol{R}_{k}}^{-1}\left(\boldsymbol{x}_{k}-g\left(\boldsymbol{x}_{k-1}, \boldsymbol{u}_{k}\right)\right)-\right.\\
+&\left.\frac{1}{2} \sum_{i 2}\left(\boldsymbol{z}_{k}-h\left(\boldsymbol{x}_{k}, \boldsymbol{m}_{j}\right)\right)^{\mathrm{T}} \boldsymbol{\Sigma}_{\boldsymbol{Q}_{k}}^{-1}\left(\boldsymbol{z}_{k}-h\left(\boldsymbol{x}_{k}, \boldsymbol{m}_{j}\right)\right)\right) \\
+\propto &\left.\arg \min _{s}\left(\sum_{i 1}\left\|\boldsymbol{x}_{k}-g\left(\boldsymbol{x}_{k-1}, \boldsymbol{u}_{k}\right)\right\|_{\Sigma_{k_{k}}^{-1}}^{2}+\sum_{i 2}\left\|\boldsymbol{z}_{k}-h\left(\boldsymbol{x}_{k}, \boldsymbol{m}_{j}\right)\right\|_{\Sigma_{\ell_{k}}^{-1}}\right)^{2}\right)
+\end{aligned}</script><p><em>（引入对数，将乘法转化为加法）</em></p>
+<p>由上式可得，<strong>0均值高斯噪声</strong>SLAM问题采用最大后验估计等于最小二乘估计。其实满足0均值高斯噪声，最大后验等价最小均方误差等于最小二乘，因子图应用到SLAM问题，对滤波方法转向优化方法起到关键作用</p>
+<p><img src="/2022/02/04/SLAM%E5%AF%BC%E8%88%AA%E5%AE%9E%E6%88%98%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9ASLAM%E2%80%94%E2%80%94%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/image-20220208220839473.png" alt="image-20220208220839473" style="zoom:67%;"></p>
+<hr>
+<h2 id="SLAM中的估计理论"><a href="#SLAM中的估计理论" class="headerlink" title="SLAM中的估计理论"></a>SLAM中的估计理论</h2>]]></content>
+      <tags>
+        <tag>SLAM</tag>
+      </tags>
+  </entry>
 </search>
