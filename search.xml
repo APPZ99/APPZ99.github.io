@@ -998,4 +998,82 @@ S_{MAP}=arg \max_S \psi(\boldsymbol{S})</script><p>引入噪声，且噪声符�
         <tag>SLAM</tag>
       </tags>
   </entry>
+  <entry>
+    <title>Ubuntu18.04下pytorch深度学习环境搭建</title>
+    <url>/2022/02/26/Ubuntu18-04%E4%B8%8Bpytorch%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</url>
+    <content><![CDATA[<blockquote>
+<p><strong>前言</strong></p>
+<p>大三下学期专业有一门《模式识别》的课程，主要是涉及其中<strong>深度学习</strong>这个分支，由于需要算力支持，所以借同学的电脑后，基于<strong>Ubuntu18.04</strong>系统下配置<strong>pytorch</strong>深度学习框架的环境，其中遇到诸多困难，在这里做总结记录。</p>
+</blockquote>
+<h2 id="环境版本"><a href="#环境版本" class="headerlink" title="环境版本"></a>环境版本</h2><ul>
+<li>Ubuntu18.04 LTS</li>
+<li>Anaconda x86 linux支持版 python3.9</li>
+<li>pytorch 1.10.2</li>
+</ul>
+<span id="more"></span>
+<h2 id="显卡驱动"><a href="#显卡驱动" class="headerlink" title="显卡驱动"></a>显卡驱动</h2><ul>
+<li>Nvidia RTX-1070</li>
+<li>CUDA 11.3</li>
+<li>cuDNN CUDA11.3 对应版本8.2.0</li>
+</ul>
+<h2 id="安装流程"><a href="#安装流程" class="headerlink" title="安装流程"></a>安装流程</h2><h3 id="Ubuntu18-04"><a href="#Ubuntu18-04" class="headerlink" title="Ubuntu18.04"></a>Ubuntu18.04</h3><p>主要是双系统配置，其中完全跟着此篇教程进行双系统安装<a href="https://www.jianshu.com/p/54d9a3a695cc">Ubuntu18.04双系统安装</a></p>
+<p><del>(之前本人笔记本是DELL，究极折磨，一天送去维修两次)</del></p>
+<h3 id="Anaconda"><a href="#Anaconda" class="headerlink" title="Anaconda"></a>Anaconda</h3><p>直接去官网下载对应的版本，<a href="https://www.anaconda.com/products/individual">Anaconda官网</a></p>
+<h3 id="显卡驱动-1"><a href="#显卡驱动-1" class="headerlink" title="显卡驱动"></a>显卡驱动</h3><p>首先检查ubuntu系统推荐的相关驱动</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ubuntu-drivers devices</span><br></pre></td></tr></table></figure>
+<p><img src="/2022/02/26/Ubuntu18-04%E4%B8%8Bpytorch%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/image-20220227093633842.png" alt="image-20220227093633842"></p>
+<p>执行后会得到类似上面的一张图，其中会有一项<strong>recommended</strong>，这个是ubuntu推荐安装的驱动，这里笔者比较怂，去官网查看对应版本的显卡驱动<a href="https://www.nvidia.com/Download/index.aspx">Nvidia显卡驱动下载</a></p>
+<p><img src="/2022/02/26/Ubuntu18-04%E4%B8%8Bpytorch%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/image-20220227093909109.png" alt="image-20220227093909109" style="zoom:67%;"></p>
+<p>查看后发现官方推荐是510的驱动，和ubuntu推荐安装是同一个版本，所以直接通过ubuntu系统安装对应驱动，执行：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo ubuntu-drivers autoinstall</span><br></pre></td></tr></table></figure>
+<p>执行指令，查看驱动安装情况</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">nvidia-smi</span><br></pre></td></tr></table></figure>
+<p>若正常显示如下，则驱动安装完成</p>
+<p><img src="/2022/02/26/Ubuntu18-04%E4%B8%8Bpytorch%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/image-20220227094305219.png" alt="image-20220227094305219" style="zoom:67%;"></p>
+<p>其中笔者框选出来的地方是对应的驱动版本，笔者是510版本，同时官方安装驱动后，会在驱动版本显示右侧（框选框的右侧）显示<strong>CUDA</strong>支持版本，笔者当时是<strong>CUDA11.6</strong>，即RTX1070最高支持11.6版本的CUDA</p>
+<p><strong>（注：是最高支持版本，不是已安装好的版本，这个时候CUDA还没安装！）</strong></p>
+<p>网上很多资料是非Ubuntu自带安装驱动，这里贴一条笔者当时查的教程<a href="https://blog.csdn.net/yaohuan2017/article/details/108670724">Nvidia驱动安装</a></p>
+<h3 id="CUDA安装"><a href="#CUDA安装" class="headerlink" title="CUDA安装"></a>CUDA安装</h3><p>这个是折磨笔者最久的一个部分，最后在知乎找到一份靠谱的教程</p>
+<p><a href="https://zhuanlan.zhihu.com/p/122286055">NVIDIA CUDA Toolkit 11.0 安装与卸载</a></p>
+<p>这里笔者没有跟着安装11.0的版本，而是先查看了pytorch官网当时主要支持的CUDA版本</p>
+<p><img src="/2022/02/26/Ubuntu18-04%E4%B8%8Bpytorch%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/image-20220227095240649.png" alt="image-20220227095240649" style="zoom:80%;"></p>
+<p>可以看到，上面官网是11.3的版本，所以笔者相应的安装了11.3的版本<strong>（注：不过后来问同学，更多是使用11.0或11.1）</strong></p>
+<p>这里有一个坑，当时用</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">nvcc -V</span><br></pre></td></tr></table></figure>
+<p>查看CUDA版本时候，提示笔者</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo apt install nvidia-cuda-toolkits</span><br></pre></td></tr></table></figure>
+<p>笔者以为只是个相应的支持工具包，就安装了，后面确实可以查看版本，但11.3安装完成后，显示的版本还是<strong>CUDA9.1</strong>，才搞明白这条指令相当于ubuntu下帮你安装了9.1的CUDA，后面删除原CUDA</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo apt-get purge nvidia-cuda-toolkit</span><br></pre></td></tr></table></figure>
+<p>具体参考这篇博客<a href="https://blog.csdn.net/u011119817/article/details/100525948">【nvidia】2.cuda旧版本卸载</a></p>
+<p>卸载后，笔者发现连版本都查不了了……<del>（差点暴毙）</del>，后面找到了本节介绍的教程，发现是没有把他CUDA11.3加入系统环境，加入环境后，查看CUDA为11.3版本。</p>
+<h3 id="cuDNN安装"><a href="#cuDNN安装" class="headerlink" title="cuDNN安装"></a>cuDNN安装</h3><p>这个安装主要费劲在Nvidia官网账号的注册上（国内网速dddd），其他只要找到<strong>CUDA版本对应的cuDNN版本即可</strong></p>
+<p><img src="/2022/02/26/Ubuntu18-04%E4%B8%8Bpytorch%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/image-20220227100413844.png" alt="image-20220227100413844" style="zoom:80%;"></p>
+<p>如上，笔者11.3版本，对应是8.2.1的cuDNN版本</p>
+<p>下载后还要进行一系列操作，具体如下</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo cp cuda/include/cudnn.h /usr/local/cuda/include</span><br><span class="line">sudo cp cuda/lib64/libcudnn* /usr/local/cuda/lib64 </span><br><span class="line">sudo chmod a+r /usr/local/cuda/include/cudnn.h </span><br><span class="line">sudo chmod a+r /usr/local/cuda/lib64/libcudnn*</span><br></pre></td></tr></table></figure>
+<p><strong>注意：上面cuda要查看自己下载到local文件夹的cuda文件夹的名字，笔者是cuda-11.3</strong></p>
+<p>具体可以参考教程<a href="https://blog.csdn.net/weixin_44003563/article/details/90312965">ubuntu18.04配置cudnn详细步骤</a></p>
+<h3 id="pytorch"><a href="#pytorch" class="headerlink" title="pytorch"></a>pytorch</h3><p>在安装pytorch之前，需要先了解一下anaconda的虚拟环境。</p>
+<p>由于深度学习对应诸多模块版本不同的问题，anaconda可以建立一个虚拟环境，该环境用户可以任意配置相关的模块版本以便满足不同模型的需求而不会和系统模块产生冲突，同时避免环境崩坏而整个系统环境不能正常使用的情况<del>（系统各种版本冲突，最后无奈只能重装整个环境）</del>。</p>
+<p>具体anaconda配置pytorch可参考<a href="https://zhuanlan.zhihu.com/p/25198543">最省心的Python版本和第三方库管理——初探Anaconda</a></p>
+<p>上述教程主要是win下，笔者win跟着做没有什么问题，但ubuntu下还是存在部分问题，下面做部分总结。</p>
+<p>首先我们创建一个虚拟空间并激活</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">conda create -n lane_det python=3.9</span><br><span class="line">activate lane_det</span><br></pre></td></tr></table></figure>
+<p>激活后，可以用如下指令查该虚拟环境还有模块</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">conda list</span><br></pre></td></tr></table></figure>
+<p>可以发现并除了几个基本模块，没有其他模块。我们先安装pytorch相关模块</p>
+<p>前往<a href="https://pytorch.org/">pytorch官网</a>，选择自己对应版本<em>(注：这里用conda，此指令是在虚拟环境执行，pip可能会安装到全局（应该）)</em></p>
+<p><img src="/2022/02/26/Ubuntu18-04%E4%B8%8Bpytorch%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/image-20220227101623594.png" alt="image-20220227101623594"></p>
+<p>复制上述指令后，等待安装完成，安装完成后，执行查看指令，查看模块是否已经安装。</p>
+<p>至此pytorch深度学习的环境搭建基本结束，但这里笔者还遇到几个问题，再做总结。</p>
+<p>启动jupyter notebook后，导入torch模块，不能找到，找了很多教程<del>（主要关键词不知道搜什么）</del>最后搜到如下教程，成果解决了这个问题</p>
+<p><a href="https://blog.csdn.net/qq_39504519/article/details/108039594">解决jupyter notebook无法找到虚拟环境的问题</a></p>
+]]></content>
+      <tags>
+        <tag>pytorch</tag>
+        <tag>Ubuntu18.04</tag>
+        <tag>Anaconda</tag>
+        <tag>DL</tag>
+      </tags>
+  </entry>
 </search>
