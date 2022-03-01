@@ -1076,4 +1076,104 @@ S_{MAP}=arg \max_S \psi(\boldsymbol{S})</script><p>引入噪声，且噪声符�
         <tag>DL</tag>
       </tags>
   </entry>
+  <entry>
+    <title>Ultral-Fast-Lane-Detection 整理</title>
+    <url>/2022/03/01/Ultral-Fast-Lane-Detection-%E6%95%B4%E7%90%86/</url>
+    <content><![CDATA[<blockquote>
+<p><strong>前言</strong></p>
+<p>最近接触了<strong>自动驾驶</strong>方向的一个子任务——<strong>Lane Detection</strong>，即车道线检测，查阅相关的文献，着手复现<strong>《Ultra Fast Structure-aware Deep Lane Detection》</strong>这篇文章的模型实验，在此对实验复现以及论文内容做简要总结记录。</p>
+<p>论文：<a href="https://arxiv.org/pdf/2004.11757v4.pdf">Ultra Fast Structure-aware Deep Lane Detection</a></p>
+<p>代码：<a href="https://github.com/cfzd/Ultra-Fast-Lane-Detection">code地址</a></p>
+</blockquote>
+<h2 id="实验复现"><a href="#实验复现" class="headerlink" title="实验复现"></a>实验复现</h2><h3 id="前期准备"><a href="#前期准备" class="headerlink" title="前期准备"></a>前期准备</h3><p>主要是深度学习环境的搭建，具体版本及搭建教程参考笔者这篇文章<a href="https://appz99.github.io/2022/02/26/Ubuntu18-04%E4%B8%8Bpytorch%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/#more">Ubuntu18.04下pytorch深度学习环境搭建</a> </p>
+<p>其中CUDA版本可以与作者不同。</p>
+<span id="more"></span>
+<h3 id="环境部署"><a href="#环境部署" class="headerlink" title="环境部署"></a>环境部署</h3><p>这里直接跟着作者的安装教程即可 <a href="https://github.com/cfzd/Ultra-Fast-Lane-Detection/blob/master/INSTALL.md">INSTALL</a></p>
+<p>注意可视化部分需要安装作者的 <em>requirements</em>，在安装文档里作者有相应提示</p>
+<h3 id="下载数据集"><a href="#下载数据集" class="headerlink" title="下载数据集"></a>下载数据集</h3><p>直接去作者安装教程里的超链接即可，若网速受限则参考下一部分笔者推荐的文档里的百度云</p>
+<h3 id="数据集解压整理"><a href="#数据集解压整理" class="headerlink" title="数据集解压整理"></a>数据集解压整理</h3><p>这里笔者第一次跑模型不太懂，查了老半天资料数据集要怎么放，主要参考这篇文档：<a href="https://blog.csdn.net/weixin_46716951/article/details/112650165">车道线检测论文Ultra-Fast-Lane-Detection-master代码复现过程</a></p>
+<p>里面有数据集的百度云链接</p>
+<p>这里有个地方需要注意：笔者一开始看训练数据和测试数据有相同的文件夹，例如两者都有“0601”这个文件夹，笔者以为内容是一样的，所以就没有把测试集的数据<strong>合并</strong>一起，导致在最后跑测试集的时候，找不到对应的数据（但不影响训练）。所以<strong>相同命名文件夹要合并在一起</strong>。</p>
+<h3 id="训练模型"><a href="#训练模型" class="headerlink" title="训练模型"></a>训练模型</h3><p>剩下部分直接跟着作者的README文档做即可</p>
+<h3 id="可视化"><a href="#可视化" class="headerlink" title="可视化"></a>可视化</h3><p>跑作者的<strong>demo.py</strong>文件即可，具体参考作者README中<strong>Visualization</strong></p>
+<h3 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h3><p>这里笔者在第一次跑训练模型的时候对<strong>train.py</strong>文件不做任何修改，导致每训练一次都保存一次训练好的模型，最后跑到70多轮的时候内存爆了……</p>
+<p>解决上述问题很好解决，在train.py文件中修改保存模型代码即可，以下是笔者所作修改：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(resume_epoch, cfg.epoch):</span><br><span class="line"></span><br><span class="line">        train(net, train_loader, loss_dict, optimizer, scheduler,logger, epoch, metric_dict, cfg.use_aux)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> ((epoch + <span class="number">1</span>) % <span class="number">10</span> == <span class="number">0</span>):<span class="comment">#作者一共跑100epoch</span></span><br><span class="line">            save_model(net, optimizer, epoch ,work_dir, distributed)</span><br><span class="line">    logger.close()</span><br><span class="line">    </span><br></pre></td></tr></table></figure>
+<h3 id="可视化训练过程"><a href="#可视化训练过程" class="headerlink" title="可视化训练过程"></a>可视化训练过程</h3><p>主要参考这篇教程：<a href="https://blog.csdn.net/bigbennyguo/article/details/87956434">https://blog.csdn.net/bigbennyguo/article/details/87956434</a></p>
+<p>但笔者没有配置任何东西……<del>（不太懂，不知道是不是作者已经配置好了什么）</del></p>
+<p>直接安装</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">pip install tensorboardX</span><br></pre></td></tr></table></figure>
+<p>执行</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">tensorboard --logdir log_path --bind_all</span><br><span class="line"><span class="meta">#</span><span class="bash"> log_path为<span class="built_in">log</span>文件夹下对应的<span class="built_in">log</span>文件路径</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="论文学习"><a href="#论文学习" class="headerlink" title="论文学习"></a>论文学习</h2><h3 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h3><p>区别于传统的语义分割方法去做检测，作者采用了<strong>row-based selection problem using global features</strong>的方法去做车道检测，最大的优势在于<strong>计算量少，速度快；同时能根据global feature解决无视觉信息（no-visual-clue）情况下预测车道线位置，同时能取得不错的精度</strong>。在其轻量模型<strong>Res-18</strong>情况下能达到300+帧每秒。</p>
+<h3 id="简要介绍"><a href="#简要介绍" class="headerlink" title="简要介绍"></a>简要介绍</h3><p>总体来说每张图片预定义<strong>Row anchors</strong>同时指定<strong>(w+1)</strong>维的<strong>cells</strong>，检测就建立在上图预定义的网格之中。</p>
+<p>这里作者介绍了自己该模型的三大特点：</p>
+<ul>
+<li>利用 global features 更好解决 no-visual-clue 的问题</li>
+<li>区别传统语义分割方法检测</li>
+<li>计算少，速度快</li>
+</ul>
+<h3 id="方法（损失函数设计）"><a href="#方法（损失函数设计）" class="headerlink" title="方法（损失函数设计）"></a>方法（损失函数设计）</h3><p>各变量说明</p>
+<p><img src="/2022/03/01/Ultral-Fast-Lane-Detection-%E6%95%B4%E7%90%86/image-20220301194808716.png" alt="image-20220301194808716"></p>
+<h4 id="定位损失"><a href="#定位损失" class="headerlink" title="定位损失"></a>定位损失</h4><script type="math/tex; mode=display">
+P_{i, j,:}=f^{i j}(X), \text { s.t. } i \in[1, C], j \in[1, h]\\
+L_{c l s}=\sum_{i=1}^{C} \sum_{j=1}^{h} L_{C E}\left(P_{i, j,:}, T_{i, j,:}\right)</script><p>基于此，本文该模型计算得到简化，在模型上体现为：</p>
+<p><img src="/2022/03/01/Ultral-Fast-Lane-Detection-%E6%95%B4%E7%90%86/image-20220301194917682.png" alt="image-20220301194917682"></p>
+<p>区别在于传统语义方法是整张图片，这里仅是预定义下的grid大小，同时 <strong>C仅取决于车道数量</strong></p>
+<p><strong>这里作者重复强调（w+1）中多出来的一维是用来存放附加信息的，这里放到是该row anchor是否存在车道</strong></p>
+<h4 id="车道结构损失"><a href="#车道结构损失" class="headerlink" title="车道结构损失"></a>车道结构损失</h4><p>作者认为整体车道应该均为近似直线，哪怕是弯道，大部分视野内也是直线</p>
+<p>相似损失（similarity loss）</p>
+<script type="math/tex; mode=display">
+L_{s i m}=\sum_{i=1}^{C} \sum_{j=1}^{h-1}\left\|P_{i, j,:}-P_{i, j+1,:}\right\|_{1}</script><p>形状损失（shape loss）</p>
+<script type="math/tex; mode=display">
+L o c_{i, j}=\underset{k}{\operatorname{argmax}} P_{i, j, k}, \text { s.t. } k \in[1, w]\\
+\operatorname{Prob}_{i, j,:}=\operatorname{softmax}\left(P_{i, j, 1: w}\right)\\
+L o c_{i, j}=\sum_{k=1}^{w} k \cdot \operatorname{Prob}_{i, j, k}\\
+\begin{aligned}
+L_{s h p}=\sum_{i=1}^{C} \sum_{j=1}^{h-2} & \|\left(L o c_{i, j}-L o c_{i, j+1}\right) 
+-\left(L o c_{i, j+1}-L o c_{i, j+2}\right) \|_{1}
+\end{aligned}</script><p>这里作者从一开始的<strong>argmax</strong>检测过渡到<strong>softmax</strong>检测有两点原因：</p>
+<ul>
+<li>softmax可微</li>
+<li>softmax可获得更多的连续信息</li>
+</ul>
+<p>后续作者也有做两者的对比实验，结果softmax略胜一筹</p>
+<p>最终得到</p>
+<script type="math/tex; mode=display">
+L_{s t r}=L_{s i m}+\lambda L_{s h p}</script><p>这里有一部分笔者觉得很妙，<strong>使用二阶微分做车道形状约束</strong>。如此，若为直线，则二阶的系数为零，这也是存在最多的情况，这样就不用设定专门的参数去学习一阶微分的分布。</p>
+<h4 id="总体结构损失"><a href="#总体结构损失" class="headerlink" title="总体结构损失"></a>总体结构损失</h4><script type="math/tex; mode=display">
+L_{\text {total }}=L_{c l s}+\alpha L_{s t r}+\beta L_{s e g}</script><p>其中$L_{seg}$为分割损失（segmentation loss），为交叉熵损失(cross entropy)</p>
+<h3 id="网络搭建"><a href="#网络搭建" class="headerlink" title="网络搭建"></a>网络搭建</h3><p><img src="/2022/03/01/Ultral-Fast-Lane-Detection-%E6%95%B4%E7%90%86/image-20220301200527681.png" alt="image-20220301200527681"></p>
+<p>训练模式下使用辅助分支（auxiliary branch），测试过程去除该分支</p>
+<h3 id="实验及结果"><a href="#实验及结果" class="headerlink" title="实验及结果"></a>实验及结果</h3><h4 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h4><p><img src="/2022/03/01/Ultral-Fast-Lane-Detection-%E6%95%B4%E7%90%86/image-20220301200739227.png" alt="image-20220301200739227"></p>
+<p>这里作者对数据集进行了强化处理，通过图片操作延伸了部分车道以便使模型更具<strong>普遍性</strong></p>
+<p><img src="/2022/03/01/Ultral-Fast-Lane-Detection-%E6%95%B4%E7%90%86/image-20220301200848886.png" alt="image-20220301200848886"></p>
+<h4 id="消融实验"><a href="#消融实验" class="headerlink" title="消融实验"></a>消融实验</h4><h5 id="cell数量"><a href="#cell数量" class="headerlink" title="cell数量"></a>cell数量</h5><p><img src="/2022/03/01/Ultral-Fast-Lane-Detection-%E6%95%B4%E7%90%86/image-20220301201006488.png" alt="image-20220301201006488"></p>
+<h5 id="分类算法与回归算法"><a href="#分类算法与回归算法" class="headerlink" title="分类算法与回归算法"></a>分类算法与回归算法</h5><p><img src="/2022/03/01/Ultral-Fast-Lane-Detection-%E6%95%B4%E7%90%86/image-20220301201035000.png" alt="image-20220301201035000"></p>
+<h5 id="结构损失函数"><a href="#结构损失函数" class="headerlink" title="结构损失函数"></a>结构损失函数</h5><p><img src="/2022/03/01/Ultral-Fast-Lane-Detection-%E6%95%B4%E7%90%86/image-20220301201053128.png" alt="image-20220301201053128"></p>
+<p>这里使用分类方法有助于损失函数的平滑</p>
+<p><img src="/2022/03/01/Ultral-Fast-Lane-Detection-%E6%95%B4%E7%90%86/image-20220301201123568.png" alt="image-20220301201123568"></p>
+<h4 id="对比结果"><a href="#对比结果" class="headerlink" title="对比结果"></a>对比结果</h4><p><img src="/2022/03/01/Ultral-Fast-Lane-Detection-%E6%95%B4%E7%90%86/image-20220301201152015.png" alt="image-20220301201152015"></p>
+<p><img src="/2022/03/01/Ultral-Fast-Lane-Detection-%E6%95%B4%E7%90%86/image-20220301201158942.png" alt="image-20220301201158942"></p>
+<h3 id="几个待解决的疑问"><a href="#几个待解决的疑问" class="headerlink" title="几个待解决的疑问"></a>几个待解决的疑问</h3><ul>
+<li>global feature 本质是什么？</li>
+<li>为什么row-based 有更好的感受野（receptive field）？</li>
+<li>which is caused by low-level pixel wise modeling and high-level long line structure of lane, can be bridged.这句的联系是什么？</li>
+<li>这里为何相乘后叠加</li>
+</ul>
+<p><img src="/2022/03/01/Ultral-Fast-Lane-Detection-%E6%95%B4%E7%90%86/image-20220301201554795.png" alt="image-20220301201554795"></p>
+<ul>
+<li>一阶微分为什么比二阶微分约束力强？</li>
+<li><p>top1 top2 top3的概念不是很懂？</p>
+</li>
+<li><p>为什么一阶不用专门设计额外参数去学习？</p>
+</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>DL</tag>
+        <tag>Lane Detection</tag>
+      </tags>
+  </entry>
 </search>
