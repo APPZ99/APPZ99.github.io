@@ -1428,4 +1428,90 @@ L_{\text {total }}=L_{c l s}+\alpha L_{s t r}+\beta L_{s e g}</script><p>其中$
         <tag>Ubuntu20.04</tag>
       </tags>
   </entry>
+  <entry>
+    <title>Ubuntu20.04下配置Nvidia显卡驱动+CUDA+CUDNN</title>
+    <url>/2023/08/06/Ubuntu20-04%E4%B8%8B%E9%85%8D%E7%BD%AENvidia%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8-CUDA-CUDNN/</url>
+    <content><![CDATA[<blockquote>
+<p>本文主要记录在Ubuntu20.04系统下配置显卡驱动以及配置CUDA、CUDNN</p>
+</blockquote>
+<h2 id="1、配置介绍"><a href="#1、配置介绍" class="headerlink" title="1、配置介绍"></a>1、配置介绍</h2><ul>
+<li>CPU： 11th Gen Intel® Core™ i7-11700 </li>
+<li>GPU： NVIDIA GeForce RTX 3070</li>
+<li>系统： Ubuntu20.04.6 LTS</li>
+</ul>
+<h2 id="2、配置显卡驱动"><a href="#2、配置显卡驱动" class="headerlink" title="2、配置显卡驱动"></a>2、配置显卡驱动</h2><p>首先查看显卡型号，一般教程都会让你使用下面这句指令进行查看：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">nvidia-smi</span><br></pre></td></tr></table></figure>
+<p>但一般都我们新的主机都无法使用这句指令，然后终端就会提示你安装相关的驱动，很多博客都会让你进行如下操作：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ubuntu-drivers devices</span><br></pre></td></tr></table></figure>
+<p>然后在终端中选择系统 <code>recommended</code> 的版本进行自动安装，这里 <strong>建议不要根据系统提示的推荐版本，很容易导致跟后续的版本冲突</strong>。</p>
+<span id="more"></span>
+<hr>
+<p>下面是笔者的方法：</p>
+<h3 id="2-1、查看显卡类型"><a href="#2-1、查看显卡类型" class="headerlink" title="2.1、查看显卡类型"></a>2.1、查看显卡类型</h3><p>输入如下指令查看显卡类型：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">lspci | grep -i nvidia</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">没有lspci就安装</span></span><br><span class="line">sudo apt install pciutils</span><br></pre></td></tr></table></figure>
+<p>笔者得到如下信息：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">01:00.0 VGA compatible controller: NVIDIA Corporation Device 2488 (rev a1)</span><br><span class="line">01:00.1 Audio device: NVIDIA Corporation Device 228b (rev a1)</span><br></pre></td></tr></table></figure>
+<p>2488是什么型号？</p>
+<p>参考 <a href="https://blog.csdn.net/DDDDDmax/article/details/124943541">【Linux下Ubuntu查看电脑cpu和显卡型号信息】</a> 中提供的网站查询显卡型号：</p>
+<p><a href="https://admin.pci-ids.ucw.cz/mods/PC/10de?action=help?help=pci">PCI devices</a></p>
+<h3 id="2-2、安装显卡驱动"><a href="#2-2、安装显卡驱动" class="headerlink" title="2.2、安装显卡驱动"></a>2.2、安装显卡驱动</h3><p>笔者参考诸多博客，各不相同（中间还崩坏了一次，重新刷了系统），在对比下最终参考如下博客成功安装显卡驱动：</p>
+<p><a href="https://blog.csdn.net/huiyoooo/article/details/128015155?spm=1001.2014.3001.5506">【超详细】【ubunbu 22.04】 手把手教你安装nvidia驱动，有手就行，隔壁家的老太太都能安装</a></p>
+<h2 id="3、配置-CUDA"><a href="#3、配置-CUDA" class="headerlink" title="3、配置 CUDA"></a>3、配置 CUDA</h2><p>配置好显卡驱动后，后续CUDA及CUDNN则简单很多。</p>
+<p>首先查看自身显卡支持的最大版本CUDA：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">nvidia-smi</span><br></pre></td></tr></table></figure>
+<p><img src="/2023/08/06/Ubuntu20-04%E4%B8%8B%E9%85%8D%E7%BD%AENvidia%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8-CUDA-CUDNN/Screenshot from 2023-08-06 17-36-22-1691326490895-4.png" alt="Screenshot from 2023-08-06 17-36-22-1691326490895-4"></p>
+<p>如右上角所示，笔者支持最大 CUDA 版本为 12.2。登陆如下网站进行下载：</p>
+<p>该网址最好科学上网：<a href="http://developer.nvidia.com/cuda-downloads">CUDA官方下载</a></p>
+<p>国内可以使用：<a href="https://developer.nvidia.cn/cuda-downloads">CUDA官方下载</a></p>
+<p><strong>注：上述两个网站区别在于把 <code>.com</code> 修改为 <code>.cn</code>，速度将快非常多！该方法适用于所有Nvidia网站！</strong></p>
+<p>上述网站会自动识别所适合的 CUDA 版本，如需下载其他版本，可到如下网站：</p>
+<p>官方：<a href="https://developer.nvidia.com/cuda-toolkit-archive">CUDA 各历史版本</a></p>
+<p>国内：<a href="https://developer.nvidia.cn/cuda-toolkit-archive">CUDA 各历史版本</a></p>
+<p><strong>注：同样是修改网站后缀！</strong></p>
+<p><img src="/2023/08/06/Ubuntu20-04%E4%B8%8B%E9%85%8D%E7%BD%AENvidia%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8-CUDA-CUDNN/Screenshot from 2023-08-06 20-10-23-1691326514573-6.png" alt="Screenshot from 2023-08-06 20-10-23" style="zoom:80%;"></p>
+<p>进入网站后选择 <strong>runfile安装</strong> （笔者用deb安装，存在一些问题），终端输入：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">wget https://developer.download.nvidia.com/compute/cuda/12.2.1/local_installers/cuda_12.2.1_535.86.10_linux.run</span><br><span class="line">sudo sh cuda_12.2.1_535.86.10_linux.run</span><br></pre></td></tr></table></figure>
+<p>具体安装流程参考：<a href="https://blog.csdn.net/m0_38101947/article/details/126499811">Ubuntu20.04安装NVIDIA显卡驱动、CUDA、CUDNN及突破NVENC并发限制、多版本CUDA切换</a></p>
+<p><strong>注意：</strong></p>
+<ol>
+<li>安装过程把 <strong>Driver</strong> 选项去掉，因为我们已经装好驱动了。</li>
+<li>根据安装好的提示，在 <code>.bashrc</code> 路径下添加环境变量。</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda-12.1/lib64</span><br><span class="line">export PATH=/usr/local/cuda-12.1/bin:$PATH</span><br></pre></td></tr></table></figure>
+<p>测试安装：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">nvcc -V</span><br></pre></td></tr></table></figure>
+<h2 id="4、安装-cuDNN"><a href="#4、安装-cuDNN" class="headerlink" title="4、安装 cuDNN"></a>4、安装 cuDNN</h2><p>安装 cuDNN为与安装 CUDA 类似，不过需要注册 Nvidia 账号，这部分可能会卡顿，解决办法还是将网站后缀改成 <code>.cn</code> ，或科学上网。</p>
+<p>官网：<a href="https://developer.nvidia.com/rdp/cudnn-download">cuDNN官方下载</a></p>
+<p>国内：<a href="https://developer.nvidia.cn/rdp/cudnn-download">cuDNN官方下载</a></p>
+<p>官网历史版本：<a href="https://developer.nvidia.com/rdp/cudnn-archive">cuDNN历史版本</a></p>
+<p>国内历史版本：<a href="https://developer.nvidia.cn/rdp/cudnn-archive">cuDNN历史版本</a></p>
+<p>选择自己对应的系统以及 CUDA 版本下载即可，笔者是 <strong>Ubuntu20.04 + CUDA12.1</strong></p>
+<p><img src="/2023/08/06/Ubuntu20-04%E4%B8%8B%E9%85%8D%E7%BD%AENvidia%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8-CUDA-CUDNN/Screenshot from 2023-08-06 20-31-42-1691326530475-8.png" alt="Screenshot from 2023-08-06 20-31-42" style="zoom:80%;"></p>
+<p>按照正常的 <code>deb</code> 文件安装后，参考官方安装文档 <a href="https://docs.nvidia.com/deeplearning/cudnn/install-guide/index.html">cuDNN官方安装文档</a>安装依赖如下：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash"><span class="variable">$&#123;cudnn_version&#125;</span>、<span class="variable">$&#123;cuda_version&#125;</span> 对应自己的版本</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">支持 TAB 补全</span></span><br><span class="line">sudo apt-get install libcudnn8=$&#123;cudnn_version&#125;-1+$&#123;cuda_version&#125;</span><br><span class="line">sudo apt-get install libcudnn8-dev=$&#123;cudnn_version&#125;-1+$&#123;cuda_version&#125;</span><br><span class="line">sudo apt-get install libcudnn8-samples=$&#123;cudnn_version&#125;-1+$&#123;cuda_version&#125;</span><br></pre></td></tr></table></figure>
+<p>测试安装是否成功：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cp -r /usr/src/cudnn_samples_v8/ $HOME</span><br><span class="line">cd  $HOME/cudnn_samples_v8/mnistCUDNN</span><br><span class="line">make clean &amp;&amp; make</span><br><span class="line">./mnistCUDNN</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">测试通过</span></span><br><span class="line">Test passed!</span><br></pre></td></tr></table></figure>
+<p>笔者遇到如下问题：<strong>编译mnistCUDNN时出错：fatal error: FreeImage.h: No such file or directory</strong>。</p>
+<p>参考：<a href="https://blog.csdn.net/xhw205/article/details/116297555">编译mnistCUDNN时出错：fatal error: FreeImage.h: No such file or directory</a></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">安装相关库</span></span><br><span class="line">sudo apt-get install libfreeimage3 libfreeimage-dev</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">编译后重新执行</span></span><br><span class="line">./mnistCUDNN</span><br></pre></td></tr></table></figure>
+<h2 id="5、参考"><a href="#5、参考" class="headerlink" title="5、参考"></a>5、参考</h2><ol>
+<li><p><a href="https://blog.csdn.net/DDDDDmax/article/details/124943541">【Linux下Ubuntu查看电脑cpu和显卡型号信息】</a> </p>
+</li>
+<li><p><a href="https://blog.csdn.net/huiyoooo/article/details/128015155?spm=1001.2014.3001.5506">【超详细】【ubunbu 22.04】 手把手教你安装nvidia驱动，有手就行，隔壁家的老太太都能安装</a></p>
+</li>
+<li><p><a href="https://blog.csdn.net/m0_38101947/article/details/126499811">Ubuntu20.04安装NVIDIA显卡驱动、CUDA、CUDNN及突破NVENC并发限制、多版本CUDA切换</a></p>
+</li>
+<li><p><a href="https://docs.nvidia.com/deeplearning/cudnn/install-guide/index.html">cuDNN官方安装文档</a></p>
+</li>
+<li><p><a href="https://blog.csdn.net/xhw205/article/details/116297555">编译mnistCUDNN时出错：fatal error: FreeImage.h: No such file or directory</a></p>
+</li>
+<li><p><a href="https://blog.csdn.net/BigData_Mining/article/details/99670642?spm=1001.2014.3001.5506">Ubuntu18.04下安装Nvidia驱动和CUDA10.1＋CUDNN</a></p>
+</li>
+</ol>
+]]></content>
+      <tags>
+        <tag>Ubuntu20.04</tag>
+        <tag>Nvidia</tag>
+      </tags>
+  </entry>
 </search>
