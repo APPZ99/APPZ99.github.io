@@ -1514,4 +1514,227 @@ L_{\text {total }}=L_{c l s}+\alpha L_{s t r}+\beta L_{s e g}</script><p>其中$
         <tag>Nvidia</tag>
       </tags>
   </entry>
+  <entry>
+    <title>【笔记】基于图像的三维重建——相机几何与相机标定</title>
+    <url>/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/</url>
+    <content><![CDATA[<blockquote>
+<p>本文主要关于深蓝学院系列课程——基于图像的三维重建的笔记。</p>
+<p>课程链接 <a href="https://www.shenlanxueyuan.com/course/627">基于图像的三维重建</a></p>
+</blockquote>
+<h2 id="1、相机几何"><a href="#1、相机几何" class="headerlink" title="1、相机几何"></a>1、相机几何</h2><h3 id="1-1、针孔模型-amp-透镜"><a href="#1-1、针孔模型-amp-透镜" class="headerlink" title="1.1、针孔模型 &amp; 透镜"></a>1.1、针孔模型 &amp; 透镜</h3><ul>
+<li><strong>针孔模型</strong>：光线的传播导致 <strong>重叠</strong>，故需要遮挡过多的光线，使得 <strong>每一个点在胶片上只有一个成像点</strong>。</li>
+</ul>
+<p><img src="/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/Screenshot from 2023-08-08 09-27-11.png" alt="Screenshot from 2023-08-08 09-27-11" style="zoom: 67%;"></p>
+<ul>
+<li><strong>针孔相机的数学模型：</strong> 利用相似三角形的关系，可以得到真实空间中的一点与成像点的映射关系。</li>
+</ul>
+<span id="more"></span>
+<p><img src="/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808093329672.png" alt="image-20230808093329672" style="zoom:80%;"></p>
+<script type="math/tex; mode=display">
+\boldsymbol{P}=\begin{pmatrix}x\\y\\z\end{pmatrix}\to\boldsymbol{p}=\begin{pmatrix}x'\\y'\end{pmatrix}\quad\begin{cases}x'=f\dfrac{x}{z}\\y'=f\dfrac{y}{z}\end{cases}</script><ul>
+<li><strong>针孔大小对成像的影响：</strong> 光圈大，光线亮，成像模糊 <strong>（多条光线在同一成像点）</strong>；光圈小，光线暗，成像清晰。</li>
+</ul>
+<p><img src="/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808093742785.png" alt="image-20230808093742785" style="zoom: 80%;"></p>
+<ul>
+<li><strong>透镜：</strong> 使得同一个点的多条光线可以聚焦到胶片上，增加照片亮度。</li>
+</ul>
+<p><img src="/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808094110192.png" alt="image-20230808094110192" style="zoom:80%;"></p>
+<ul>
+<li><strong>透镜问题：</strong> </li>
+</ul>
+<ol>
+<li>失焦：透镜自身工艺原因不能将光线很好地汇集。<strong>可以清晰成像的部分称为景深</strong>。</li>
+</ol>
+<p><img src="/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808094357614.png" alt="image-20230808094357614" style="zoom:80%;"></p>
+<ol>
+<li>径向畸变：光线在远离透镜中心的地方比靠近中心的地方更加弯曲。主要分为 <strong>桶型和枕型</strong> 畸变。</li>
+</ol>
+<p><img src="/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808094539335.png" alt="image-20230808094539335"></p>
+<h3 id="1-2、相机几何"><a href="#1-2、相机几何" class="headerlink" title="1.2、相机几何"></a>1.2、相机几何</h3><ul>
+<li><p><strong>相机几何模型涉及到的坐标系：</strong> 相机坐标系、成像坐标系、像素坐标系。</p>
+</li>
+<li><p><strong>成像坐标系与像素坐标系的转换关系：</strong> 统一单位系数 $k, l$ ，坐标系偏置 $c_x, c_y$.</p>
+</li>
+</ul>
+<p><img src="/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808112028485.png" alt="image-20230808112028485"></p>
+<ul>
+<li><strong>齐次坐标系的引入和投影矩阵：</strong> 上述变换是 <strong>非线性的，在表达上十分不方便（非线性变换）</strong>，为使其可以 <strong>线性表示</strong>，引入齐次坐标系表示。<strong>$M$ 称为相机的投影矩阵</strong>，表示三维点投影到 <strong>像素坐标系</strong> 的变换关系。</li>
+</ul>
+<script type="math/tex; mode=display">
+p_h=\begin{pmatrix}\alpha x+c_xz\\\beta y+c_yz\\z\end{pmatrix}=\begin{pmatrix}\alpha&0&c_x&0\\0&\beta&c_y&0\\0&0&1&0\end{pmatrix}\boxed{\begin{pmatrix}x\\y\\z\\1\end{pmatrix}}—P_h=MP_h</script><ul>
+<li><strong>相机偏斜：</strong> 像素坐标系不满足严格的正交关系。</li>
+</ul>
+<p><img src="/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808113606469.png" alt="image-20230808113606469"></p>
+<script type="math/tex; mode=display">
+\boldsymbol{p}=\begin{pmatrix}\alpha&-\alpha\cot\theta&c_x&0\\0&\beta/\sin\theta&c_y&0\\0&0&1&0\end{pmatrix}\begin{pmatrix}x\\y\\z\\1\end{pmatrix}</script><ul>
+<li><strong>相机坐标系下的相机模型：</strong></li>
+</ul>
+<p><img src="/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808114200790.png" alt="image-20230808114200790" style="zoom:80%;"></p>
+<script type="math/tex; mode=display">
+p=K(I\quad0)P=K(I\quad 0)\begin{pmatrix}R&t\\0^\mathrm{T}&1\end{pmatrix}P_\mathrm{w}=K(R\quad t)P_\mathrm{w}=MP_\mathrm{w}\\
+相机内参：\boldsymbol{K}=\begin{pmatrix}\alpha&&-\alpha\cot\theta&&c_x\\0&&\beta/\sin\theta&&c_y\\0&&0&&1\end{pmatrix}\\
+相机外参：({R}\quad t)</script><p>其中 $M$ 为投影矩阵； $K$ 为 <strong>相机内参</strong>，决定了相机坐标系下的空间点到图像点的映射； $({R}\quad t)$ 为 <strong>相机外参</strong>，表示相机坐标系相对世界坐标系的旋转和平移。</p>
+<p><img src="/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808115100998.png" alt="image-20230808115100998" style="zoom:80%;"></p>
+<ul>
+<li><p><strong>相机模型内外参的自由度：</strong> 相机模型一共 <strong>11个自由度</strong>，其中内参 <strong>5个自由度</strong> ，外参 <strong>6个自由度（三维旋转+平移）</strong>。</p>
+</li>
+<li><p><strong>$p$ 转换为欧式坐标：</strong></p>
+</li>
+</ul>
+<script type="math/tex; mode=display">
+{p=MP_w=\begin{pmatrix}m_1^\mathrm{T}\\m_2^\mathrm{T}\\m_3^\mathrm{T}\end{pmatrix}P_w=\begin{pmatrix}m_1^\mathrm{T}P_w\\m_2^\mathrm{T}P_w\\m_3^\mathrm{T}P_w\end{pmatrix}}\to\left(\frac{m_1^\mathrm{T}P_w}{m_3^\mathrm{T}P_w},\frac{m_2^\mathrm{T}P_w}{m_3^\mathrm{T}P_w}\right)^\mathrm{T}\\
+M=\begin{pmatrix}m_1^\mathrm{T}\\m_2^\mathrm{T}\\m_3^\mathrm{T}\end{pmatrix}</script><ul>
+<li><strong>相关定理：</strong></li>
+</ul>
+<script type="math/tex; mode=display">
+M=K(R\quad t)=(KR\quad Kt)=(A\quad b)\quad A=\begin{pmatrix}a_1^\mathrm{T}\\a_2^\mathrm{T}\\a_3^\mathrm{T}\end{pmatrix}</script><ol>
+<li>$M$ 是透视投影矩阵的一个充分必要条件是 $Det(A)\ne 0$.</li>
+<li>$M$ 是零倾斜透视投影矩阵的一个充分必要条件是 $Det(A)\ne 0$ 且 $(a_1\times a_3)\cdot(a_2\times a_3)=0$.</li>
+<li>$M$ 是零倾斜且宽高比为 1 的 透视投影矩阵的一个充分必要条件是 $Det(A)\ne 0$ 且 $\left{\begin{matrix}(a_1\times a_3)\cdot(a_2\times a_3)=0\(a_1\times a_3)\cdot(a_1\times a_3)=(a_2\times a_3)\cdot(a_2\times a_3)\end{matrix}\right.$</li>
+</ol>
+<ul>
+<li><strong>投影变换的性质</strong>：<ul>
+<li>点投影为点；</li>
+<li>线投影为线；</li>
+<li>近大远小；</li>
+<li>角度不再保持，平行线相交。</li>
+</ul>
+</li>
+</ul>
+<h3 id="1-3、其他相机模型"><a href="#1-3、其他相机模型" class="headerlink" title="1.3、其他相机模型"></a>1.3、其他相机模型</h3><ul>
+<li><p><strong>弱透视与透视投影相机：</strong> 弱透视是当物体离光心无限远，所有成像点 <strong>可以视为在同一平面</strong>。</p>
+</li>
+<li><p><strong>思考：</strong> 缺少了哪三维的自由度？</p>
+<ul>
+<li>答：<strong>关于 $X，Y$ 轴的旋转以及 $Z$ 轴的平移。</strong></li>
+</ul>
+</li>
+<li><strong>思考：</strong> 最后一行为何是 $(0,0,0,1)$？<ul>
+<li>参考：<a href="https://zhuanlan.zhihu.com/p/458000359">三维重建1——相机几何模型和投影矩阵</a></li>
+</ul>
+</li>
+</ul>
+<p><img src="/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808152137753.png" alt="image-20230808152137753" style="zoom:80%;"></p>
+<p><img src="/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808152201256.png" alt="image-20230808152201256" style="zoom:80%;"></p>
+<ul>
+<li><strong>正交投影</strong>：光心距离成像平面以及物体均无限远。应用与工业设计，建筑设计。</li>
+</ul>
+<p><img src="/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808152415889.png" alt="image-20230808152415889" style="zoom:80%;"></p>
+<h2 id="2、相机标定"><a href="#2、相机标定" class="headerlink" title="2、相机标定"></a>2、相机标定</h2><h3 id="2-1、针孔模型-amp-透镜相机标定问题"><a href="#2-1、针孔模型-amp-透镜相机标定问题" class="headerlink" title="2.1、针孔模型 &amp; 透镜相机标定问题"></a>2.1、针孔模型 &amp; 透镜相机标定问题</h3><p><strong>目标：</strong> 从1张或者多张图像中估算内、外参数矩阵。</p>
+<p><img src="/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808204624946.png" alt="image-20230808204624946" style="zoom:80%;"></p>
+<p><strong>方法：</strong> 通过标定装置，给定世界坐标系下的坐标点，同时从图像上得到坐标点在像素坐标系下的坐标，求解投影矩阵。</p>
+<p><img src="/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808205028794.png" alt="image-20230808205028794" style="zoom:80%;"></p>
+<p><strong>已知：</strong> 待求参数量（未知量）为 <strong>11个</strong>，一对对应点可以提供 <strong>2个方程</strong>。</p>
+<p><strong>求解：</strong> 至少需要 <strong>6对点对</strong> 进行求解。实际操作一般采用多于6对点对来获得更为鲁棒的结果。</p>
+<script type="math/tex; mode=display">
+\begin{aligned}u_i&=\frac{\boldsymbol{m}_1^\mathrm{T}\boldsymbol{P}_i}{\boldsymbol{m}_3^\mathrm{T}\boldsymbol{P}_i}\quad\to\quad u_i\big(\boldsymbol{m}_3^\mathrm{T}\boldsymbol{P}_i\big)=\boldsymbol{m}_1^\mathrm{T}\boldsymbol{P}_i\quad\to\quad\boldsymbol{m}_1^\mathrm{T}\boldsymbol{P}_i-u_i(\boldsymbol{m}_3^\mathrm{T}\boldsymbol{P}_i)=0\\\\v_i&=\frac{\boldsymbol{m}_2^\mathrm{T}\boldsymbol{P}_i}{\boldsymbol{m}_3^\mathrm{T}\boldsymbol{P}_i}\quad\to\quad v_i\big(\boldsymbol{m}_3^\mathrm{T}\boldsymbol{P}_i\big)=\boldsymbol{m}_2^\mathrm{T}\boldsymbol{P}_i\quad\to\quad\boldsymbol{m}_2^\mathrm{T}\boldsymbol{P}_i-v_i(\boldsymbol{m}_3^\mathrm{T}\boldsymbol{P}_i)=0\end{aligned}</script><p><strong>标定问题：</strong> 方程数 $2n$ 个且 $n\ge 6$ ，未知参数 11个。为 <strong>超定齐次线性方程组</strong> 。</p>
+<script type="math/tex; mode=display">
+\boldsymbol{P}\stackrel{\mathrm{def}}{=}\begin{pmatrix}\boldsymbol{P}_{1}^{\mathrm{T}}&\boldsymbol{0}^{\mathrm{T}}&-u_{1}\boldsymbol{P}_{1}^{\mathrm{T}}\\\boldsymbol{0}^{\mathrm{T}}&\boldsymbol{P}_{1}^{\mathrm{T}}&-v_{1}\boldsymbol{P}_{1}^{\mathrm{T}}\\\cdots&\cdots&\cdots\\\boldsymbol{P}_{n}^{\mathrm{T}}&\boldsymbol{0}^{\mathrm{T}}&-u_{n}\boldsymbol{P}_{n}^{\mathrm{T}}\\\boldsymbol{0}^{\mathrm{T}}&\boldsymbol{P}_{n}^{\mathrm{T}}&-v_{n}\boldsymbol{P}_{n}^{\mathrm{T}}\end{pmatrix}_{2n\times12},\boldsymbol{m}\triangleq\begin{pmatrix}\boldsymbol{m_1}\\\boldsymbol{m_2}\\\boldsymbol{m_3}\end{pmatrix}_{12\times1}
+\\
+\begin{cases}-u_1(\boldsymbol{m}_3^\mathrm{T}\boldsymbol{P}_1)+\boldsymbol{m}_1^\mathrm{T}\boldsymbol{P}_1=0\\-v_1(\boldsymbol{m}_3^\mathrm{T}\boldsymbol{P}_1)+\boldsymbol{m}_2^\mathrm{T}\boldsymbol{P}_1=0\\\vdots\\-u_n(\boldsymbol{m}_3^\mathrm{T}\boldsymbol{P}_n)+\boldsymbol{m}_1^\mathrm{T}\boldsymbol{P}_n=0\\-v_n(\boldsymbol{m}_3^\mathrm{T}\boldsymbol{P}_n)+\boldsymbol{m}_2^\mathrm{T}\boldsymbol{P}_n=0\end{cases} \to Pm=0</script><p>转换为<strong>最小二乘问题</strong>：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}Pm=0\quad\Longleftrightarrow\quad&\min_m\|Pm\|\\&s.t.\|m\|=1\end{aligned}</script><p>求解上式：</p>
+<ol>
+<li>矩阵 $P$ 进行奇异值分解 $P=UDV^T$</li>
+<li>$x^*$ 为$V$ 矩阵的最后一列（最小特征值对应的右特征向量）</li>
+</ol>
+<p><img src="/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808210627346.png" alt="image-20230808210627346"></p>
+<p><strong>求解参数：</strong> 式中 $\rho$ 为 $\left |  m \right | = 1$ 的约束带来的。<strong>正是由于这个约束，使得 $M$ 矩阵为11个自由度即可！</strong> </p>
+<script type="math/tex; mode=display">
+\rho \boldsymbol{M} =\boldsymbol{K}(\boldsymbol{R}\quad\boldsymbol{t})=\begin{pmatrix}\alpha\boldsymbol{r}_{1}^{\mathrm{T}}-\alpha\cot\theta\boldsymbol{r}_{2}^{\mathrm{T}}+c_{x}\boldsymbol{r}_{3}^{\mathrm{T}}&\alpha t_{x}-\alpha\cot\theta t_{y}+c_{x}t_{z}\\\frac{\beta}{\sin\theta}\boldsymbol{r}_{2}^{\mathrm{T}}+c_{y}\boldsymbol{r}_{3}^{\mathrm{T}}&\frac{\beta}{\sin\theta}t_{y}+c_{y}t_{z}\\\boldsymbol{r}_{3}^{\mathrm{T}}&t_{z}\end{pmatrix}</script><p><strong>前置变换：</strong></p>
+<script type="math/tex; mode=display">
+\rho(A\quad b)=K(R\quad t)\\
+A=\begin{pmatrix}\boldsymbol{a}_{1}^{\mathrm{T}}\\\boldsymbol{a}_{2}^{\mathrm{T}}\\\boldsymbol{a}_{3}^{\mathrm{T}}\end{pmatrix}\quad\boldsymbol{b}=\begin{pmatrix}b_{1}\\b_{2}\\b_{3}\end{pmatrix}</script><p><strong>求得结果：</strong></p>
+<script type="math/tex; mode=display">
+\rho=\frac{\pm1}{|a_{3}|}\\\
+c_{x}=\rho^{2}(a_{1}\cdot a_{3}) \\
+c_{y}=\rho^{2}(a_{2}\cdot a_{3}) \\
+\cos\theta=-{\frac{(a_{1}\times a_{3})\cdot(a_{2}\times a_{3})}{|a_{1}\times a_{3}|\cdot|a_{2}\times a_{3}|}} \\
+\alpha=\rho^{2}|\boldsymbol{a}_{1}\times\boldsymbol{a}_{3}|\sin\theta \\
+\beta=\rho^2|\boldsymbol{a}_2\times\boldsymbol{a}_3|\sin\theta  \\
+r_{1}={\frac{(a_{2}\times a_{3})}{|a_{2}\times a_{3}|}} \\
+r_{2}=r_{3}\times r_{1} \\
+r_{3}={\frac{\pm a_{3}}{|a_{3}|}}\\
+\boldsymbol{t}=\rho\boldsymbol{K}^{-1}\boldsymbol{b}</script><p><strong>退化情况：</strong> 所选取点对不能位于同一平面。</p>
+<h3 id="2-2、径向畸变的相机标定"><a href="#2-2、径向畸变的相机标定" class="headerlink" title="2.2、径向畸变的相机标定"></a>2.2、径向畸变的相机标定</h3><p>建模： 畸变示意图如下</p>
+<p><img src="/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230809102420293.png" alt="image-20230809102420293" style="zoom:80%;"></p>
+<p>建模方程如下： 其中 $k_p$ 为畸变因子</p>
+<script type="math/tex; mode=display">
+\\
+\begin{pmatrix}\dfrac{1}{\lambda}&0&0\\0&\dfrac{1}{\lambda}&0\\0&0&1\end{pmatrix}M\boldsymbol{P}_i\to\binom{u_i}{v_i}=\boldsymbol{p}_i 
+\\
+\lambda=1\pm\sum_{p=1}^{q}k_{p}d^{2p}，\quad d^2=u^2+v^2</script><p>设畸变参数矩阵与 $M$ 为 $Q$ ：</p>
+<script type="math/tex; mode=display">
+{\boxed{\begin{pmatrix}\frac1\lambda&0&0\\0&\frac1\lambda&0\\0&0&1\end{pmatrix}M}}P_i\to\binom{\lambda_i}{\nu_i}=p_i\quad Q=\begin{pmatrix}q_1^\mathrm{T}\\q_2^\mathrm{T}\\q_3^\mathrm{T}\end{pmatrix}\\</script><p>构建方程组，该方程组为 <strong>非线性</strong> 方程组：</p>
+<script type="math/tex; mode=display">
+p_i=\begin{pmatrix}u_i\\v_i\end{pmatrix}=\begin{pmatrix}\dfrac{q_1^\mathrm{T}P_i}{q_3^\mathrm{T}P_i}\\\dfrac{q_2^\mathrm{T}P_i}{q_3^\mathrm{T}P_i}\end{pmatrix}\longrightarrow\begin{cases}u_iq_3^\mathrm{T}P_i=q_1^\mathrm{T}P_i\\v_iq_3^\mathrm{T}P_i=q_2^\mathrm{T}P_i\end{cases}</script><p><strong>方法一：</strong> 采用 <strong>牛顿法或L-M法</strong> 进行非线性求解：</p>
+<script type="math/tex; mode=display">
+\begin{cases}u_iq_3^\mathrm{T}P_i=q_1^\mathrm{T}P_i\\v_iq_3^\mathrm{T}P_i=q_2^TP_i\end{cases}\longrightarrow\begin{cases}u_iq_3^\mathrm{T}P_i-q_1^\mathrm{T}P_i=0\\v_iq_3^\mathrm{T}P_i-q_2^\mathrm{T}P_i=0\end{cases}\longrightarrow\begin{cases}f_1(k_1,k_2,k_3,m_1^\mathrm{T},m_2^\mathrm{T},m_3^\mathrm{T})=0\\f_2(k_1,k_2,k_3,m_1^\mathrm{T},m_2^\mathrm{T},m_3^\mathrm{T})=0\end{cases}\\</script><script type="math/tex; mode=display">
+\begin{array}{l}\text{令}x^\mathrm{T}=(k_1,k_2,k_3,\boldsymbol{m}_1^\mathrm{T},\boldsymbol{m}_2^\mathrm{T},\boldsymbol{m}_3^\mathrm{T})\\\\x^*=arg\min_x\|f(x)\|^2\end{array}</script><p><strong>方法二：</strong> 先求解线性部分，再求解非线性部分：</p>
+<script type="math/tex; mode=display">
+\boldsymbol{p}_i=\binom{u_i}{v_i}=\frac1\lambda\begin{pmatrix}\cfrac{\boldsymbol{m}_1^\mathrm{T}\boldsymbol{P}_i}{\boldsymbol{m}_3^\mathrm{T}\boldsymbol{P}_i}\\\cfrac{\boldsymbol{m}_2^\mathrm{T}\boldsymbol{P}_i}{\boldsymbol{m}_3^\mathrm{T}\boldsymbol{P}_i}\end{pmatrix}\longrightarrow\quad\frac{u_i}{v_i}=\frac{\frac1\lambda\frac{\left(\boldsymbol{m}_1^\mathrm{T}\boldsymbol{P}_i\right)}{\left(\boldsymbol{m}_3^\mathrm{T}\boldsymbol{P}_i\right)}}{\frac1\lambda\frac{\left(\boldsymbol{m}_2^\mathrm{T}\boldsymbol{P}_i\right)}{\left(\boldsymbol{m}_3^\mathrm{T}\boldsymbol{P}_i\right)}}=\frac{\boldsymbol{m}_1^\mathrm{T}\boldsymbol{P}_i}{\boldsymbol{m}_2^\mathrm{T}\boldsymbol{P}_i}</script><script type="math/tex; mode=display">
+\begin{cases}v_1(\boldsymbol{m_1^\mathrm{T}}\boldsymbol{P_1})-u_1(\boldsymbol{m_2^\mathrm{T}}\boldsymbol{P_1})=0\\\vdots\\v_i(\boldsymbol{m_1^\mathrm{T}}\boldsymbol{P_i})-u_i(\boldsymbol{m_2^\mathrm{T}}\boldsymbol{P_i})=0\\\vdots\\v_n(\boldsymbol{m_1^\mathrm{T}}\boldsymbol{P_n})-u_n(\boldsymbol{m_2^\mathrm{T}}\boldsymbol{P_n})=0\end{cases} ,\quad 
+L\stackrel{\mathrm{def}}{=}\begin{pmatrix}v_1\boldsymbol{P_1^\mathrm{T}}&-u_1\boldsymbol{P_1^\mathrm{T}}\\v_2\boldsymbol{P_2^\mathrm{T}}&-u_2\boldsymbol{P_2^\mathrm{T}}\\\vdots&\vdots\\v_n\boldsymbol{P_n^\mathrm{T}}&-u_n\boldsymbol{P_n^\mathrm{T}}\end{pmatrix}</script><script type="math/tex; mode=display">
+构建 \quad Ln = 0，通过SVD求得 \quad n=\binom{m_1}{m_2}</script><p>非线性部分：</p>
+<p>$m_3,k_1,k_2,k_3$ 关于 $m_1,m_2$ 的非线性函数，采用 <strong>牛顿法和L-M法 </strong> 求解。</p>
+]]></content>
+      <tags>
+        <tag>3D Reconstruction</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【笔记】深蓝学院NeRF系列分享</title>
+    <url>/2023/08/07/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E6%B7%B1%E8%93%9D%E5%AD%A6%E9%99%A2NeRF%E7%B3%BB%E5%88%97%E5%88%86%E4%BA%AB/</url>
+    <content><![CDATA[<blockquote>
+<p>本文主要是关于深蓝学院NeRF系列分享的一些随手笔记。</p>
+</blockquote>
+<h2 id="1、课程链接"><a href="#1、课程链接" class="headerlink" title="1、课程链接"></a>1、课程链接</h2><p>分享课程链接：<a href="https://www.shenlanxueyuan.com/course/504?source=1">深蓝学院——神经辐射场（NeRF）系列分享</a></p>
+<h2 id="2、基于NeRF的三维内容生成"><a href="#2、基于NeRF的三维内容生成" class="headerlink" title="2、基于NeRF的三维内容生成"></a>2、基于NeRF的三维内容生成</h2><ol>
+<li>三维物体的基本属性主要涉及到物体的 <strong>形状、材质和光照</strong>。</li>
+<li><strong>渲染：</strong>三维物体/空间以 <strong>2D</strong> 形式表达； <strong>三维重建：</strong> 反渲染的过程。</li>
+<li>计算机图形学与计算机视觉偏重点的不同： <strong>图形学的重点在渲染过程，视觉的重点在反渲染的过程。</strong></li>
+</ol>
+<p><img src="/2023/08/07/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E6%B7%B1%E8%93%9D%E5%AD%A6%E9%99%A2NeRF%E7%B3%BB%E5%88%97%E5%88%86%E4%BA%AB/Screenshot from 2023-08-07 11-13-24.png" alt="Screenshot from 2023-08-07 11-13-24"></p>
+<ol>
+<li><p>反渲染中的三个关键问题：</p>
+<ol>
+<li><p>What <strong>shape</strong> representations to use?</p>
+<ol>
+<li><strong>Mesh、 Point cloud、Occupancy  field、Signed distance field</strong>.</li>
+</ol>
+<p><img src="/2023/08/07/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E6%B7%B1%E8%93%9D%E5%AD%A6%E9%99%A2NeRF%E7%B3%BB%E5%88%97%E5%88%86%E4%BA%AB/Screenshot from 2023-08-07 14-11-29.png" alt="Screenshot from 2023-08-07 14-11-29" style="zoom:67%;"></p>
+</li>
+<li><p>What <strong>appearance</strong> representation to use?</p>
+<ol>
+<li>Material texture map and environmental lighting：将贴图和环境灯光分离，优点是 <strong>具有较强的操作性、编辑性</strong>，缺点是 <strong>实现难度大，相对的计算资源需求更大</strong>。</li>
+<li>Radiance field：神经辐射场表示，优点 <strong>实现较为简单</strong>，缺点是 <strong>编辑性较差</strong>。</li>
+</ol>
+<p><img src="/2023/08/07/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E6%B7%B1%E8%93%9D%E5%AD%A6%E9%99%A2NeRF%E7%B3%BB%E5%88%97%E5%88%86%E4%BA%AB/Screenshot from 2023-08-07 14-21-31.png" alt="Screenshot from 2023-08-07 14-21-31" style="zoom:67%;"></p>
+</li>
+<li><p>What <strong>rendering</strong> operator to use?</p>
+<ol>
+<li>Ray tracing rendering.</li>
+</ol>
+<p><img src="/2023/08/07/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E6%B7%B1%E8%93%9D%E5%AD%A6%E9%99%A2NeRF%E7%B3%BB%E5%88%97%E5%88%86%E4%BA%AB/Screenshot from 2023-08-07 14-24-39.png" alt="Screenshot from 2023-08-07 14-24-39" style="zoom:67%;"></p>
+</li>
+</ol>
+</li>
+<li><p>NeRF的 shape 和 appearance:</p>
+<ol>
+<li><strong>shape</strong>：是一种 <strong>soft opacity field</strong> 可以理解为一种 <strong>雾(fog)</strong>，也就是论文中的 $\sigma$ .</li>
+<li><strong>appearance</strong>：使用 MLP 网络训练得到。</li>
+</ol>
+</li>
+</ol>
+<p><img src="/2023/08/07/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E6%B7%B1%E8%93%9D%E5%AD%A6%E9%99%A2NeRF%E7%B3%BB%E5%88%97%E5%88%86%E4%BA%AB/Screenshot from 2023-08-07 14-34-11.png" alt="Screenshot from 2023-08-07 14-34-11" style="zoom:67%;"></p>
+]]></content>
+      <tags>
+        <tag>NeRF</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【笔记】基于图像的三维重建——三维从简基础与对极几何</title>
+    <url>/2023/08/13/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E5%9F%BA%E7%A1%80%E4%B8%8E%E5%AF%B9%E6%9E%81%E5%87%A0%E4%BD%95/</url>
+    <content><![CDATA[]]></content>
+  </entry>
 </search>

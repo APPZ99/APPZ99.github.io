@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+
+
+
+  <meta name="description" content="本文主要关于深蓝学院系列课程——基于图像的三维重建的笔记。 课程链接 基于图像的三维重建  1、相机几何1.1、针孔模型 &amp; 透镜 针孔模型：光线的传播导致 重叠，故需要遮挡过多的光线，使得 每一个点在胶片上只有一个成像点。    针孔相机的数学模型： 利用相似三角形的关系，可以得到真实空间中的一点与成像点的映射关系。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【笔记】基于图像的三维重建——相机几何与相机标定">
+<meta property="og:url" content="http://example.com/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/index.html">
+<meta property="og:site_name" content="AppZ99&#39;s Blog">
+<meta property="og:description" content="本文主要关于深蓝学院系列课程——基于图像的三维重建的笔记。 课程链接 基于图像的三维重建  1、相机几何1.1、针孔模型 &amp; 透镜 针孔模型：光线的传播导致 重叠，故需要遮挡过多的光线，使得 每一个点在胶片上只有一个成像点。    针孔相机的数学模型： 利用相似三角形的关系，可以得到真实空间中的一点与成像点的映射关系。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/Screenshot%20from%202023-08-08%2009-27-11.png">
+<meta property="og:image" content="http://example.com/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808093329672.png">
+<meta property="og:image" content="http://example.com/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808093742785.png">
+<meta property="og:image" content="http://example.com/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808094110192.png">
+<meta property="og:image" content="http://example.com/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808094357614.png">
+<meta property="og:image" content="http://example.com/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808094539335.png">
+<meta property="og:image" content="http://example.com/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808112028485.png">
+<meta property="og:image" content="http://example.com/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808113606469.png">
+<meta property="og:image" content="http://example.com/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808114200790.png">
+<meta property="og:image" content="http://example.com/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808115100998.png">
+<meta property="og:image" content="http://example.com/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808152137753.png">
+<meta property="og:image" content="http://example.com/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808152201256.png">
+<meta property="og:image" content="http://example.com/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808152415889.png">
+<meta property="og:image" content="http://example.com/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808204624946.png">
+<meta property="og:image" content="http://example.com/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808205028794.png">
+<meta property="og:image" content="http://example.com/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808210627346.png">
+<meta property="og:image" content="http://example.com/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230809102420293.png">
+<meta property="article:published_time" content="2023-08-08T01:11:14.000Z">
+<meta property="article:modified_time" content="2023-08-13T14:07:10.228Z">
+<meta property="article:author" content="AppZ99">
+<meta property="article:tag" content="3D Reconstruction">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/Screenshot%20from%202023-08-08%2009-27-11.png">
+
+<link rel="canonical" href="http://example.com/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>【笔记】基于图像的三维重建——相机几何与相机标定 | AppZ99's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">AppZ99's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">OHHHH</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="AppZ99">
+      <meta itemprop="description" content="TKAW">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AppZ99's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          【笔记】基于图像的三维重建——相机几何与相机标定
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-08 09:11:14" itemprop="dateCreated datePublished" datetime="2023-08-08T09:11:14+08:00">2023-08-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-08-13 22:07:10" itemprop="dateModified" datetime="2023-08-13T22:07:10+08:00">2023-08-13</time>
+              </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>8.5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>8 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>本文主要关于深蓝学院系列课程——基于图像的三维重建的笔记。</p>
+<p>课程链接 <a target="_blank" rel="noopener" href="https://www.shenlanxueyuan.com/course/627">基于图像的三维重建</a></p>
+</blockquote>
+<h2 id="1、相机几何"><a href="#1、相机几何" class="headerlink" title="1、相机几何"></a>1、相机几何</h2><h3 id="1-1、针孔模型-amp-透镜"><a href="#1-1、针孔模型-amp-透镜" class="headerlink" title="1.1、针孔模型 &amp; 透镜"></a>1.1、针孔模型 &amp; 透镜</h3><ul>
+<li><strong>针孔模型</strong>：光线的传播导致 <strong>重叠</strong>，故需要遮挡过多的光线，使得 <strong>每一个点在胶片上只有一个成像点</strong>。</li>
+</ul>
+<p><img src="/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/Screenshot from 2023-08-08 09-27-11.png" alt="Screenshot from 2023-08-08 09-27-11" style="zoom: 67%;"></p>
+<ul>
+<li><strong>针孔相机的数学模型：</strong> 利用相似三角形的关系，可以得到真实空间中的一点与成像点的映射关系。</li>
+</ul>
+<span id="more"></span>
+<p><img src="/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808093329672.png" alt="image-20230808093329672" style="zoom:80%;"></p>
+<script type="math/tex; mode=display">
+\boldsymbol{P}=\begin{pmatrix}x\\y\\z\end{pmatrix}\to\boldsymbol{p}=\begin{pmatrix}x'\\y'\end{pmatrix}\quad\begin{cases}x'=f\dfrac{x}{z}\\y'=f\dfrac{y}{z}\end{cases}</script><ul>
+<li><strong>针孔大小对成像的影响：</strong> 光圈大，光线亮，成像模糊 <strong>（多条光线在同一成像点）</strong>；光圈小，光线暗，成像清晰。</li>
+</ul>
+<p><img src="/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808093742785.png" alt="image-20230808093742785" style="zoom: 80%;"></p>
+<ul>
+<li><strong>透镜：</strong> 使得同一个点的多条光线可以聚焦到胶片上，增加照片亮度。</li>
+</ul>
+<p><img src="/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808094110192.png" alt="image-20230808094110192" style="zoom:80%;"></p>
+<ul>
+<li><strong>透镜问题：</strong> </li>
+</ul>
+<ol>
+<li>失焦：透镜自身工艺原因不能将光线很好地汇集。<strong>可以清晰成像的部分称为景深</strong>。</li>
+</ol>
+<p><img src="/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808094357614.png" alt="image-20230808094357614" style="zoom:80%;"></p>
+<ol>
+<li>径向畸变：光线在远离透镜中心的地方比靠近中心的地方更加弯曲。主要分为 <strong>桶型和枕型</strong> 畸变。</li>
+</ol>
+<p><img src="/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808094539335.png" alt="image-20230808094539335"></p>
+<h3 id="1-2、相机几何"><a href="#1-2、相机几何" class="headerlink" title="1.2、相机几何"></a>1.2、相机几何</h3><ul>
+<li><p><strong>相机几何模型涉及到的坐标系：</strong> 相机坐标系、成像坐标系、像素坐标系。</p>
+</li>
+<li><p><strong>成像坐标系与像素坐标系的转换关系：</strong> 统一单位系数 $k, l$ ，坐标系偏置 $c_x, c_y$.</p>
+</li>
+</ul>
+<p><img src="/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808112028485.png" alt="image-20230808112028485"></p>
+<ul>
+<li><strong>齐次坐标系的引入和投影矩阵：</strong> 上述变换是 <strong>非线性的，在表达上十分不方便（非线性变换）</strong>，为使其可以 <strong>线性表示</strong>，引入齐次坐标系表示。<strong>$M$ 称为相机的投影矩阵</strong>，表示三维点投影到 <strong>像素坐标系</strong> 的变换关系。</li>
+</ul>
+<script type="math/tex; mode=display">
+p_h=\begin{pmatrix}\alpha x+c_xz\\\beta y+c_yz\\z\end{pmatrix}=\begin{pmatrix}\alpha&0&c_x&0\\0&\beta&c_y&0\\0&0&1&0\end{pmatrix}\boxed{\begin{pmatrix}x\\y\\z\\1\end{pmatrix}}—P_h=MP_h</script><ul>
+<li><strong>相机偏斜：</strong> 像素坐标系不满足严格的正交关系。</li>
+</ul>
+<p><img src="/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808113606469.png" alt="image-20230808113606469"></p>
+<script type="math/tex; mode=display">
+\boldsymbol{p}=\begin{pmatrix}\alpha&-\alpha\cot\theta&c_x&0\\0&\beta/\sin\theta&c_y&0\\0&0&1&0\end{pmatrix}\begin{pmatrix}x\\y\\z\\1\end{pmatrix}</script><ul>
+<li><strong>相机坐标系下的相机模型：</strong></li>
+</ul>
+<p><img src="/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808114200790.png" alt="image-20230808114200790" style="zoom:80%;"></p>
+<script type="math/tex; mode=display">
+p=K(I\quad0)P=K(I\quad 0)\begin{pmatrix}R&t\\0^\mathrm{T}&1\end{pmatrix}P_\mathrm{w}=K(R\quad t)P_\mathrm{w}=MP_\mathrm{w}\\
+相机内参：\boldsymbol{K}=\begin{pmatrix}\alpha&&-\alpha\cot\theta&&c_x\\0&&\beta/\sin\theta&&c_y\\0&&0&&1\end{pmatrix}\\
+相机外参：({R}\quad t)</script><p>其中 $M$ 为投影矩阵； $K$ 为 <strong>相机内参</strong>，决定了相机坐标系下的空间点到图像点的映射； $({R}\quad t)$ 为 <strong>相机外参</strong>，表示相机坐标系相对世界坐标系的旋转和平移。</p>
+<p><img src="/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808115100998.png" alt="image-20230808115100998" style="zoom:80%;"></p>
+<ul>
+<li><p><strong>相机模型内外参的自由度：</strong> 相机模型一共 <strong>11个自由度</strong>，其中内参 <strong>5个自由度</strong> ，外参 <strong>6个自由度（三维旋转+平移）</strong>。</p>
+</li>
+<li><p><strong>$p$ 转换为欧式坐标：</strong></p>
+</li>
+</ul>
+<script type="math/tex; mode=display">
+{p=MP_w=\begin{pmatrix}m_1^\mathrm{T}\\m_2^\mathrm{T}\\m_3^\mathrm{T}\end{pmatrix}P_w=\begin{pmatrix}m_1^\mathrm{T}P_w\\m_2^\mathrm{T}P_w\\m_3^\mathrm{T}P_w\end{pmatrix}}\to\left(\frac{m_1^\mathrm{T}P_w}{m_3^\mathrm{T}P_w},\frac{m_2^\mathrm{T}P_w}{m_3^\mathrm{T}P_w}\right)^\mathrm{T}\\
+M=\begin{pmatrix}m_1^\mathrm{T}\\m_2^\mathrm{T}\\m_3^\mathrm{T}\end{pmatrix}</script><ul>
+<li><strong>相关定理：</strong></li>
+</ul>
+<script type="math/tex; mode=display">
+M=K(R\quad t)=(KR\quad Kt)=(A\quad b)\quad A=\begin{pmatrix}a_1^\mathrm{T}\\a_2^\mathrm{T}\\a_3^\mathrm{T}\end{pmatrix}</script><ol>
+<li>$M$ 是透视投影矩阵的一个充分必要条件是 $Det(A)\ne 0$.</li>
+<li>$M$ 是零倾斜透视投影矩阵的一个充分必要条件是 $Det(A)\ne 0$ 且 $(a_1\times a_3)\cdot(a_2\times a_3)=0$.</li>
+<li>$M$ 是零倾斜且宽高比为 1 的 透视投影矩阵的一个充分必要条件是 $Det(A)\ne 0$ 且 $\left{\begin{matrix}(a_1\times a_3)\cdot(a_2\times a_3)=0\(a_1\times a_3)\cdot(a_1\times a_3)=(a_2\times a_3)\cdot(a_2\times a_3)\end{matrix}\right.$</li>
+</ol>
+<ul>
+<li><strong>投影变换的性质</strong>：<ul>
+<li>点投影为点；</li>
+<li>线投影为线；</li>
+<li>近大远小；</li>
+<li>角度不再保持，平行线相交。</li>
+</ul>
+</li>
+</ul>
+<h3 id="1-3、其他相机模型"><a href="#1-3、其他相机模型" class="headerlink" title="1.3、其他相机模型"></a>1.3、其他相机模型</h3><ul>
+<li><p><strong>弱透视与透视投影相机：</strong> 弱透视是当物体离光心无限远，所有成像点 <strong>可以视为在同一平面</strong>。</p>
+</li>
+<li><p><strong>思考：</strong> 缺少了哪三维的自由度？</p>
+<ul>
+<li>答：<strong>关于 $X，Y$ 轴的旋转以及 $Z$ 轴的平移。</strong></li>
+</ul>
+</li>
+<li><strong>思考：</strong> 最后一行为何是 $(0,0,0,1)$？<ul>
+<li>参考：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/458000359">三维重建1——相机几何模型和投影矩阵</a></li>
+</ul>
+</li>
+</ul>
+<p><img src="/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808152137753.png" alt="image-20230808152137753" style="zoom:80%;"></p>
+<p><img src="/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808152201256.png" alt="image-20230808152201256" style="zoom:80%;"></p>
+<ul>
+<li><strong>正交投影</strong>：光心距离成像平面以及物体均无限远。应用与工业设计，建筑设计。</li>
+</ul>
+<p><img src="/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808152415889.png" alt="image-20230808152415889" style="zoom:80%;"></p>
+<h2 id="2、相机标定"><a href="#2、相机标定" class="headerlink" title="2、相机标定"></a>2、相机标定</h2><h3 id="2-1、针孔模型-amp-透镜相机标定问题"><a href="#2-1、针孔模型-amp-透镜相机标定问题" class="headerlink" title="2.1、针孔模型 &amp; 透镜相机标定问题"></a>2.1、针孔模型 &amp; 透镜相机标定问题</h3><p><strong>目标：</strong> 从1张或者多张图像中估算内、外参数矩阵。</p>
+<p><img src="/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808204624946.png" alt="image-20230808204624946" style="zoom:80%;"></p>
+<p><strong>方法：</strong> 通过标定装置，给定世界坐标系下的坐标点，同时从图像上得到坐标点在像素坐标系下的坐标，求解投影矩阵。</p>
+<p><img src="/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808205028794.png" alt="image-20230808205028794" style="zoom:80%;"></p>
+<p><strong>已知：</strong> 待求参数量（未知量）为 <strong>11个</strong>，一对对应点可以提供 <strong>2个方程</strong>。</p>
+<p><strong>求解：</strong> 至少需要 <strong>6对点对</strong> 进行求解。实际操作一般采用多于6对点对来获得更为鲁棒的结果。</p>
+<script type="math/tex; mode=display">
+\begin{aligned}u_i&=\frac{\boldsymbol{m}_1^\mathrm{T}\boldsymbol{P}_i}{\boldsymbol{m}_3^\mathrm{T}\boldsymbol{P}_i}\quad\to\quad u_i\big(\boldsymbol{m}_3^\mathrm{T}\boldsymbol{P}_i\big)=\boldsymbol{m}_1^\mathrm{T}\boldsymbol{P}_i\quad\to\quad\boldsymbol{m}_1^\mathrm{T}\boldsymbol{P}_i-u_i(\boldsymbol{m}_3^\mathrm{T}\boldsymbol{P}_i)=0\\\\v_i&=\frac{\boldsymbol{m}_2^\mathrm{T}\boldsymbol{P}_i}{\boldsymbol{m}_3^\mathrm{T}\boldsymbol{P}_i}\quad\to\quad v_i\big(\boldsymbol{m}_3^\mathrm{T}\boldsymbol{P}_i\big)=\boldsymbol{m}_2^\mathrm{T}\boldsymbol{P}_i\quad\to\quad\boldsymbol{m}_2^\mathrm{T}\boldsymbol{P}_i-v_i(\boldsymbol{m}_3^\mathrm{T}\boldsymbol{P}_i)=0\end{aligned}</script><p><strong>标定问题：</strong> 方程数 $2n$ 个且 $n\ge 6$ ，未知参数 11个。为 <strong>超定齐次线性方程组</strong> 。</p>
+<script type="math/tex; mode=display">
+\boldsymbol{P}\stackrel{\mathrm{def}}{=}\begin{pmatrix}\boldsymbol{P}_{1}^{\mathrm{T}}&\boldsymbol{0}^{\mathrm{T}}&-u_{1}\boldsymbol{P}_{1}^{\mathrm{T}}\\\boldsymbol{0}^{\mathrm{T}}&\boldsymbol{P}_{1}^{\mathrm{T}}&-v_{1}\boldsymbol{P}_{1}^{\mathrm{T}}\\\cdots&\cdots&\cdots\\\boldsymbol{P}_{n}^{\mathrm{T}}&\boldsymbol{0}^{\mathrm{T}}&-u_{n}\boldsymbol{P}_{n}^{\mathrm{T}}\\\boldsymbol{0}^{\mathrm{T}}&\boldsymbol{P}_{n}^{\mathrm{T}}&-v_{n}\boldsymbol{P}_{n}^{\mathrm{T}}\end{pmatrix}_{2n\times12},\boldsymbol{m}\triangleq\begin{pmatrix}\boldsymbol{m_1}\\\boldsymbol{m_2}\\\boldsymbol{m_3}\end{pmatrix}_{12\times1}
+\\
+\begin{cases}-u_1(\boldsymbol{m}_3^\mathrm{T}\boldsymbol{P}_1)+\boldsymbol{m}_1^\mathrm{T}\boldsymbol{P}_1=0\\-v_1(\boldsymbol{m}_3^\mathrm{T}\boldsymbol{P}_1)+\boldsymbol{m}_2^\mathrm{T}\boldsymbol{P}_1=0\\\vdots\\-u_n(\boldsymbol{m}_3^\mathrm{T}\boldsymbol{P}_n)+\boldsymbol{m}_1^\mathrm{T}\boldsymbol{P}_n=0\\-v_n(\boldsymbol{m}_3^\mathrm{T}\boldsymbol{P}_n)+\boldsymbol{m}_2^\mathrm{T}\boldsymbol{P}_n=0\end{cases} \to Pm=0</script><p>转换为<strong>最小二乘问题</strong>：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}Pm=0\quad\Longleftrightarrow\quad&\min_m\|Pm\|\\&s.t.\|m\|=1\end{aligned}</script><p>求解上式：</p>
+<ol>
+<li>矩阵 $P$ 进行奇异值分解 $P=UDV^T$</li>
+<li>$x^*$ 为$V$ 矩阵的最后一列（最小特征值对应的右特征向量）</li>
+</ol>
+<p><img src="/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230808210627346.png" alt="image-20230808210627346"></p>
+<p><strong>求解参数：</strong> 式中 $\rho$ 为 $\left |  m \right | = 1$ 的约束带来的。<strong>正是由于这个约束，使得 $M$ 矩阵为11个自由度即可！</strong> </p>
+<script type="math/tex; mode=display">
+\rho \boldsymbol{M} =\boldsymbol{K}(\boldsymbol{R}\quad\boldsymbol{t})=\begin{pmatrix}\alpha\boldsymbol{r}_{1}^{\mathrm{T}}-\alpha\cot\theta\boldsymbol{r}_{2}^{\mathrm{T}}+c_{x}\boldsymbol{r}_{3}^{\mathrm{T}}&\alpha t_{x}-\alpha\cot\theta t_{y}+c_{x}t_{z}\\\frac{\beta}{\sin\theta}\boldsymbol{r}_{2}^{\mathrm{T}}+c_{y}\boldsymbol{r}_{3}^{\mathrm{T}}&\frac{\beta}{\sin\theta}t_{y}+c_{y}t_{z}\\\boldsymbol{r}_{3}^{\mathrm{T}}&t_{z}\end{pmatrix}</script><p><strong>前置变换：</strong></p>
+<script type="math/tex; mode=display">
+\rho(A\quad b)=K(R\quad t)\\
+A=\begin{pmatrix}\boldsymbol{a}_{1}^{\mathrm{T}}\\\boldsymbol{a}_{2}^{\mathrm{T}}\\\boldsymbol{a}_{3}^{\mathrm{T}}\end{pmatrix}\quad\boldsymbol{b}=\begin{pmatrix}b_{1}\\b_{2}\\b_{3}\end{pmatrix}</script><p><strong>求得结果：</strong></p>
+<script type="math/tex; mode=display">
+\rho=\frac{\pm1}{|a_{3}|}\\\
+c_{x}=\rho^{2}(a_{1}\cdot a_{3}) \\
+c_{y}=\rho^{2}(a_{2}\cdot a_{3}) \\
+\cos\theta=-{\frac{(a_{1}\times a_{3})\cdot(a_{2}\times a_{3})}{|a_{1}\times a_{3}|\cdot|a_{2}\times a_{3}|}} \\
+\alpha=\rho^{2}|\boldsymbol{a}_{1}\times\boldsymbol{a}_{3}|\sin\theta \\
+\beta=\rho^2|\boldsymbol{a}_2\times\boldsymbol{a}_3|\sin\theta  \\
+r_{1}={\frac{(a_{2}\times a_{3})}{|a_{2}\times a_{3}|}} \\
+r_{2}=r_{3}\times r_{1} \\
+r_{3}={\frac{\pm a_{3}}{|a_{3}|}}\\
+\boldsymbol{t}=\rho\boldsymbol{K}^{-1}\boldsymbol{b}</script><p><strong>退化情况：</strong> 所选取点对不能位于同一平面。</p>
+<h3 id="2-2、径向畸变的相机标定"><a href="#2-2、径向畸变的相机标定" class="headerlink" title="2.2、径向畸变的相机标定"></a>2.2、径向畸变的相机标定</h3><p>建模： 畸变示意图如下</p>
+<p><img src="/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/image-20230809102420293.png" alt="image-20230809102420293" style="zoom:80%;"></p>
+<p>建模方程如下： 其中 $k_p$ 为畸变因子</p>
+<script type="math/tex; mode=display">
+\\
+\begin{pmatrix}\dfrac{1}{\lambda}&0&0\\0&\dfrac{1}{\lambda}&0\\0&0&1\end{pmatrix}M\boldsymbol{P}_i\to\binom{u_i}{v_i}=\boldsymbol{p}_i 
+\\
+\lambda=1\pm\sum_{p=1}^{q}k_{p}d^{2p}，\quad d^2=u^2+v^2</script><p>设畸变参数矩阵与 $M$ 为 $Q$ ：</p>
+<script type="math/tex; mode=display">
+{\boxed{\begin{pmatrix}\frac1\lambda&0&0\\0&\frac1\lambda&0\\0&0&1\end{pmatrix}M}}P_i\to\binom{\lambda_i}{\nu_i}=p_i\quad Q=\begin{pmatrix}q_1^\mathrm{T}\\q_2^\mathrm{T}\\q_3^\mathrm{T}\end{pmatrix}\\</script><p>构建方程组，该方程组为 <strong>非线性</strong> 方程组：</p>
+<script type="math/tex; mode=display">
+p_i=\begin{pmatrix}u_i\\v_i\end{pmatrix}=\begin{pmatrix}\dfrac{q_1^\mathrm{T}P_i}{q_3^\mathrm{T}P_i}\\\dfrac{q_2^\mathrm{T}P_i}{q_3^\mathrm{T}P_i}\end{pmatrix}\longrightarrow\begin{cases}u_iq_3^\mathrm{T}P_i=q_1^\mathrm{T}P_i\\v_iq_3^\mathrm{T}P_i=q_2^\mathrm{T}P_i\end{cases}</script><p><strong>方法一：</strong> 采用 <strong>牛顿法或L-M法</strong> 进行非线性求解：</p>
+<script type="math/tex; mode=display">
+\begin{cases}u_iq_3^\mathrm{T}P_i=q_1^\mathrm{T}P_i\\v_iq_3^\mathrm{T}P_i=q_2^TP_i\end{cases}\longrightarrow\begin{cases}u_iq_3^\mathrm{T}P_i-q_1^\mathrm{T}P_i=0\\v_iq_3^\mathrm{T}P_i-q_2^\mathrm{T}P_i=0\end{cases}\longrightarrow\begin{cases}f_1(k_1,k_2,k_3,m_1^\mathrm{T},m_2^\mathrm{T},m_3^\mathrm{T})=0\\f_2(k_1,k_2,k_3,m_1^\mathrm{T},m_2^\mathrm{T},m_3^\mathrm{T})=0\end{cases}\\</script><script type="math/tex; mode=display">
+\begin{array}{l}\text{令}x^\mathrm{T}=(k_1,k_2,k_3,\boldsymbol{m}_1^\mathrm{T},\boldsymbol{m}_2^\mathrm{T},\boldsymbol{m}_3^\mathrm{T})\\\\x^*=arg\min_x\|f(x)\|^2\end{array}</script><p><strong>方法二：</strong> 先求解线性部分，再求解非线性部分：</p>
+<script type="math/tex; mode=display">
+\boldsymbol{p}_i=\binom{u_i}{v_i}=\frac1\lambda\begin{pmatrix}\cfrac{\boldsymbol{m}_1^\mathrm{T}\boldsymbol{P}_i}{\boldsymbol{m}_3^\mathrm{T}\boldsymbol{P}_i}\\\cfrac{\boldsymbol{m}_2^\mathrm{T}\boldsymbol{P}_i}{\boldsymbol{m}_3^\mathrm{T}\boldsymbol{P}_i}\end{pmatrix}\longrightarrow\quad\frac{u_i}{v_i}=\frac{\frac1\lambda\frac{\left(\boldsymbol{m}_1^\mathrm{T}\boldsymbol{P}_i\right)}{\left(\boldsymbol{m}_3^\mathrm{T}\boldsymbol{P}_i\right)}}{\frac1\lambda\frac{\left(\boldsymbol{m}_2^\mathrm{T}\boldsymbol{P}_i\right)}{\left(\boldsymbol{m}_3^\mathrm{T}\boldsymbol{P}_i\right)}}=\frac{\boldsymbol{m}_1^\mathrm{T}\boldsymbol{P}_i}{\boldsymbol{m}_2^\mathrm{T}\boldsymbol{P}_i}</script><script type="math/tex; mode=display">
+\begin{cases}v_1(\boldsymbol{m_1^\mathrm{T}}\boldsymbol{P_1})-u_1(\boldsymbol{m_2^\mathrm{T}}\boldsymbol{P_1})=0\\\vdots\\v_i(\boldsymbol{m_1^\mathrm{T}}\boldsymbol{P_i})-u_i(\boldsymbol{m_2^\mathrm{T}}\boldsymbol{P_i})=0\\\vdots\\v_n(\boldsymbol{m_1^\mathrm{T}}\boldsymbol{P_n})-u_n(\boldsymbol{m_2^\mathrm{T}}\boldsymbol{P_n})=0\end{cases} ,\quad 
+L\stackrel{\mathrm{def}}{=}\begin{pmatrix}v_1\boldsymbol{P_1^\mathrm{T}}&-u_1\boldsymbol{P_1^\mathrm{T}}\\v_2\boldsymbol{P_2^\mathrm{T}}&-u_2\boldsymbol{P_2^\mathrm{T}}\\\vdots&\vdots\\v_n\boldsymbol{P_n^\mathrm{T}}&-u_n\boldsymbol{P_n^\mathrm{T}}\end{pmatrix}</script><script type="math/tex; mode=display">
+构建 \quad Ln = 0，通过SVD求得 \quad n=\binom{m_1}{m_2}</script><p>非线性部分：</p>
+<p>$m_3,k_1,k_2,k_3$ 关于 $m_1,m_2$ 的非线性函数，采用 <strong>牛顿法和L-M法 </strong> 求解。</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>AppZ99
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://example.com/2023/08/08/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95%E4%B8%8E%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/" title="【笔记】基于图像的三维重建——相机几何与相机标定">http://example.com/2023/08/08/【笔记】基于图像的三维重建——相机几何与相机标定/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/3D-Reconstruction/" rel="tag"><i class="fa fa-tag"></i> 3D Reconstruction</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/08/07/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E6%B7%B1%E8%93%9D%E5%AD%A6%E9%99%A2NeRF%E7%B3%BB%E5%88%97%E5%88%86%E4%BA%AB/" rel="prev" title="【笔记】深蓝学院NeRF系列分享">
+      <i class="fa fa-chevron-left"></i> 【笔记】深蓝学院NeRF系列分享
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/08/13/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E5%9F%BA%E7%A1%80%E4%B8%8E%E5%AF%B9%E6%9E%81%E5%87%A0%E4%BD%95/" rel="next" title="【笔记】基于图像的三维重建——三维从简基础与对极几何">
+      【笔记】基于图像的三维重建——三维从简基础与对极几何 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1%E3%80%81%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95"><span class="nav-text">1、相机几何</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1%E3%80%81%E9%92%88%E5%AD%94%E6%A8%A1%E5%9E%8B-amp-%E9%80%8F%E9%95%9C"><span class="nav-text">1.1、针孔模型 &amp; 透镜</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2%E3%80%81%E7%9B%B8%E6%9C%BA%E5%87%A0%E4%BD%95"><span class="nav-text">1.2、相机几何</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3%E3%80%81%E5%85%B6%E4%BB%96%E7%9B%B8%E6%9C%BA%E6%A8%A1%E5%9E%8B"><span class="nav-text">1.3、其他相机模型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%E3%80%81%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A"><span class="nav-text">2、相机标定</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1%E3%80%81%E9%92%88%E5%AD%94%E6%A8%A1%E5%9E%8B-amp-%E9%80%8F%E9%95%9C%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A%E9%97%AE%E9%A2%98"><span class="nav-text">2.1、针孔模型 &amp; 透镜相机标定问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2%E3%80%81%E5%BE%84%E5%90%91%E7%95%B8%E5%8F%98%E7%9A%84%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A"><span class="nav-text">2.2、径向畸变的相机标定</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AppZ99"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">AppZ99</p>
+  <div class="site-description" itemprop="description">TKAW</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/APPZ99" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;APPZ99" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:925455893@qq.com" title="E-Mail → mailto:925455893@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+      <div id="music163player">
+        <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=1872048272&auto=1&height=66">
+        </iframe>
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AppZ99</span>
+
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">51k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">46 分钟</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,0' opacity='0.5' zIndex='-1' count='150' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":500},"mobile":{"show":true}});</script></body>
+</html>
