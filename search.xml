@@ -1733,8 +1733,172 @@ L\stackrel{\mathrm{def}}{=}\begin{pmatrix}v_1\boldsymbol{P_1^\mathrm{T}}&-u_1\bo
       </tags>
   </entry>
   <entry>
-    <title>【笔记】基于图像的三维重建——三维从简基础与对极几何</title>
+    <title>【笔记】基于图像的三维重建——三维重建基础与对极几何</title>
     <url>/2023/08/13/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E5%9F%BA%E7%A1%80%E4%B8%8E%E5%AF%B9%E6%9E%81%E5%87%A0%E4%BD%95/</url>
-    <content><![CDATA[]]></content>
+    <content><![CDATA[<blockquote>
+<p>本文主要关于深蓝学院系列课程——基于图像的三维重建的笔记。</p>
+<p>课程链接 <a href="https://www.shenlanxueyuan.com/course/627">基于图像的三维重建</a></p>
+</blockquote>
+<h2 id="1、单视几何"><a href="#1、单视几何" class="headerlink" title="1、单视几何"></a>1、单视几何</h2><h3 id="1-1、无穷远点、无穷远线与无穷远面"><a href="#1-1、无穷远点、无穷远线与无穷远面" class="headerlink" title="1.1、无穷远点、无穷远线与无穷远面"></a>1.1、无穷远点、无穷远线与无穷远面</h3><p><strong>无穷远点：</strong> 空间中平行线的交点。</p>
+<p><strong>无穷远线：</strong> 平行平面在无穷远处交于一条公共线。</p>
+<p><strong>无穷远面：</strong> 两条或多条无穷远直线的集合。</p>
+<p><strong>表示：</strong> 无穷远点与无穷远面表示如下（三维空间无穷远线较难表示，一般是两个平面的交线表示）：</p>
+<script type="math/tex; mode=display">
+无穷远点： \quad X_\infty=\begin{pmatrix}a\\b\\c\\0\end{pmatrix} \\
+无穷远面： \quad\Pi_\infty=\begin{pmatrix}0\\0\\0\\1\end{pmatrix}</script><span id="more"></span>
+<h3 id="1-2、隐消点和隐消线"><a href="#1-2、隐消点和隐消线" class="headerlink" title="1.2、隐消点和隐消线"></a>1.2、隐消点和隐消线</h3><p><strong>隐消点：</strong> 三维空间中无穷远点在图像平面上的投影点，其与直线方向满足如下关系：其中 $v$ 为隐消点， $d$ 为直线方向， $K$ 为相机投影矩阵。</p>
+<script type="math/tex; mode=display">
+v=Kd\quad\boxed{\Longrightarrow}\quad d=\frac{K^{-1}v}{||K^{-1}v||}</script><p><strong>2D平面上的直线变换：</strong> 已知：直线 $l$ 和变换矩阵 $H$ ，求解变换后的直线 $l’$ ：</p>
+<script type="math/tex; mode=display">
+{l^{\prime}=H^{-\mathrm{T}}l} \\
+隐消线l_{\infty}与其投影线有：\quad l_{h}=M^{-\mathrm{T}}l_{\infty}</script><p><strong>隐消线与平面法向量：</strong> 识别隐消线有助于重构。**图像中两条直线如果消失在隐消线上，则这两条线是3D空间中的平行线。</p>
+<p><img src="/2023/08/13/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E5%9F%BA%E7%A1%80%E4%B8%8E%E5%AF%B9%E6%9E%81%E5%87%A0%E4%BD%95/image-20230813223038086.png" alt="image-20230813223038086"></p>
+<script type="math/tex; mode=display">
+{n=K^\mathrm{T}l_h}</script><p><strong>两组平行线的夹角与隐消点：</strong> </p>
+<p><img src="/2023/08/13/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E5%9F%BA%E7%A1%80%E4%B8%8E%E5%AF%B9%E6%9E%81%E5%87%A0%E4%BD%95/image-20230813223345010.png" alt="image-20230813223345010"></p>
+<script type="math/tex; mode=display">
+{cos\theta}=\frac{d_1\cdot d_2}{|d_1||d_2|}=\frac{(K^{-1}v_1)^\mathrm{T}}{\sqrt{(K^{-1}v_1)^\mathrm{T}K^{-1}v_1}}\frac{K^{-1}v_2}{\sqrt{(K^{-1}v_2)^\mathrm{T}K^{-1}v_2}} \\
+令 W=K^{\mathrm{T}}K^{-1}=(KK^{\mathrm{T}})^{-1} \\
+cos\theta = \frac{v_1^\mathrm{T}Wv_2}{\sqrt{v_1^\mathrm{T}Wv_1}\sqrt{v_2^\mathrm{T}Wv_2}}</script><p><strong>$W$ 的性质：</strong> </p>
+<ol>
+<li>$\boldsymbol{W}=\begin{pmatrix}W_1&amp;W_2&amp;W_4\W_2&amp;W_3&amp;W_5\W_4&amp;W_5&amp;W_6\end{pmatrix}$ 对称；</li>
+<li>$W_2 = 0$ 为零倾斜投影；</li>
+<li>$W_2=0; W_1 = W_3$ ，相机为方形像素；</li>
+<li>$W$ 仅 <strong>5个</strong> 自由度。</li>
+</ol>
+<p><strong>总结：</strong> </p>
+<p><img src="/2023/08/13/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E5%9F%BA%E7%A1%80%E4%B8%8E%E5%AF%B9%E6%9E%81%E5%87%A0%E4%BD%95/image-20230813223907533.png" alt="image-20230813223907533" style="zoom:80%;"></p>
+<h3 id="1-3、单视图标定"><a href="#1-3、单视图标定" class="headerlink" title="1.3、单视图标定"></a>1.3、单视图标定</h3><p><strong>两个假设：</strong> 零倾斜；正方形像素。<strong>可以得到两个内参。</strong></p>
+<p><strong>三个消隐点：</strong> 根据 <strong>两两垂直</strong> 的消隐点得到三条方程，求解剩下的内参：</p>
+<p><img src="/2023/08/13/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E5%9F%BA%E7%A1%80%E4%B8%8E%E5%AF%B9%E6%9E%81%E5%87%A0%E4%BD%95/image-20230813224226651.png" alt="image-20230813224226651" style="zoom:80%;"></p>
+<script type="math/tex; mode=display">
+\begin{cases}\boldsymbol{v_1}^\mathrm{T}\boldsymbol{Wv_2}=0\\\boldsymbol{v_1}^\mathrm{T}\boldsymbol{Wv_3}=0\\\boldsymbol{v_2}^\mathrm{T}\boldsymbol{Wv_3}=0&\end{cases}</script><p><strong>重构场景平面方向：</strong> </p>
+<p><img src="/2023/08/13/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E5%9F%BA%E7%A1%80%E4%B8%8E%E5%AF%B9%E6%9E%81%E5%87%A0%E4%BD%95/image-20230813224357768.png" alt="image-20230813224357768" style="zoom:80%;"></p>
+<p><strong>单视图重构缺陷：</strong> 场景的实际比例无法复制。</p>
+<h2 id="2、三维重建基础与极几何"><a href="#2、三维重建基础与极几何" class="headerlink" title="2、三维重建基础与极几何"></a>2、三维重建基础与极几何</h2><h3 id="2-1、三维重建基础"><a href="#2-1、三维重建基础" class="headerlink" title="2.1、三维重建基础"></a>2.1、三维重建基础</h3><p><strong>三角化求解问题：</strong> 已知： $p,p’,K,K’,R,T$ ，求解：$P$ 点的三维坐标？</p>
+<p><img src="/2023/08/13/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E5%9F%BA%E7%A1%80%E4%B8%8E%E5%AF%B9%E6%9E%81%E5%87%A0%E4%BD%95/image-20230814095944122.png" alt="image-20230814095944122" style="zoom:80%;"></p>
+<ol>
+<li><strong>线性求解：</strong>找到对应点对构建方程组求解。</li>
+</ol>
+<script type="math/tex; mode=display">
+\\
+\begin{cases}\boldsymbol{p}=\boldsymbol{M}\boldsymbol{P}=\boldsymbol{K}(\boldsymbol{I}0)\boldsymbol{P}\\\\\boldsymbol{p}'=\boldsymbol{M}'\boldsymbol{P}=\boldsymbol{K}'(\boldsymbol{R}\boldsymbol{T})\boldsymbol{P}\end{cases} \\
+\to \begin{cases}\begin{gathered}
+u={\frac{m_{1}P}{m_{3}P}} \rightarrow m_{1}P-u(\boldsymbol{m}_{3}P)=0 \\
+v=\frac{m_{2}P}{m_{3}P} \rightarrow m_{2}P-v(\boldsymbol{m}_{3}\boldsymbol{P})=0 \\
+u^{\prime}=\frac{m_{1}^{\prime}P}{m_{3}P} \rightarrow m_{1}^{\prime}P-u^{\prime}(\boldsymbol{m}_{3}^{\prime}\boldsymbol{P})=0 \\
+v^{\prime}=\frac{m_{2}^{\prime}P}{m_{3}^{\prime}P} \to\boldsymbol{m}_2^{\prime}\boldsymbol{P}-v^{\prime}(\boldsymbol{m}_3^{\prime}\boldsymbol{P})=0 
+\end{gathered}\end{cases} \\
+\to AP=0,A=\begin{pmatrix}u\boldsymbol{m}_3-\boldsymbol{m}_1\\v\boldsymbol{m}_3-\boldsymbol{m}_2\\u'\boldsymbol{m}_3'-\boldsymbol{m}_1'\\v'\boldsymbol{m}_3'-\boldsymbol{m}_2'\end{pmatrix}</script><p>方程数 4 个，未知参数 3 个，构成超定齐次线性方程组，采用最小二乘解：</p>
+<pre><code>  1. 对 $A$ 进行奇异值分解 $A=UDV^T$ ；
+  2. $P$ 为 $V$ 矩阵的最后一列。
+</code></pre><ol>
+<li><strong>非线性解法：</strong> 寻找 $P$ 最小化能量函数 $d(p,MP)+d(p’,M’P)$ ，采用牛顿法或L-M方法。</li>
+</ol>
+<p><img src="/2023/08/13/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E5%9F%BA%E7%A1%80%E4%B8%8E%E5%AF%B9%E6%9E%81%E5%87%A0%E4%BD%95/image-20230814104658966.png" alt="image-20230814104658966" style="zoom:80%;"></p>
+<p><strong>实际应用中存在的问题：</strong> 由于噪声存在，通常两条直线不相交，且线性、非线性方法都需要知道内参矩阵以及变换矩阵。</p>
+<ol>
+<li>问题1： 已知 $p,p’$ ，相机内参 $K,K’$ 。求解：相机间的 $R,T$ 以及 $P$ 的三维坐标？</li>
+<li>问题2： 已知 $p,p’$ 。求解：相机内参 $K,K’$ ，相机间的 $R,T$ 以及 $P$ 的三维坐标？</li>
+</ol>
+<p><strong>多视图几何的关键问题：</strong></p>
+<ol>
+<li>相机几何：从一张或多张图像求解相机内、外参数；</li>
+<li>场景几何：通过两至多幅图寻找3D场景坐标；</li>
+<li>对应关系：已知一个图像中的 $p$ 点，如何在另一个图像中找到 $p’$ 点。</li>
+</ol>
+<h3 id="2-2、极几何与基础矩阵"><a href="#2-2、极几何与基础矩阵" class="headerlink" title="2.2、极几何与基础矩阵"></a>2.2、极几何与基础矩阵</h3><p><strong>极几何：</strong> 描述了同一场景或者物体的两个视点图像间的几何关系。</p>
+<ul>
+<li>概念：<ul>
+<li>极平面：过点 $P,O_1,O_2$ 的平面；</li>
+<li>基线： $O_1,O_2$ 的连线；</li>
+<li>极线： 极平面与成像平面的交线；</li>
+<li>极点： 基线与成像平面的交点。</li>
+</ul>
+</li>
+<li>性质：<ul>
+<li>极平面相交于基线；</li>
+<li>极线相交于极点；</li>
+<li>$p(p’)$ 的对应点在极线 $l’(l)$ 上。</li>
+</ul>
+</li>
+<li><strong>作用：</strong>将搜索范围缩小到对应的极线上。</li>
+</ul>
+<p><img src="/2023/08/13/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E5%9F%BA%E7%A1%80%E4%B8%8E%E5%AF%B9%E6%9E%81%E5%87%A0%E4%BD%95/image-20230814110013171.png" alt="image-20230814110013171" style="zoom:80%;"></p>
+<p><img src="/2023/08/13/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E5%9F%BA%E7%A1%80%E4%B8%8E%E5%AF%B9%E6%9E%81%E5%87%A0%E4%BD%95/image-20230814110337607.png" alt="image-20230814110337607" style="zoom:80%;"></p>
+<p><strong>本质矩阵：</strong> 对 <strong>规范化相机</strong> 拍摄的两个视点图像间的极几何关系进行 <strong>代数描述</strong>。</p>
+<ul>
+<li>推导：<ul>
+<li>$p’,O_2$ 在 $O_1$ 的坐标分别为：$R^{\mathrm{T}}p^{^{\prime}}-R^{\mathrm{T}}T$ ， $-R^TT$；</li>
+<li>上述两个向量的差乘垂直于极平面：$R^\mathrm{T}T\times(R^\mathrm{T}p^{\prime}-R^\mathrm{T}T)=R^\mathrm{T}T\times R^\mathrm{T}p^{\prime} = 0$ ；</li>
+<li>整理可得 $p^{\prime\text{T}} ( T \times R ) p = 0$ ；</li>
+<li>对上式进行整理：令 <strong>$E=T\times R=[T_\times]R$ </strong> ，<strong>$E$ 称为本质矩阵</strong>。即：$p’^TEp=0$ .</li>
+</ul>
+</li>
+</ul>
+<p><img src="/2023/08/13/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E5%9F%BA%E7%A1%80%E4%B8%8E%E5%AF%B9%E6%9E%81%E5%87%A0%E4%BD%95/image-20230814111605734.png" alt="image-20230814111605734"></p>
+<ul>
+<li>性质：<ul>
+<li>$p(p’)$ 对应的极线是 $l’(l’=Ep)(l(l=E^Tp’))$ ；</li>
+<li>$Ee = 0$ 与 $e’^TE=0$ ；</li>
+<li>$E$ 是奇异的（秩为2）；</li>
+<li>$E$ 有 <strong>5个自由度</strong> （三个旋转，三个平移，$det(E) = 0$ 去掉一个自由度）。</li>
+</ul>
+</li>
+</ul>
+<p><strong>基础矩阵：</strong> 对 <strong>一般的透视相机</strong> 拍摄的两个视点图像间的极几何关系进行 <strong>代数描述</strong> 。</p>
+<ul>
+<li><p>推导：参考本质矩阵推导。<strong>构建规范化相机模型</strong>。</p>
+<ul>
+<li>$F={K^{\prime}}^{-\mathrm{T}}[T_{\times}]RK^{-1}$</li>
+</ul>
+</li>
+<li><p>性质：</p>
+<ul>
+<li>$p(p’)$ 对应的极线是 $l’(l’=Fp)(l(l=F^Tp’))$ ；</li>
+<li>$Fe = 0$ 与 $e’^TF=0$ ；</li>
+<li>$F$ 是奇异的（秩为2）；</li>
+<li>$F$ 有 <strong>7个自由度</strong> （尺度无法确定，$det(E) = 0$ 去掉一个自由度）。</li>
+</ul>
+</li>
+</ul>
+<p><strong>自由度问题：</strong> 参考：<a href="https://www.zhihu.com/question/270431743/answer/401695352">为什么本质矩阵５自由度，基础矩阵７自由度，单应矩阵８自由度？</a></p>
+<h3 id="2-3、基础矩阵估计"><a href="#2-3、基础矩阵估计" class="headerlink" title="2.3、基础矩阵估计"></a>2.3、基础矩阵估计</h3><p><strong>8点法：</strong> $F$ 共7个自由度，理论上7个点即可，但计算方法比较复杂。</p>
+<script type="math/tex; mode=display">
+(u^{\prime},v^{\prime},1)\begin{pmatrix}F_{11}&F_{12}&F_{13}\\F_{21}&F_{22}&F_{23}\\F_{31}&F_{32}&F_{33}\end{pmatrix}\begin{pmatrix}u\\v\\1\end{pmatrix}=0\quad\longrightarrow\quad(uu^{\prime},vu^{\prime},uv^{\prime},vv^{\prime},v^{\prime},u,v,1)\begin{pmatrix}F_{11}\\F_{12}\\F_{13}\\F_{21}\\F_{22}\\F_{23}\\F_{31}\\F_{33}\end{pmatrix}=0</script><p><strong>求解：</strong> </p>
+<ol>
+<li>构建齐次系统 $Wf=0$ ；</li>
+<li>通常选取点对 $N&gt;8$ ，构建最小二乘解，进行 SVD 分解求得 $\hat{F}$ 。$W$ 为点对矩阵，$f$ 为待求 $F$ 矩阵的向量形式， $f$ 为 $W$ 矩阵最小奇异值的右奇异向量，且 $|f|=1$</li>
+</ol>
+<script type="math/tex; mode=display">
+Wf=0\quad \to \quad \begin{aligned}&\min_f\|Wf\|\\&s.t.\parallel f\parallel=1\end{aligned} \quad \to \quad \hat{F}</script><p><strong>$\hat{F}$ 并非我们所要求的基础矩阵：</strong></p>
+<ul>
+<li>原因：基础矩阵秩为 2， $\hat{F}$ 秩通常为3，即满秩。</li>
+<li>解决：寻找 $F$ 最小化 $|F-\hat{F}|_F \quad s.t.det(F)=0$.</li>
+</ul>
+<script type="math/tex; mode=display">
+{SVD(\widehat{F})=U\begin{pmatrix}s_1&{0}&{0}\\{0}&s_2&{0}\\{0}&{0}&{s_3}\end{pmatrix}V^\mathrm{T}}\quad\Longrightarrow\quad{F=U\begin{pmatrix}s_1&{0}&{0}\\{0}&s_2&{0}\\{0}&{0}&{0}\end{pmatrix}V^\mathrm{T}}</script><p><strong>八点法：</strong> 步骤如下：</p>
+<ol>
+<li>构建 $W$ 矩阵；</li>
+<li>对 $W$ 矩阵进行奇异值分解求 $\hat{F}$ ；</li>
+<li>执行秩为 2 的约束求 $F$ ，即式（10）。</li>
+</ol>
+<p><strong>八点法缺陷：</strong> 精度较低， $W$ 矩阵中各个元素的数值差异过大。</p>
+<p><strong>归一化八点法：</strong> 解决八点法缺陷。**对每幅图施加变换 $T$ （平移和缩放），让其满足如下条件：</p>
+<ul>
+<li>原点 = 图像上点的重心；</li>
+<li>各个像点到坐标原点的均方根距离等于 $\sqrt{2}$ （或者均方距离等于2）。</li>
+</ul>
+<ol>
+<li>分别计算左图和右图的 $T$ 和 $T’$ ；</li>
+<li>坐标归一化 $q_i = Tp_i$ ，$q’_i = T’p’_i$ ；</li>
+<li>通过八点法计算矩阵 $F_q$ ；</li>
+<li>逆归一化 $F=T’_TF_qT$ 。</li>
+</ol>
+<p><img src="/2023/08/13/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E5%9F%BA%E7%A1%80%E4%B8%8E%E5%AF%B9%E6%9E%81%E5%87%A0%E4%BD%95/image-20230814160747095.png" alt="image-20230814160747095" style="zoom:80%;"></p>
+]]></content>
+      <tags>
+        <tag>3D Reconstruction</tag>
+      </tags>
   </entry>
 </search>
