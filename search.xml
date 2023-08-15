@@ -1779,6 +1779,45 @@ E(u,v)\approx(u\quad v)\boldsymbol{M}\binom uv\Rightarrow(u\quad v)\boldsymbol{M
 <li>计算距离比 $d_1/d_2$ ，如果小于某个阈值，如0.6，则认为作图特征点 $i$ 与右图特征点 $j_1$ 是一对匹配点。</li>
 </ol>
 <p><img src="/2023/08/14/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%9B%BE%E5%83%8F%E7%89%B9%E5%BE%81/image-20230815110140175.png" alt="image-20230815110140175" style="zoom:80%;"></p>
+<h2 id="3、模型拟合之RANSAC"><a href="#3、模型拟合之RANSAC" class="headerlink" title="3、模型拟合之RANSAC"></a>3、模型拟合之RANSAC</h2><p><strong>RANSAC：</strong> 随即采样一致性（Random sample consesus, RANSAC）：一种适用于数据受到异常值污染的模型拟合方法。</p>
+<p><strong>基本步骤：</strong> </p>
+<ol>
+<li>随机均匀采样获取模型求解所需的最小子集；</li>
+<li>应用该子集估计模型参数；</li>
+<li>计算剩余样本与当前模型一致性，统计满足当前模型点（内点）的个数，作为当前模型分数；</li>
+<li>以设定的次数重复上述步骤，最终输出分数最高的模型。</li>
+</ol>
+<p><strong>参数设置：</strong> </p>
+<ul>
+<li>初始点数量 $s$ ：模型求解所需的最少的点的个数；</li>
+<li>距离门线 $\tau$ ；</li>
+<li>采样次数 $N$ ：选择采样次数 $N$ 使得至少有一次采样为真实解的概率为 $p$ （如： $p=0.99$）</li>
+</ul>
+<script type="math/tex; mode=display">
+\begin{aligned}&(1-(1-e)^s)^N=1-p\\\\&N=\log{(1-p)}/\log{(1-(1-e)^s)}，\quad e \text{为外点率（噪点占全部点的比率）}\end{aligned}</script><p><strong>自适应迭代次数：</strong> 外点率通常是未知的，按最坏的情况估计，如 50%；然后，根据计算结果自适应调整外点比率，修正所需要的总采样次数。</p>
+<ol>
+<li>$N = \infty,\text{采样次数}=0,e=1$ ；</li>
+<li>While $N$ &gt; 采样次数：<ol>
+<li>采样一组样本点，计算模型内点数；</li>
+<li>设置 $e’=1-\text{内点数/总点数}$ ；</li>
+<li>if ($e’&lt;e$) 令 $e=e’$ ，基于 $e$ 计算所需的迭代次数 $N$ ；</li>
+<li>采样次数 + 1.</li>
+</ol>
+</li>
+</ol>
+<p><strong>RANSAC 估计基础矩阵：</strong> </p>
+<ul>
+<li>输入：左、右图像的所有匹配点对；</li>
+<li>输出：两副图像间的基础矩阵 $F$ ：<ol>
+<li>随机均匀采样八对匹配点对；</li>
+<li>基于采样点对，使用归一化八点法估计基础矩阵 $\hat{F}$；</li>
+<li>计算生于匹配点对是否满足当前 $\hat{F}$ ，统计满足当前 $\hat{F}$ 的匹配点对数量作为当前 $\hat{F}$ 分数；</li>
+<li>以设定的次数重复1-3 ；</li>
+<li>使用最高分数的 $\hat{F}$ 的所有匹配点对估计基础矩阵 $F$ ；</li>
+<li>输出 $F$ 。</li>
+</ol>
+</li>
+</ul>
 ]]></content>
       <tags>
         <tag>3D Reconstruction</tag>
