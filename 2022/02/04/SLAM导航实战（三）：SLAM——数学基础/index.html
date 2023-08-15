@@ -317,7 +317,7 @@ v_y \\
 \omega _z
 \end{bmatrix}
 \Delta t</script><p>上式需要满足两个条件：<em>运动时间很小；实际前馈运动不存在误差</em></p>
-<p>若此时考虑速度的误差，且<strong>$u<em>k、x</em>{k-1}、x_k$均服从高斯分布</strong>，此时$u_k$的协方差矩阵表示为：</p>
+<p>若此时考虑速度的误差，且<strong>$u_k、x_{k-1}、x_k$均服从高斯分布</strong>，此时$u_k$的协方差矩阵表示为：</p>
 <script type="math/tex; mode=display">
 \sum u_k=\begin{bmatrix}
  \sigma_{v_x}^2  & 0 & 0\\
@@ -459,7 +459,7 @@ S_{MAP}=arg \max_S \psi(\boldsymbol{S})</script><p>引入噪声，且噪声符�
 \Delta \psi=\psi\left(\boldsymbol{x}^{(k)}+\Delta \boldsymbol{x}\right)-\psi\left(\boldsymbol{x}^{(k)}\right)=\psi\left(\boldsymbol{x}^{(k+1)}\right)-\psi\left(\boldsymbol{x}^{(k)}\right) \\
 \Delta \varphi=\varphi(\Delta \boldsymbol{x})-\varphi(\boldsymbol{0})=2 \Delta \boldsymbol{x}^{\mathrm{T}} \cdot \boldsymbol{J}_{e}^{\mathrm{T}} \cdot \boldsymbol{e}+\Delta \boldsymbol{x}^{\mathrm{T}} \cdot \boldsymbol{J}_{e}^{\mathrm{T}} \cdot \boldsymbol{J}_{e} \cdot \Delta \boldsymbol{x}
 \end{array}  \\</script><script type="math/tex; mode=display">
-\gamma_{k}=\frac{\Delta \psi}{\Delta \varphi}=\frac{\psi\left(\boldsymbol{x}^{(k+1)}\right)-\psi\left(\boldsymbol{x}^{(k)}\right)}{2 \Delta \boldsymbol{x}^{\mathrm{T}} \cdot \boldsymbol{J}_{e}^{\mathrm{T}} \cdot \boldsymbol{e}+\Delta \boldsymbol{x}^{\mathrm{T}} \cdot \boldsymbol{J}_{e}^{\mathrm{T}} \cdot \boldsymbol{J}_{e} \cdot \Delta \boldsymbol{x}}</script><p>通过$\gamma<em>{k}$来调节$\mu</em>{k}$：趋近1，高斯-牛顿主导；逼近0，梯度下降主导；比值小于0，则拒绝迭代，修改阻尼系数。</p>
+\gamma_{k}=\frac{\Delta \psi}{\Delta \varphi}=\frac{\psi\left(\boldsymbol{x}^{(k+1)}\right)-\psi\left(\boldsymbol{x}^{(k)}\right)}{2 \Delta \boldsymbol{x}^{\mathrm{T}} \cdot \boldsymbol{J}_{e}^{\mathrm{T}} \cdot \boldsymbol{e}+\Delta \boldsymbol{x}^{\mathrm{T}} \cdot \boldsymbol{J}_{e}^{\mathrm{T}} \cdot \boldsymbol{J}_{e} \cdot \Delta \boldsymbol{x}}</script><p>通过$\gamma_{k}$来调节$\mu_{k}$：趋近1，高斯-牛顿主导；逼近0，梯度下降主导；比值小于0，则拒绝迭代，修改阻尼系数。</p>
 <h4 id="狗腿算法"><a href="#狗腿算法" class="headerlink" title="狗腿算法"></a>狗腿算法</h4><p>列文伯格-马夸尔特算法存在拒绝迭代而浪费算力的情况</p>
 <script type="math/tex; mode=display">
 \begin{array}{c}
@@ -597,7 +597,7 @@ S_{MAP}=arg \max_S \psi(\boldsymbol{S})</script><p>引入噪声，且噪声符�
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-count">20</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -658,12 +658,12 @@ S_{MAP}=arg \max_S \psi(\boldsymbol{S})</script><p>引入噪声，且噪声符�
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">56k</span>
+    <span title="站点总字数">59k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">50 分钟</span>
+    <span title="站点阅读时长">53 分钟</span>
 </div>
 
         
