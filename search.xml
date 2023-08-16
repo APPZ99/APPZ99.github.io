@@ -2093,4 +2093,144 @@ L\stackrel{\mathrm{def}}{=}\begin{pmatrix}v_1\boldsymbol{P_1^\mathrm{T}}&-u_1\bo
         <tag>Face Recognize</tag>
       </tags>
   </entry>
+  <entry>
+    <title>【笔记】基于图像的三维重建——双目立体视觉</title>
+    <url>/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/</url>
+    <content><![CDATA[<blockquote>
+<p>本文主要关于深蓝学院系列课程——基于图像的三维重建的笔记。</p>
+<p>课程链接 <a href="https://www.shenlanxueyuan.com/course/627">基于图像的三维重建</a></p>
+</blockquote>
+<h2 id="1、基于平行视图的双目立体视觉"><a href="#1、基于平行视图的双目立体视觉" class="headerlink" title="1、基于平行视图的双目立体视觉"></a>1、基于平行视图的双目立体视觉</h2><p><strong>平行视图：</strong> 平行视图为极几何的一种特例。</p>
+<ul>
+<li>基线平行于图像平面，极点 $e$ 和 $e’$ 位于无穷远处；</li>
+<li>极线是水平的，平行于 $u$ 轴；</li>
+</ul>
+<script type="math/tex; mode=display">
+K=K^{\prime}\quad\quad R=I\quad\quad\boldsymbol{T}=\begin{pmatrix}t\\0\\0\end{pmatrix}\quad\quad\boldsymbol{e}^{\prime}=\begin{pmatrix}1\\0\\0\end{pmatrix}</script><p><img src="/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/image-20230815184635930.png" alt="image-20230815184635930" style="zoom:80%;"></p>
+<span id="more"></span>
+<p><strong>平行视图的基础矩阵：</strong> </p>
+<p><img src="/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/image-20230815185001159.png" alt="image-20230815185001159" style="zoom:80%;"></p>
+<p>$O_1$ 在右像素平面上的投影点为：</p>
+<script type="math/tex; mode=display">
+\begin{matrix}e^{\prime}=K^{\prime}(R&T)\\\end{matrix}\begin{pmatrix}0\\0\\0\\1\end{pmatrix}=K^{\prime}T</script><p>叉乘性质：对于任何向量 $a$ ，如果 $B$ 可逆，相差一个尺度情况下：</p>
+<script type="math/tex; mode=display">
+[a_{\times}]B=B^{-\mathrm{T}}[(B^{-1}a)_{\times}]</script><p>令 $a=T,B=K^{\prime{-1}}$ ，则：</p>
+<script type="math/tex; mode=display">
+[T_{\times}]K^{\prime{-1}}=K^{\prime\mathrm{T}}[(K^{\prime}T)_{\times}]
+\\\quad[T_{\times}]=K^{\prime\mathrm{T}}[(K^{\prime}T)_{\times}]K^{\prime}</script><p>根据基础矩阵 $F={K^{\prime}}^{-\mathrm{T}}[T_{\times}]RK^{-1}$ ，得到：</p>
+<script type="math/tex; mode=display">
+F=K^{\prime{-T}}[T_{\times}]RK^{-1}=K^{\prime{-T}}K^{\prime\mathrm{T}}[(K^{\prime}T)_{\times}]K^{\prime}RK^{-1}=[(K^{\prime}T)_{\times}]K^{\prime}RK^{-1}=[e^{\prime}{}_{\times}]K^{\prime}RK^{-1}</script><p>代入 （1）式可得：</p>
+<script type="math/tex; mode=display">
+F=[e^{\prime}_\times]K^{\prime}RK^{-1}=[e^{\prime}_\times]=\begin{pmatrix}0&0&0\\0&0&-1\\0&1&0\end{pmatrix}</script><p><strong>平行视图的极线 $l$ 为：</strong> 极线是 <strong>水平的，平行与 $u$ 轴</strong> ：</p>
+<script type="math/tex; mode=display">
+\boldsymbol{l}=\boldsymbol{F}^{\mathrm{T}}\boldsymbol{p}^{\prime}=\begin{pmatrix}0&0&0\\0&0&1\\0&-1&0\end{pmatrix}\begin{pmatrix}p_{u}^{\prime}\\p_{v}^{\prime}\\1\end{pmatrix}=\begin{pmatrix}0\\1\\-p_{v}^{\prime}\end{pmatrix}</script><p><strong>平行视图的 $p$ 和 $p’$ 关系：</strong> 两者 <strong>$v$ 坐标相同</strong>：</p>
+<script type="math/tex; mode=display">
+\\
+\begin{aligned}&\boldsymbol{p^{\prime T}}\boldsymbol{Fp}=0\iff(p_u^{\prime}\quad p_v^{\prime}\quad1)\begin{pmatrix}0&0&0\\0&0&-1\\0&1&0\end{pmatrix}\begin{pmatrix}p_u\\p_v\\1\end{pmatrix}=0\end{aligned} \\
+p_v =p'_v</script><p><strong>平行视图的性质：</strong></p>
+<ul>
+<li>极线是水平的，平行于 $u$ 轴；</li>
+<li>极点位于无穷远；</li>
+<li>$p$ 和 $p’$ 的 $v$ 坐标一样</li>
+</ul>
+<p><strong>平行视图的三角测量：</strong> </p>
+<p><img src="/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/image-20230815190411541.png" alt="image-20230815190411541" style="zoom:80%;"></p>
+<p>根据上图可得：</p>
+<script type="math/tex; mode=display">
+\frac{p_u^{\prime}-p_u}f=\frac Bz \\
+p_{u}-p_{u}^{\prime}=\frac{B\cdot f}{z}</script><p>视差 $p_{u}-p_{u}^{\prime}$ 与深度 $z$ 成<strong>反比</strong>。</p>
+<p><strong>双目立体视觉系统构建的核心问题：</strong></p>
+<ul>
+<li>如何获得平行视图？</li>
+<li>如何建立点对应关系？</li>
+</ul>
+<h2 id="2、图像校正"><a href="#2、图像校正" class="headerlink" title="2、图像校正"></a>2、图像校正</h2><p><img src="/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/image-20230815210732788.png" alt="image-20230815210732788" style="zoom:80%;"></p>
+<p><strong>图像校正步骤：</strong> </p>
+<ol>
+<li>在两副图像 $I$ 和 $I’$ 找到一组匹配点 $p_i \to p’_i$ ，不少于<strong>8个</strong>；</li>
+<li>计算基础矩阵 $F$ ，求解两副图像中的极点 $e$ 和 $e’$ ；</li>
+</ol>
+<script type="math/tex; mode=display">
+l_{i}=F^{\mathrm{T}}p_{i}^{\prime} \\
+\begin{pmatrix}\boldsymbol{l_1^\mathrm{T}}\\\vdots \\\boldsymbol{l_n^\mathrm{T}}\end{pmatrix}\boldsymbol{e=0}</script><ol>
+<li>选择透视变换 $H’$ 将 $e’$ 映射到无穷远点 $(f,0,0)$ ；</li>
+</ol>
+<script type="math/tex; mode=display">
+H^{\prime}=T^{-1}GRT</script><ul>
+<li>$I’$ 的中心点的齐次坐标为$(0,0,1)$ ，$e’$ 的齐次坐标为 $(e’_1,e’_2,1)$ ：</li>
+</ul>
+<script type="math/tex; mode=display">
+\boldsymbol{T}=\begin{pmatrix}1&0&-\frac{width}2\\0&1&-\frac{height}2\\0&0&1\end{pmatrix}</script><ul>
+<li>$e’&gt;0$ 时， $\alpha=1$ ，反之 $\alpha=-1$ ；$e’$ 的齐次坐标$(f,0,1)$ ：</li>
+</ul>
+<script type="math/tex; mode=display">
+R=\begin{pmatrix}\alpha\frac{e_1'}{\sqrt{e_1'^2+e_2'^2}}&\alpha\frac{e_2'}{\sqrt{e_1'^2+e_2'^2}}&0\\-\alpha\frac{e_2'}{\sqrt{e_1'^2+e_2'^2}}&\alpha\frac{e_1'}{\sqrt{e_1'^2+e_2'^2}}&0\\0&0&1\end{pmatrix}</script><ul>
+<li>$e’$ 的齐次坐标为$(f,0,0)$ ：</li>
+</ul>
+<script type="math/tex; mode=display">
+G=\begin{pmatrix}1&0&0\\0&1&0\\-\dfrac{1}{f}&0&1\end{pmatrix}</script><ol>
+<li>寻找对应的透视变换矩阵 $H$ ，使得下式最小：</li>
+</ol>
+<script type="math/tex; mode=display">
+\sum_id(\boldsymbol{Hp}_i,\boldsymbol{H}^{\prime}\boldsymbol{p}_i^{\prime}) \\
+\text{其中：}\quad H=H_AH'M \\
+H_A=\begin{pmatrix}a&b&c\\0&1&0\\0&0&1\end{pmatrix} \\
+M=[e_\times]F</script><p>对上式解释：<strong>平行视图中，对应的极线方程是相同的</strong>：</p>
+<p><img src="/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/image-20230815215607210.png" alt="image-20230815215607210" style="zoom:80%;"></p>
+<p>已知：直线 $l$ 和变换矩阵 $H$ ；</p>
+<p>求解：变换后的直线${\boldsymbol{\ell}}$ </p>
+<script type="math/tex; mode=display">
+\begin{aligned}\boldsymbol{p}^\mathrm{T}\boldsymbol{l}&=0&\boldsymbol{p}^{\prime\mathrm{T}}\boldsymbol{l}^{\prime}&=0\\\boldsymbol{y}&=\boldsymbol{H}\boldsymbol{p}&\boldsymbol{y}^{\prime}&=\boldsymbol{H}^{\prime}\boldsymbol{p}^{\prime}\\\boldsymbol{\ell}&=\boldsymbol{H}^{-\mathrm{T}}\boldsymbol{l}&{\ell}^{\prime}&=\boldsymbol{H}^{\prime{-\mathrm{T}}}\boldsymbol{l}^{\prime}\end{aligned}</script><p>故要最小化 ${\boldsymbol{\ell}}$ 和 ${\boldsymbol{\ell}’}$ 等价于式（15）。</p>
+<ol>
+<li>分别用矩阵 $H$ 和 $H’$ ，对左右两副图像 $I$ 和 $I’$ 进行重采样。</li>
+</ol>
+<h2 id="3、对应点搜索"><a href="#3、对应点搜索" class="headerlink" title="3、对应点搜索"></a>3、对应点搜索</h2><p><strong>双目融合问题：</strong> 给定 3D 点 $P$ ，在左右图像中找到相应的观测值 $p$ 和 $p’$ 。</p>
+<p><strong>平行视图的对应点搜索：</strong> 图像校正后， $p’$ 点沿着<strong>扫描线</strong>寻找即可。</p>
+<p><strong>归一化相关匹配：</strong></p>
+<p><img src="/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/image-20230815223007819.png" alt="image-20230815223007819" style="zoom:80%;"></p>
+<ol>
+<li>$p=(p_u,p_v)$ 处选择一个窗口 $W$ ，建立向量 $w$ ；</li>
+<li>在右图中沿扫描线在每个位置 $s’_u$ 建立窗口 $W’$ ，并获得 $w’$ 向量；</li>
+<li>计算每个 $s’_u$ 位置的$\frac{(w-\overline{w})^\mathrm{T}(w^{\prime}-\overline{w}^{\prime})}{||w-\overline{w}||\times||(w^{\prime}-\overline{w}^{\prime})||}$ 的值； $\overline{w}$ 为向量中每个元素均为 $W$ 内的灰度均值，目的是<strong>消除亮度和曝光的影响。</strong></li>
+<li>$p_{u}^{\prime}=arg\mathrm{max}\frac{(w-\bar{w})^{T}(w^{\prime}-\bar{w}^{\prime})}{||w-\bar{w}||\times||(w^{\prime}-\bar{w}^{\prime})||}$ 。</li>
+</ol>
+<p><strong>窗口大小的影响：</strong> </p>
+<ul>
+<li>较小的窗口：细节丰富；噪声更多；</li>
+<li>较大的窗口：视差图更平滑、噪声更少；细节丢失；</li>
+</ul>
+<p><img src="/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/image-20230815223620942.png" alt="image-20230815223620942" style="zoom:80%;"></p>
+<p><strong>相关法存在的问题：</strong></p>
+<ul>
+<li>透视缩短</li>
+<li>遮挡</li>
+</ul>
+<p><img src="/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/image-20230815223706500.png" alt="image-20230815223706500" style="zoom:80%;"></p>
+<ul>
+<li>基线选择</li>
+<li>同质区域</li>
+<li>重复模式</li>
+</ul>
+<p><img src="/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/image-20230815223836319.png" alt="image-20230815223836319" style="zoom:67%;"></p>
+<p><img src="/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/image-20230815223845875.png" alt="image-20230815223845875" style="zoom:67%;"></p>
+<p><strong>透视缩短和遮挡的解决方法：</strong> 为了减少透视缩短以及遮挡的影响，希望更小的 $B/z$ （基线深度比）比值，但当 $B/z$ 小时，测量值的小误差意味着估算深度的大误差。</p>
+<p><img src="/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/image-20230815224101851.png" alt="image-20230815224101851" style="zoom:80%;"></p>
+<p><img src="/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/image-20230815224110637.png" alt="image-20230815224110637" style="zoom:80%;"></p>
+<p><strong>引入其他约束：</strong> 为解决相关法的缺陷问题，引入其他约束：</p>
+<ul>
+<li>唯一性约束：一张图像中的任何点，在另一张图像中最多只有一个匹配点；</li>
+</ul>
+<p><img src="/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/image-20230815224246356.png" alt="image-20230815224246356" style="zoom:80%;"></p>
+<ul>
+<li>顺序约束/单调性约束：左右视图中的对应点次序一致：</li>
+</ul>
+<p><img src="/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/image-20230815224323714.png" alt="image-20230815224323714" style="zoom:80%;"></p>
+<ul>
+<li>平滑性约束：视差函数通常是平滑的。</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>3D Reconstruction</tag>
+      </tags>
+  </entry>
 </search>
