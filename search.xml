@@ -2622,4 +2622,186 @@ m(p,\boldsymbol{f}_p)=1-NCC(\boldsymbol{q}_1,\boldsymbol{H}_{ij}(\boldsymbol{q}_
         <tag>3D Reconstruction</tag>
       </tags>
   </entry>
+  <entry>
+    <title>【笔记】基于图像的三维重建——表面重建</title>
+    <url>/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/</url>
+    <content><![CDATA[<blockquote>
+<p>本文主要关于深蓝学院系列课程——基于图像的三维重建的笔记。</p>
+<p>课程链接 <a href="https://www.shenlanxueyuan.com/course/627">基于图像的三维重建</a></p>
+</blockquote>
+<h2 id="1、三维物体的表面表达方式"><a href="#1、三维物体的表面表达方式" class="headerlink" title="1、三维物体的表面表达方式"></a>1、三维物体的表面表达方式</h2><p><strong>边界表示法（Boundary Representation）：</strong> 将物体表面表示成一组封闭物体空间的四边形、三角形、参数曲面或者非参数的曲面，具有稳定性强、灵活性强、有助于表示表面细节。</p>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819160257192.png" alt="image-20230819160257192" style="zoom:80%;"></p>
+<span id="more"></span>
+<p><strong>空间划分法（Spatial-Partitioning Representations）：</strong> 将物体内部的空间划分成细小、不重叠的连续实体来描述物体的形状。</p>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819160400266.png" alt="image-20230819160400266" style="zoom:80%;"></p>
+<p><strong>构造体素法（Boundary Constructive Solid Geometry）：</strong>  通过集合运算（并、交、差）将简单规则的形状组合成更加复杂的形状，操作简单、便于实现，但是只能用来表示较为简单的实体，无法用于形状复杂或者表面精细的物体。</p>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819160514460.png" alt="image-20230819160514460" style="zoom:80%;"></p>
+<p><strong>三角网格（Triangular Mesh）：</strong> 最常见的三维模型表述方式。计算机图形学和计算机视觉中的三维网格处理绝大部分都是基于三角网格。</p>
+<ul>
+<li>三角网格的基本结构：<ul>
+<li>顶点（Vertex）</li>
+<li>面片（Facet）</li>
+<li>边（Edge）</li>
+</ul>
+</li>
+<li>点线和面上的各种属性<ul>
+<li>颜色（Color）</li>
+<li>法向量（Normal）</li>
+<li>纹理坐标（Texture Coordinate）</li>
+</ul>
+</li>
+</ul>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819160838707.png" alt="image-20230819160838707" style="zoom:80%;"></p>
+<h2 id="2、基于符号距离场的表面重建方法"><a href="#2、基于符号距离场的表面重建方法" class="headerlink" title="2、基于符号距离场的表面重建方法"></a>2、基于符号距离场的表面重建方法</h2><h3 id="2-1、基本概念"><a href="#2-1、基本概念" class="headerlink" title="2.1、基本概念"></a>2.1、基本概念</h3><p><strong>符号距离函数（Signed Distance Function）：</strong> 符号距离函数Signed Distance Function是某度量空间 $X$ 中的一个集合 $\Omega $ 的函数，决定 $X$ 中任一点到 $\Omega$ 边界 $\partial\Omega $ 的距离，并且由 $x$ 是在 $\Omega $ 内还是 $\Omega $ 外确定 SDF 的正负号：当 $x$ 在 $\Omega $ 内时，SDF 为正； 当 $x$ 在 $\Omega $ 外时， SDF 为负。</p>
+<script type="math/tex; mode=display">
+F(x)=\begin{cases}d(x,\partial\Omega)&ifx\in\Omega_i\\-d(x,\partial\Omega)&ifx\in\Omega_o\end{cases}</script><p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819161733649.png" alt="image-20230819161733649" style="zoom:80%;"></p>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819161746835.png" alt="image-20230819161746835" style="zoom:80%;"></p>
+<h3 id="2-2、基于隐函数的表面重建"><a href="#2-2、基于隐函数的表面重建" class="headerlink" title="2.2、基于隐函数的表面重建"></a>2.2、基于隐函数的表面重建</h3><p><strong>空间划分：</strong> 主要用于对隐函数进行离散化，即划分区域的每个区域计算一个符号距离值。</p>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819162012782.png" alt="image-20230819162012782" style="zoom:80%;"></p>
+<p><strong>八叉树构建：</strong> </p>
+<ol>
+<li>设定最大递归深度；</li>
+<li>找出场景的最大尺寸，并以此尺寸建立第一个立方体；</li>
+<li>依序将元素丢入能被包含且没有子节点的立方体；</li>
+<li>若没达到最大递归深度，就进行细分八等份，再将该立方体所装的元素全部分给八个子立方体；</li>
+<li><strong>若发现子立方体所分配到的元素数量不为零且跟父立方体是一样的，则该子立方体停止细分；</strong></li>
+<li>重复3，直到达到最大递归深度。</li>
+</ol>
+<p><strong>符号距离场构建：</strong></p>
+<ul>
+<li>对于grid，根据邻域中的样本点计算每个node的符号距离；</li>
+<li>对于octree，根据邻域中的样本点计算每个叶子结点的符号距离值。</li>
+</ul>
+<p><strong>符号距离场构建——局部方法：</strong> </p>
+<p>符号距离场函数的一般定义：</p>
+<script type="math/tex; mode=display">
+F(\boldsymbol{x})=\frac{\sum_ic_iw_i(\boldsymbol{x})f_i(\boldsymbol{x})}{\sum_ic_iw_i(\boldsymbol{x})}</script><p>一种简单的情况：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}f_i(x)&=(x-p_i)\cdot n_i\\\\w_i(x)&=\exp(-||x-p_i||^2)\end{aligned}</script><p><strong>FSSR方法</strong>的符号距离函数定义：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}f(x_i)&=f_x(x)f_y(y)f_z(z)=\frac{x}{\sigma^42\pi}\cdot e^{\frac{-1}{2\sigma^2}(x^2+y^2+z^2)}\\\\f_x(x)&=\frac{x}{\sigma^2}e^{\frac{-x^2}{2\sigma^2}}\quad f_y(x)=f_z(x)=\frac{1}{\sigma\sqrt{2\pi}}e^{\frac{-x^2}{2\sigma^2}}\end{aligned}</script><p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163125131.png" alt="image-20230819163125131" style="zoom:80%;"></p>
+<script type="math/tex; mode=display">
+\begin{array}{rcl}w(\boldsymbol{x}_i)&=&w_x(x)\cdot w_{yz}(\sqrt{y^2+z^2})\\\\w_x(x)&=&\begin{cases}\frac{1}{9}\frac{x^2}{\sigma^2}+\frac{2}{3}\frac{x}{\sigma}+1&x\in[-3\sigma,0)\\\frac{2}{27}\frac{x^3}{\sigma^3}-\frac{1}{3}\frac{x^2}{\sigma^2}+1&x\in[0,3\sigma)\\0&\mathrm{otherwise}\end{cases}\\\\w_{yz}(r)&=&\begin{cases}\frac{2}{27}\frac{r^3}{\sigma^3}-\frac{1}{3}\frac{r^2}{\sigma^2}+1&r<3\sigma\\0&\mathrm{otherwise}\end{cases}\\\\r&=&\sqrt{y^2+z^2}.\end{array}</script><p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163226820.png" alt="image-20230819163226820" style="zoom:80%;"></p>
+<p>效果：</p>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163248618.png" alt="image-20230819163248618" style="zoom:80%;"></p>
+<p><strong>符号距离场的构建——全局方式：</strong> 将有向点看做是对隐函数的梯度的采样，全局的方法的 <strong>优点是鲁棒</strong> ，能够很好地处理噪声和空洞，主要 <strong>缺点是计算量大</strong> ，需要求解大规模的方程。</p>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163540042.png" alt="image-20230819163540042" style="zoom:80%;"></p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+&\operatorname*{min}_{\chi_{M}}\|\nabla\chi_{M}-\vec{V}\| \\\\
+&\nabla\cdot(\nabla\chi_{M})=\nabla\cdot\vec{V} \\\\
+&\Delta\chi_{M} =\nabla\cdot\vec{\boldsymbol{V}} \\\\
+&\chi_M(p)=\begin{cases}1&\text{if}p\in M\\0&\text{if}p\notin M\end{cases}
+\end{aligned}</script><p><strong>柏松表面重建方法：</strong> </p>
+<ol>
+<li>构建八叉树：</li>
+</ol>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163723124.png" alt="image-20230819163723124" style="zoom:67%;"></p>
+<ol>
+<li>创建向量场 $\vec{V}$ ：</li>
+</ol>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163758887.png" alt="image-20230819163758887" style="zoom:67%;"></p>
+<ol>
+<li>计算指示函数 $\Delta\chi_{M} =\nabla\cdot\vec{\boldsymbol{V}}$：</li>
+</ol>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163854016.png" alt="image-20230819163854016" style="zoom:67%;"></p>
+<p>不同分辨率下的指示函数表达：</p>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163927387.png" alt="image-20230819163927387" style="zoom:67%;"></p>
+<ol>
+<li>提取等值面：</li>
+</ol>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163955023.png" alt="image-20230819163955023" style="zoom:67%;"></p>
+<p><strong>Marching Cube 生成表面：</strong> </p>
+<ul>
+<li>二维：根据四边形的 4个 顶点的符号距离值，通过插值的方法生成直线段。 总共 $2^4 =16$ 种分布状态。</li>
+</ul>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819164151204.png" alt="image-20230819164151204" style="zoom:80%;"></p>
+<ul>
+<li>三维：通过插值法生成面片，共 $2^8 = 256$ 种分布状态，通过对称性可以简化成 <strong>15种</strong> 状态。</li>
+</ul>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819164346994.png" alt="image-20230819164346994" style="zoom:80%;"></p>
+<h2 id="3、基于二元分割的表面重建方法"><a href="#3、基于二元分割的表面重建方法" class="headerlink" title="3、基于二元分割的表面重建方法"></a>3、基于二元分割的表面重建方法</h2><h3 id="3-1、基本概念"><a href="#3-1、基本概念" class="headerlink" title="3.1、基本概念"></a>3.1、基本概念</h3><p><strong>主要思想：</strong> 将空间划分成一组 cell（voxel/tetrahedron），采用而远分割的思想，将这些 cell 划分成内部和外部两类，介于 interior 和 exterior 面，即为物体的 surface。</p>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819164814242.png" alt="image-20230819164814242" style="zoom:80%;"></p>
+<p><strong>Delaunay Triangulation：</strong> </p>
+<ul>
+<li>空圆特性：点集 $P$ 的德劳内三角剖分满足 $P$ 内任意一个点都不在 $P$ 内任意一个三角面片的外界圆内；任意 3个 点的外界圆不包含第 4个 点，即任意 3个 点的外界圆是空的；</li>
+</ul>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819165149096.png" alt="image-20230819165149096" style="zoom:80%;"></p>
+<ul>
+<li>最大化最小角：德劳内三角剖分最大化三角面片内三角形的最小角。</li>
+</ul>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819165405523.png" alt="image-20230819165405523" style="zoom:80%;"></p>
+<p>翻转前的内角： $\alpha_{1}+\alpha_{2},\quad\alpha_{3},\quad\alpha_{4},\quad\underline{\alpha_{1}},\quad\underline{\alpha_{2}},\quad\overline{\alpha_{3}}+\overline{\alpha_{4}}$ ；</p>
+<p>翻转后的内角： $\alpha_{1},\quad\alpha_{2},\quad\overline{\alpha_{3}},\quad\overline{\alpha_{4}},\quad\underline{\alpha_{1}}+\alpha_{4},\quad\underline{\alpha_{2}}+\alpha_{3}$ ；</p>
+<p>满足： 每一次翻转都是在增大三角剖分的最小角；</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+&&\alpha_{1}&& >\underline{\alpha_{1}},  \\
+&&\alpha_2&& >\alpha_{2},  \\
+&&\overline{\alpha_{3}}&& >\alpha_{3},  \\
+&&\overline{\alpha_{4}}&& >\alpha_{4},  \\
+&&\underline{\alpha_{1}}+\alpha_{4}&& >\alpha_{4},  \\
+&& \underline{\alpha_{2}}+\alpha_{3}&&>\alpha_{3}
+\end{aligned}</script><p><strong>一种增量的德劳内三角剖分算法——Bowyer-Watson算法：</strong> </p>
+<ol>
+<li>假定已生成了链接若干个顶点的德劳内三角网络；</li>
+<li>加入一个新的节点，找出所有外界圆包含新加入节点的三角形，并将这些三角形删除，形成一个空腔。</li>
+<li>空腔的节点与新加入的节点连接，形成新的 Delaunay 三角形网络；</li>
+<li>不断循环直到遍历完所有点。</li>
+</ol>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819170439677.png" alt="image-20230819170439677" style="zoom:80%;"></p>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819170840910.png" alt="image-20230819170840910" style="zoom:80%;"></p>
+<h3 id="3-2、四面体剖分"><a href="#3-2、四面体剖分" class="headerlink" title="3.2、四面体剖分"></a>3.2、四面体剖分</h3><p><strong>四面体剖分：</strong> 3D 空间对应的是德劳内四面体剖分。在创建过程中，将点插入三角剖分前需要进行判断：</p>
+<ul>
+<li>如果和已有的顶点距离较远，则直接插入新的顶点；</li>
+<li>如果已经存在一个较近的顶点，则对该顶点进行更新。</li>
+</ul>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819170722592.png" alt="image-20230819170722592" style="zoom:80%;"></p>
+<p><strong>数学模型：</strong> </p>
+<ul>
+<li>有向图的顶点对应四面体（tetrahedron），边界对应三角形（triangle）；</li>
+<li>最小化下式将四面体划分成内部和外部两类：</li>
+</ul>
+<script type="math/tex; mode=display">{ }
+E(S)=E_{vis}(S,P,v)+\lambda_{qual}E_{qual}(S)\\
+\begin{aligned}
+&E_{vis}\colon\text{ 可视性代价}; \\
+&E_{qual}\colon\text{ 表面质量代价}; \\
+&S\colon\text{重建的表面;} \\
+&P\colon{\text{点云;}} \\
+&v\colon\text{ 摄像机位姿};
+\end{aligned}</script><p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819171317696.png" alt="image-20230819171317696" style="zoom:80%;"></p>
+<p><strong>图割（Graph cut）：最大流（Max-flow）与最小割（Min-cut）：</strong> </p>
+<ul>
+<li>有向加权图 $\mathcal{G}=\langle\mathcal{V},\mathcal{E}\rangle $ ，包含两个特殊的 terminal nodes： source 和 sink；</li>
+<li>图割将所有节点 划分成没有交集的两部分，划分的代价定义为：</li>
+</ul>
+<script type="math/tex; mode=display">
+\mathfrak{c}(\mathcal{S},\mathcal{T})=\sum_{v_i\in\mathcal{S}\setminus\{s\}\atop v_j\in T\setminus\{t\}}w_{ij}+\sum_{v_i\in\mathcal{S}\setminus\{s\}}t_i+\sum_{v_i\in T\setminus\{t\}}s_i</script><p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819171647039.png" alt="image-20230819171647039" style="zoom:80%;"></p>
+<p><strong>可视性约束和局部平滑性的构建：</strong>  被 vertex 到相机中心的 ray 穿越的四面体倾向于 visible；</p>
+<p>邻接表面可能存在的几种情况：外部-内部；内部-外部；外部-外部；内部-内部；</p>
+<script type="math/tex; mode=display">
+E_{vis}(S,P,v)=\sum_{p\in P}\sum_{q\in v_{p}}\left\{D_{out}\left(l_{\tau_{1}^{Q\rightarrow P}}\right)+\sum_{i=1}^{N_{[QP]}-1}V_{align}(l_{\tau_{l}^{Q\rightarrow P}},l_{\tau_{l+1}^{Q\rightarrow P}})+D_{in}(l_{\tau_{\mathcal{N}_{[QP]^{+1}}}^{Q\rightarrow P}})\right\}</script><p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819172150977.png" alt="image-20230819172150977" style="zoom:80%;"></p>
+<p><strong>表面质量约束：</strong> </p>
+<script type="math/tex; mode=display">
+E_{qual}(s)=\sum_{f}w_{f}=1-\min\{\cos(\phi),\cos(\varphi)\}</script><p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819172215720.png" alt="image-20230819172215720" style="zoom:80%;"></p>
+<p><strong>总结：</strong></p>
+<ul>
+<li>算法流程简单，容易实现；</li>
+<li>适用于大规模场景以及小物体的重建，能够处理复杂表面；</li>
+<li>重建的效果以来 Delaunay Triangulation 的质量，容易受到噪声和外点的影响；</li>
+<li>通常需要结合 Mesh refinement 获得更加细致的表面细节。</li>
+</ul>
+<p><strong>常用的重建算法：</strong></p>
+<ul>
+<li><a href="https://github.com/cdcseacave/openMVS">Delaunay Triangualtion + Graph Cut</a></li>
+<li><a href="http://hhoppe.com/proj/poissonrecon/">泊松表面重建算法</a></li>
+<li><a href="http://mesh.brown.edu/ssd/paper.html">SSd 重建算法</a></li>
+<li><a href="http://www.regard3d.org/index.php/documentation/details/surface">FSSR 重建算法</a></li>
+</ul>
+]]></content>
+      <tags>
+        <tag>3D Reconstruction</tag>
+      </tags>
+  </entry>
 </search>

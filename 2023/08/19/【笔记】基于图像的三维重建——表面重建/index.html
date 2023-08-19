@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+
+
+
+  <meta name="description" content="本文主要关于深蓝学院系列课程——基于图像的三维重建的笔记。 课程链接 基于图像的三维重建  1、三维物体的表面表达方式边界表示法（Boundary Representation）： 将物体表面表示成一组封闭物体空间的四边形、三角形、参数曲面或者非参数的曲面，具有稳定性强、灵活性强、有助于表示表面细节。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【笔记】基于图像的三维重建——表面重建">
+<meta property="og:url" content="http://example.com/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/index.html">
+<meta property="og:site_name" content="AppZ99&#39;s Blog">
+<meta property="og:description" content="本文主要关于深蓝学院系列课程——基于图像的三维重建的笔记。 课程链接 基于图像的三维重建  1、三维物体的表面表达方式边界表示法（Boundary Representation）： 将物体表面表示成一组封闭物体空间的四边形、三角形、参数曲面或者非参数的曲面，具有稳定性强、灵活性强、有助于表示表面细节。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819160257192.png">
+<meta property="og:image" content="http://example.com/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819160400266.png">
+<meta property="og:image" content="http://example.com/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819160514460.png">
+<meta property="og:image" content="http://example.com/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819160838707.png">
+<meta property="og:image" content="http://example.com/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819161733649.png">
+<meta property="og:image" content="http://example.com/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819161746835.png">
+<meta property="og:image" content="http://example.com/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819162012782.png">
+<meta property="og:image" content="http://example.com/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163125131.png">
+<meta property="og:image" content="http://example.com/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163226820.png">
+<meta property="og:image" content="http://example.com/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163248618.png">
+<meta property="og:image" content="http://example.com/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163540042.png">
+<meta property="og:image" content="http://example.com/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163723124.png">
+<meta property="og:image" content="http://example.com/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163758887.png">
+<meta property="og:image" content="http://example.com/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163854016.png">
+<meta property="og:image" content="http://example.com/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163927387.png">
+<meta property="og:image" content="http://example.com/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163955023.png">
+<meta property="og:image" content="http://example.com/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819164151204.png">
+<meta property="og:image" content="http://example.com/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819164346994.png">
+<meta property="og:image" content="http://example.com/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819164814242.png">
+<meta property="og:image" content="http://example.com/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819165149096.png">
+<meta property="og:image" content="http://example.com/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819165405523.png">
+<meta property="og:image" content="http://example.com/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819170439677.png">
+<meta property="og:image" content="http://example.com/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819170840910.png">
+<meta property="og:image" content="http://example.com/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819170722592.png">
+<meta property="og:image" content="http://example.com/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819171317696.png">
+<meta property="og:image" content="http://example.com/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819171647039.png">
+<meta property="og:image" content="http://example.com/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819172150977.png">
+<meta property="og:image" content="http://example.com/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819172215720.png">
+<meta property="article:published_time" content="2023-08-19T07:43:47.000Z">
+<meta property="article:modified_time" content="2023-08-19T11:46:47.164Z">
+<meta property="article:author" content="AppZ99">
+<meta property="article:tag" content="3D Reconstruction">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819160257192.png">
+
+<link rel="canonical" href="http://example.com/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>【笔记】基于图像的三维重建——表面重建 | AppZ99's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">AppZ99's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">OHHHH</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="AppZ99">
+      <meta itemprop="description" content="TKAW">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AppZ99's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          【笔记】基于图像的三维重建——表面重建
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-08-19 15:43:47 / 修改时间：19:46:47" itemprop="dateCreated datePublished" datetime="2023-08-19T15:43:47+08:00">2023-08-19</time>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.7k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>本文主要关于深蓝学院系列课程——基于图像的三维重建的笔记。</p>
+<p>课程链接 <a target="_blank" rel="noopener" href="https://www.shenlanxueyuan.com/course/627">基于图像的三维重建</a></p>
+</blockquote>
+<h2 id="1、三维物体的表面表达方式"><a href="#1、三维物体的表面表达方式" class="headerlink" title="1、三维物体的表面表达方式"></a>1、三维物体的表面表达方式</h2><p><strong>边界表示法（Boundary Representation）：</strong> 将物体表面表示成一组封闭物体空间的四边形、三角形、参数曲面或者非参数的曲面，具有稳定性强、灵活性强、有助于表示表面细节。</p>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819160257192.png" alt="image-20230819160257192" style="zoom:80%;"></p>
+<span id="more"></span>
+<p><strong>空间划分法（Spatial-Partitioning Representations）：</strong> 将物体内部的空间划分成细小、不重叠的连续实体来描述物体的形状。</p>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819160400266.png" alt="image-20230819160400266" style="zoom:80%;"></p>
+<p><strong>构造体素法（Boundary Constructive Solid Geometry）：</strong>  通过集合运算（并、交、差）将简单规则的形状组合成更加复杂的形状，操作简单、便于实现，但是只能用来表示较为简单的实体，无法用于形状复杂或者表面精细的物体。</p>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819160514460.png" alt="image-20230819160514460" style="zoom:80%;"></p>
+<p><strong>三角网格（Triangular Mesh）：</strong> 最常见的三维模型表述方式。计算机图形学和计算机视觉中的三维网格处理绝大部分都是基于三角网格。</p>
+<ul>
+<li>三角网格的基本结构：<ul>
+<li>顶点（Vertex）</li>
+<li>面片（Facet）</li>
+<li>边（Edge）</li>
+</ul>
+</li>
+<li>点线和面上的各种属性<ul>
+<li>颜色（Color）</li>
+<li>法向量（Normal）</li>
+<li>纹理坐标（Texture Coordinate）</li>
+</ul>
+</li>
+</ul>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819160838707.png" alt="image-20230819160838707" style="zoom:80%;"></p>
+<h2 id="2、基于符号距离场的表面重建方法"><a href="#2、基于符号距离场的表面重建方法" class="headerlink" title="2、基于符号距离场的表面重建方法"></a>2、基于符号距离场的表面重建方法</h2><h3 id="2-1、基本概念"><a href="#2-1、基本概念" class="headerlink" title="2.1、基本概念"></a>2.1、基本概念</h3><p><strong>符号距离函数（Signed Distance Function）：</strong> 符号距离函数Signed Distance Function是某度量空间 $X$ 中的一个集合 $\Omega $ 的函数，决定 $X$ 中任一点到 $\Omega$ 边界 $\partial\Omega $ 的距离，并且由 $x$ 是在 $\Omega $ 内还是 $\Omega $ 外确定 SDF 的正负号：当 $x$ 在 $\Omega $ 内时，SDF 为正； 当 $x$ 在 $\Omega $ 外时， SDF 为负。</p>
+<script type="math/tex; mode=display">
+F(x)=\begin{cases}d(x,\partial\Omega)&ifx\in\Omega_i\\-d(x,\partial\Omega)&ifx\in\Omega_o\end{cases}</script><p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819161733649.png" alt="image-20230819161733649" style="zoom:80%;"></p>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819161746835.png" alt="image-20230819161746835" style="zoom:80%;"></p>
+<h3 id="2-2、基于隐函数的表面重建"><a href="#2-2、基于隐函数的表面重建" class="headerlink" title="2.2、基于隐函数的表面重建"></a>2.2、基于隐函数的表面重建</h3><p><strong>空间划分：</strong> 主要用于对隐函数进行离散化，即划分区域的每个区域计算一个符号距离值。</p>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819162012782.png" alt="image-20230819162012782" style="zoom:80%;"></p>
+<p><strong>八叉树构建：</strong> </p>
+<ol>
+<li>设定最大递归深度；</li>
+<li>找出场景的最大尺寸，并以此尺寸建立第一个立方体；</li>
+<li>依序将元素丢入能被包含且没有子节点的立方体；</li>
+<li>若没达到最大递归深度，就进行细分八等份，再将该立方体所装的元素全部分给八个子立方体；</li>
+<li><strong>若发现子立方体所分配到的元素数量不为零且跟父立方体是一样的，则该子立方体停止细分；</strong></li>
+<li>重复3，直到达到最大递归深度。</li>
+</ol>
+<p><strong>符号距离场构建：</strong></p>
+<ul>
+<li>对于grid，根据邻域中的样本点计算每个node的符号距离；</li>
+<li>对于octree，根据邻域中的样本点计算每个叶子结点的符号距离值。</li>
+</ul>
+<p><strong>符号距离场构建——局部方法：</strong> </p>
+<p>符号距离场函数的一般定义：</p>
+<script type="math/tex; mode=display">
+F(\boldsymbol{x})=\frac{\sum_ic_iw_i(\boldsymbol{x})f_i(\boldsymbol{x})}{\sum_ic_iw_i(\boldsymbol{x})}</script><p>一种简单的情况：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}f_i(x)&=(x-p_i)\cdot n_i\\\\w_i(x)&=\exp(-||x-p_i||^2)\end{aligned}</script><p><strong>FSSR方法</strong>的符号距离函数定义：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}f(x_i)&=f_x(x)f_y(y)f_z(z)=\frac{x}{\sigma^42\pi}\cdot e^{\frac{-1}{2\sigma^2}(x^2+y^2+z^2)}\\\\f_x(x)&=\frac{x}{\sigma^2}e^{\frac{-x^2}{2\sigma^2}}\quad f_y(x)=f_z(x)=\frac{1}{\sigma\sqrt{2\pi}}e^{\frac{-x^2}{2\sigma^2}}\end{aligned}</script><p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163125131.png" alt="image-20230819163125131" style="zoom:80%;"></p>
+<script type="math/tex; mode=display">
+\begin{array}{rcl}w(\boldsymbol{x}_i)&=&w_x(x)\cdot w_{yz}(\sqrt{y^2+z^2})\\\\w_x(x)&=&\begin{cases}\frac{1}{9}\frac{x^2}{\sigma^2}+\frac{2}{3}\frac{x}{\sigma}+1&x\in[-3\sigma,0)\\\frac{2}{27}\frac{x^3}{\sigma^3}-\frac{1}{3}\frac{x^2}{\sigma^2}+1&x\in[0,3\sigma)\\0&\mathrm{otherwise}\end{cases}\\\\w_{yz}(r)&=&\begin{cases}\frac{2}{27}\frac{r^3}{\sigma^3}-\frac{1}{3}\frac{r^2}{\sigma^2}+1&r<3\sigma\\0&\mathrm{otherwise}\end{cases}\\\\r&=&\sqrt{y^2+z^2}.\end{array}</script><p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163226820.png" alt="image-20230819163226820" style="zoom:80%;"></p>
+<p>效果：</p>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163248618.png" alt="image-20230819163248618" style="zoom:80%;"></p>
+<p><strong>符号距离场的构建——全局方式：</strong> 将有向点看做是对隐函数的梯度的采样，全局的方法的 <strong>优点是鲁棒</strong> ，能够很好地处理噪声和空洞，主要 <strong>缺点是计算量大</strong> ，需要求解大规模的方程。</p>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163540042.png" alt="image-20230819163540042" style="zoom:80%;"></p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+&\operatorname*{min}_{\chi_{M}}\|\nabla\chi_{M}-\vec{V}\| \\\\
+&\nabla\cdot(\nabla\chi_{M})=\nabla\cdot\vec{V} \\\\
+&\Delta\chi_{M} =\nabla\cdot\vec{\boldsymbol{V}} \\\\
+&\chi_M(p)=\begin{cases}1&\text{if}p\in M\\0&\text{if}p\notin M\end{cases}
+\end{aligned}</script><p><strong>柏松表面重建方法：</strong> </p>
+<ol>
+<li>构建八叉树：</li>
+</ol>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163723124.png" alt="image-20230819163723124" style="zoom:67%;"></p>
+<ol>
+<li>创建向量场 $\vec{V}$ ：</li>
+</ol>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163758887.png" alt="image-20230819163758887" style="zoom:67%;"></p>
+<ol>
+<li>计算指示函数 $\Delta\chi_{M} =\nabla\cdot\vec{\boldsymbol{V}}$：</li>
+</ol>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163854016.png" alt="image-20230819163854016" style="zoom:67%;"></p>
+<p>不同分辨率下的指示函数表达：</p>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163927387.png" alt="image-20230819163927387" style="zoom:67%;"></p>
+<ol>
+<li>提取等值面：</li>
+</ol>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163955023.png" alt="image-20230819163955023" style="zoom:67%;"></p>
+<p><strong>Marching Cube 生成表面：</strong> </p>
+<ul>
+<li>二维：根据四边形的 4个 顶点的符号距离值，通过插值的方法生成直线段。 总共 $2^4 =16$ 种分布状态。</li>
+</ul>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819164151204.png" alt="image-20230819164151204" style="zoom:80%;"></p>
+<ul>
+<li>三维：通过插值法生成面片，共 $2^8 = 256$ 种分布状态，通过对称性可以简化成 <strong>15种</strong> 状态。</li>
+</ul>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819164346994.png" alt="image-20230819164346994" style="zoom:80%;"></p>
+<h2 id="3、基于二元分割的表面重建方法"><a href="#3、基于二元分割的表面重建方法" class="headerlink" title="3、基于二元分割的表面重建方法"></a>3、基于二元分割的表面重建方法</h2><h3 id="3-1、基本概念"><a href="#3-1、基本概念" class="headerlink" title="3.1、基本概念"></a>3.1、基本概念</h3><p><strong>主要思想：</strong> 将空间划分成一组 cell（voxel/tetrahedron），采用而远分割的思想，将这些 cell 划分成内部和外部两类，介于 interior 和 exterior 面，即为物体的 surface。</p>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819164814242.png" alt="image-20230819164814242" style="zoom:80%;"></p>
+<p><strong>Delaunay Triangulation：</strong> </p>
+<ul>
+<li>空圆特性：点集 $P$ 的德劳内三角剖分满足 $P$ 内任意一个点都不在 $P$ 内任意一个三角面片的外界圆内；任意 3个 点的外界圆不包含第 4个 点，即任意 3个 点的外界圆是空的；</li>
+</ul>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819165149096.png" alt="image-20230819165149096" style="zoom:80%;"></p>
+<ul>
+<li>最大化最小角：德劳内三角剖分最大化三角面片内三角形的最小角。</li>
+</ul>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819165405523.png" alt="image-20230819165405523" style="zoom:80%;"></p>
+<p>翻转前的内角： $\alpha_{1}+\alpha_{2},\quad\alpha_{3},\quad\alpha_{4},\quad\underline{\alpha_{1}},\quad\underline{\alpha_{2}},\quad\overline{\alpha_{3}}+\overline{\alpha_{4}}$ ；</p>
+<p>翻转后的内角： $\alpha_{1},\quad\alpha_{2},\quad\overline{\alpha_{3}},\quad\overline{\alpha_{4}},\quad\underline{\alpha_{1}}+\alpha_{4},\quad\underline{\alpha_{2}}+\alpha_{3}$ ；</p>
+<p>满足： 每一次翻转都是在增大三角剖分的最小角；</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+&&\alpha_{1}&& >\underline{\alpha_{1}},  \\
+&&\alpha_2&& >\alpha_{2},  \\
+&&\overline{\alpha_{3}}&& >\alpha_{3},  \\
+&&\overline{\alpha_{4}}&& >\alpha_{4},  \\
+&&\underline{\alpha_{1}}+\alpha_{4}&& >\alpha_{4},  \\
+&& \underline{\alpha_{2}}+\alpha_{3}&&>\alpha_{3}
+\end{aligned}</script><p><strong>一种增量的德劳内三角剖分算法——Bowyer-Watson算法：</strong> </p>
+<ol>
+<li>假定已生成了链接若干个顶点的德劳内三角网络；</li>
+<li>加入一个新的节点，找出所有外界圆包含新加入节点的三角形，并将这些三角形删除，形成一个空腔。</li>
+<li>空腔的节点与新加入的节点连接，形成新的 Delaunay 三角形网络；</li>
+<li>不断循环直到遍历完所有点。</li>
+</ol>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819170439677.png" alt="image-20230819170439677" style="zoom:80%;"></p>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819170840910.png" alt="image-20230819170840910" style="zoom:80%;"></p>
+<h3 id="3-2、四面体剖分"><a href="#3-2、四面体剖分" class="headerlink" title="3.2、四面体剖分"></a>3.2、四面体剖分</h3><p><strong>四面体剖分：</strong> 3D 空间对应的是德劳内四面体剖分。在创建过程中，将点插入三角剖分前需要进行判断：</p>
+<ul>
+<li>如果和已有的顶点距离较远，则直接插入新的顶点；</li>
+<li>如果已经存在一个较近的顶点，则对该顶点进行更新。</li>
+</ul>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819170722592.png" alt="image-20230819170722592" style="zoom:80%;"></p>
+<p><strong>数学模型：</strong> </p>
+<ul>
+<li>有向图的顶点对应四面体（tetrahedron），边界对应三角形（triangle）；</li>
+<li>最小化下式将四面体划分成内部和外部两类：</li>
+</ul>
+<script type="math/tex; mode=display">{ }
+E(S)=E_{vis}(S,P,v)+\lambda_{qual}E_{qual}(S)\\
+\begin{aligned}
+&E_{vis}\colon\text{ 可视性代价}; \\
+&E_{qual}\colon\text{ 表面质量代价}; \\
+&S\colon\text{重建的表面;} \\
+&P\colon{\text{点云;}} \\
+&v\colon\text{ 摄像机位姿};
+\end{aligned}</script><p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819171317696.png" alt="image-20230819171317696" style="zoom:80%;"></p>
+<p><strong>图割（Graph cut）：最大流（Max-flow）与最小割（Min-cut）：</strong> </p>
+<ul>
+<li>有向加权图 $\mathcal{G}=\langle\mathcal{V},\mathcal{E}\rangle $ ，包含两个特殊的 terminal nodes： source 和 sink；</li>
+<li>图割将所有节点 划分成没有交集的两部分，划分的代价定义为：</li>
+</ul>
+<script type="math/tex; mode=display">
+\mathfrak{c}(\mathcal{S},\mathcal{T})=\sum_{v_i\in\mathcal{S}\setminus\{s\}\atop v_j\in T\setminus\{t\}}w_{ij}+\sum_{v_i\in\mathcal{S}\setminus\{s\}}t_i+\sum_{v_i\in T\setminus\{t\}}s_i</script><p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819171647039.png" alt="image-20230819171647039" style="zoom:80%;"></p>
+<p><strong>可视性约束和局部平滑性的构建：</strong>  被 vertex 到相机中心的 ray 穿越的四面体倾向于 visible；</p>
+<p>邻接表面可能存在的几种情况：外部-内部；内部-外部；外部-外部；内部-内部；</p>
+<script type="math/tex; mode=display">
+E_{vis}(S,P,v)=\sum_{p\in P}\sum_{q\in v_{p}}\left\{D_{out}\left(l_{\tau_{1}^{Q\rightarrow P}}\right)+\sum_{i=1}^{N_{[QP]}-1}V_{align}(l_{\tau_{l}^{Q\rightarrow P}},l_{\tau_{l+1}^{Q\rightarrow P}})+D_{in}(l_{\tau_{\mathcal{N}_{[QP]^{+1}}}^{Q\rightarrow P}})\right\}</script><p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819172150977.png" alt="image-20230819172150977" style="zoom:80%;"></p>
+<p><strong>表面质量约束：</strong> </p>
+<script type="math/tex; mode=display">
+E_{qual}(s)=\sum_{f}w_{f}=1-\min\{\cos(\phi),\cos(\varphi)\}</script><p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819172215720.png" alt="image-20230819172215720" style="zoom:80%;"></p>
+<p><strong>总结：</strong></p>
+<ul>
+<li>算法流程简单，容易实现；</li>
+<li>适用于大规模场景以及小物体的重建，能够处理复杂表面；</li>
+<li>重建的效果以来 Delaunay Triangulation 的质量，容易受到噪声和外点的影响；</li>
+<li>通常需要结合 Mesh refinement 获得更加细致的表面细节。</li>
+</ul>
+<p><strong>常用的重建算法：</strong></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/cdcseacave/openMVS">Delaunay Triangualtion + Graph Cut</a></li>
+<li><a target="_blank" rel="noopener" href="http://hhoppe.com/proj/poissonrecon/">泊松表面重建算法</a></li>
+<li><a target="_blank" rel="noopener" href="http://mesh.brown.edu/ssd/paper.html">SSd 重建算法</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.regard3d.org/index.php/documentation/details/surface">FSSR 重建算法</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>AppZ99
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://example.com/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/" title="【笔记】基于图像的三维重建——表面重建">http://example.com/2023/08/19/【笔记】基于图像的三维重建——表面重建/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/3D-Reconstruction/" rel="tag"><i class="fa fa-tag"></i> 3D Reconstruction</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/08/17/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%A8%A0%E5%AF%86%E7%82%B9%E4%BA%91%E9%87%8D%E5%BB%BA/" rel="prev" title="【笔记】基于图像的三维重建——稠密点云重建">
+      <i class="fa fa-chevron-left"></i> 【笔记】基于图像的三维重建——稠密点云重建
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1%E3%80%81%E4%B8%89%E7%BB%B4%E7%89%A9%E4%BD%93%E7%9A%84%E8%A1%A8%E9%9D%A2%E8%A1%A8%E8%BE%BE%E6%96%B9%E5%BC%8F"><span class="nav-text">1、三维物体的表面表达方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%E3%80%81%E5%9F%BA%E4%BA%8E%E7%AC%A6%E5%8F%B7%E8%B7%9D%E7%A6%BB%E5%9C%BA%E7%9A%84%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA%E6%96%B9%E6%B3%95"><span class="nav-text">2、基于符号距离场的表面重建方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1%E3%80%81%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-text">2.1、基本概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2%E3%80%81%E5%9F%BA%E4%BA%8E%E9%9A%90%E5%87%BD%E6%95%B0%E7%9A%84%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA"><span class="nav-text">2.2、基于隐函数的表面重建</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3%E3%80%81%E5%9F%BA%E4%BA%8E%E4%BA%8C%E5%85%83%E5%88%86%E5%89%B2%E7%9A%84%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA%E6%96%B9%E6%B3%95"><span class="nav-text">3、基于二元分割的表面重建方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1%E3%80%81%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-text">3.1、基本概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2%E3%80%81%E5%9B%9B%E9%9D%A2%E4%BD%93%E5%89%96%E5%88%86"><span class="nav-text">3.2、四面体剖分</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AppZ99"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">AppZ99</p>
+  <div class="site-description" itemprop="description">TKAW</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/APPZ99" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;APPZ99" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:925455893@qq.com" title="E-Mail → mailto:925455893@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+      <div id="music163player">
+        <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=1872048272&auto=1&height=66">
+        </iframe>
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AppZ99</span>
+
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">77k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:10</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,0' opacity='0.5' zIndex='-1' count='150' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+//    window.MathJax = {
+//      loader: {
+//
+//        source: {
+//          '[tex]/amsCd': '[tex]/amscd',
+//          '[tex]/AMScd': '[tex]/amscd'
+//        }
+//      },
+//      tex: {
+//        inlineMath: {'[+]': [['$', '$']]},
+//
+//        tags: 'ams'
+//      },
+//      options: {
+//        renderActions: {
+//          findScript: [10, doc => {
+//            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+//              const display = !!node.type.match(/; *mode=display/);
+//              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+//              const text = document.createTextNode('');
+//              node.parentNode.replaceChild(text, node);
+//              math.start = {node: text, delim: '', n: 0};
+//              math.end = {node: text, delim: '', n: 0};
+//              doc.math.push(math);
+//            });
+//          }, '', false],
+//          insertedScript: [200, () => {
+//            document.querySelectorAll('mjx-container').forEach(node => {
+//              let target = node.parentNode;
+//              if (target.nodeName.toLowerCase() === 'li') {
+//                target.parentNode.classList.add('has-jax');
+//              }
+//            });
+//          }, '', false]
+//        }
+//      }
+//    };
+    window.MathJax = {
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        processEscapes: true
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@2.7.8/unpacked/MathJax.js?config=TeX-MML-AM_CHTML';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":500},"mobile":{"show":true}});</script></body>
+</html>
