@@ -2998,4 +2998,27 @@ min_f\iint_{\Omega}|\nabla f-\boldsymbol{v}|,wrt.f|_{\partial\Omega}=f^*|_{\part
         <tag>3D Reconstruction</tag>
       </tags>
   </entry>
+  <entry>
+    <title>代码随想录-随记——数据结构篇</title>
+    <url>/2023/09/05/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95-%E9%9A%8F%E8%AE%B0%E2%80%94%E2%80%94%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AF%87/</url>
+    <content><![CDATA[<blockquote>
+<p>本文主要是对《代码随想录》中数据结构部分的知识点做简要的笔记。</p>
+</blockquote>
+<h2 id="1、数组"><a href="#1、数组" class="headerlink" title="1、数组"></a>1、数组</h2><h3 id="1-1、数组理论基础"><a href="#1-1、数组理论基础" class="headerlink" title="1.1、数组理论基础"></a>1.1、数组理论基础</h3><p><strong>概念：</strong> 数组是存放在连续内存空间上的相同类型数据的集合。</p>
+<p><img src="/2023/09/05/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95-%E9%9A%8F%E8%AE%B0%E2%80%94%E2%80%94%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AF%87/image-20230905231004040.png" alt="image-20230905231004040" style="zoom:67%;"></p>
+<p><strong>注意：</strong></p>
+<ul>
+<li>数组下标从 0 开始；</li>
+<li>数组内存空间的地址是连续的。</li>
+</ul>
+<p><strong>数组操作的复杂性：</strong> 正是由于数组内存地址是连续的，所以在对数组进行删除和添加的操作时，难免需要移动其他元素的地址。</p>
+<p><strong>不可删除性：</strong> 数组的元素是不能删除的，只能覆盖。</p>
+<p><strong>C++ 中的 vector 和 array:</strong> vector 底层实现是 array，本质不是数组而是容器。</p>
+<p><strong>C++ 二维数组的地址空间：</strong> C++ 二维数组在地址空间上是连续的。</p>
+]]></content>
+      <tags>
+        <tag>Algorithms</tag>
+        <tag>Data Structures</tag>
+      </tags>
+  </entry>
 </search>
