@@ -3011,14 +3011,46 @@ min_f\iint_{\Omega}|\nabla f-\boldsymbol{v}|,wrt.f|_{\partial\Omega}=f^*|_{\part
 <li>数组下标从 0 开始；</li>
 <li>数组内存空间的地址是连续的。</li>
 </ul>
+<span id="more"></span>
 <p><strong>数组操作的复杂性：</strong> 正是由于数组内存地址是连续的，所以在对数组进行删除和添加的操作时，难免需要移动其他元素的地址。</p>
 <p><strong>不可删除性：</strong> 数组的元素是不能删除的，只能覆盖。</p>
 <p><strong>C++ 中的 vector 和 array:</strong> vector 底层实现是 array，本质不是数组而是容器。</p>
 <p><strong>C++ 二维数组的地址空间：</strong> C++ 二维数组在地址空间上是连续的。</p>
+<h3 id="1-2、二分查找"><a href="#1-2、二分查找" class="headerlink" title="1.2、二分查找"></a>1.2、二分查找</h3><p>二分查找的主要问题在于<strong>边界的确定</strong>。一半采用两种写法：</p>
+<ul>
+<li>左闭右闭</li>
+<li>左闭右开</li>
+</ul>
+<ol>
+<li>左闭右闭</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> left = <span class="number">0</span>;</span><br><span class="line"><span class="type">int</span> right = nums.<span class="built_in">size</span>() - <span class="number">1</span>;	<span class="comment">// 闭区间故需要取值</span></span><br><span class="line"><span class="keyword">while</span>(left &lt;= right)&#123;  	<span class="comment">// 区间合理</span></span><br><span class="line">    <span class="type">int</span> middle = left + (right - left) / <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">if</span>(nums[middle] &gt; target)&#123;</span><br><span class="line">        right = middle - <span class="number">1</span>;	<span class="comment">// 已经大于，故不用在取 middle</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(nums[middle] &lt; target)&#123;</span><br><span class="line">        left = middle + <span class="number">1</span>;	<span class="comment">// 上述同理</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> middle;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>左闭右开</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> left = <span class="number">0</span>;</span><br><span class="line"><span class="type">int</span> right = nums.<span class="built_in">size</span>(); <span class="comment">// 即：[left, right)</span></span><br><span class="line"><span class="keyword">while</span> (left &lt; right) &#123; <span class="comment">// 因为left == right的时候，在[left, right)是无效的空间，所以使用 &lt;</span></span><br><span class="line">    <span class="type">int</span> middle = left + ((right - left) &gt;&gt; <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">if</span> (nums[middle] &gt; target) &#123;</span><br><span class="line">        right = middle; <span class="comment">// target 在左区间，在[left, middle)中</span></span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (nums[middle] &lt; target) &#123;</span><br><span class="line">        left = middle + <span class="number">1</span>; <span class="comment">// target 在右区间，在[middle + 1, right)中</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123; <span class="comment">// nums[middle] == target</span></span><br><span class="line">        <span class="keyword">return</span> middle; <span class="comment">// 数组中找到目标值，直接返回下标</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运用二分查找的关键词：<strong>有序数组、元素唯一</strong> 。</p>
 ]]></content>
       <tags>
         <tag>Algorithms</tag>
         <tag>Data Structures</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MVG-随记</title>
+    <url>/2023/09/07/MVG-%E9%9A%8F%E8%AE%B0/</url>
+    <content><![CDATA[<blockquote>
+<p>本书是关于 <em>Multiple View Geometry in Computer Vision</em> （计算机视觉中的多视图几何）中的随笔记录。</p>
+</blockquote>
+<h2 id="零、序章"><a href="#零、序章" class="headerlink" title="零、序章"></a>零、序章</h2><p><strong>计算机视觉的基本问题：</strong> 根据若干幅世界景物的图像求得对真实世界景物结构的理解。</p>
+<p><strong>几何与变换群：</strong> 各种几何的本质是描述几何元素在不同变换群下的不变量。</p>
+<p><strong>马颂德序言：</strong> 这本书对我国长期从事相关数学领域研究的认识也值得一度，计算机视觉涉及的数学，量大面广，是一个典型的数学工作者可有用武之地的领域，但比起其他国家来说，我国的数学家们基本不介入一些有相当实用背景的新兴学科，学科不能交叉，创新从何而来？</p>
+<h2 id="一、第一章：2D射影几何和变换"><a href="#一、第一章：2D射影几何和变换" class="headerlink" title="一、第一章：2D射影几何和变换"></a>一、第一章：2D射影几何和变换</h2><h3 id="1-1、平面几何"><a href="#1-1、平面几何" class="headerlink" title="1.1、平面几何"></a>1.1、平面几何</h3><p><strong>几何与代数：</strong> 几何可以代数化，几何理论可以从代数的观点进行推导。</p>
+<p><strong>几何中采用代数的显著优点：</strong> 这种方法推导出的结果更容易产生算法以及实际的计算方法。</p>
+]]></content>
+      <tags>
+        <tag>Multiple View Geometry</tag>
+        <tag>Computer Vision</tag>
       </tags>
   </entry>
 </search>
