@@ -3030,6 +3030,15 @@ min_f\iint_{\Omega}|\nabla f-\boldsymbol{v}|,wrt.f|_{\partial\Omega}=f^*|_{\part
 </ol>
 <figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> left = <span class="number">0</span>;</span><br><span class="line"><span class="type">int</span> right = nums.<span class="built_in">size</span>(); <span class="comment">// 即：[left, right)</span></span><br><span class="line"><span class="keyword">while</span> (left &lt; right) &#123; <span class="comment">// 因为left == right的时候，在[left, right)是无效的空间，所以使用 &lt;</span></span><br><span class="line">    <span class="type">int</span> middle = left + ((right - left) &gt;&gt; <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">if</span> (nums[middle] &gt; target) &#123;</span><br><span class="line">        right = middle; <span class="comment">// target 在左区间，在[left, middle)中</span></span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (nums[middle] &lt; target) &#123;</span><br><span class="line">        left = middle + <span class="number">1</span>; <span class="comment">// target 在右区间，在[middle + 1, right)中</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123; <span class="comment">// nums[middle] == target</span></span><br><span class="line">        <span class="keyword">return</span> middle; <span class="comment">// 数组中找到目标值，直接返回下标</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>运用二分查找的关键词：<strong>有序数组、元素唯一</strong> 。</p>
+<h3 id="1-3、删除元素"><a href="#1-3、删除元素" class="headerlink" title="1.3、删除元素"></a>1.3、删除元素</h3><p>题意：删除数组中指定的某个值的元素。</p>
+<ol>
+<li>暴力解法：for循环遍历</li>
+<li>双指针解法：重点在于理解<strong>双指针中快慢指针的意义</strong>：<ol>
+<li>快指针：寻找新数组的元素，新数组就是不含有目标元素的数组；</li>
+<li>慢指针：指向更新<strong>新数组的下标位置</strong>。</li>
+</ol>
+</li>
+</ol>
 ]]></content>
       <tags>
         <tag>Algorithms</tag>
