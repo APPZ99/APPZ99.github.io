@@ -3060,6 +3060,10 @@ min_f\iint_{\Omega}|\nabla f-\boldsymbol{v}|,wrt.f|_{\partial\Omega}=f^*|_{\part
 <p><a href="https://leetcode.cn/problems/fruit-into-baskets/solutions/1437444/shen-du-jie-xi-zhe-dao-ti-he-by-linzeyin-6crr/">【深度解析】这道题和76. 最小覆盖子串的区别</a></p>
 <figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 904</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">totalFruit</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; fruits)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> n = fruits.<span class="built_in">size</span>();</span><br><span class="line">        unordered_map&lt;<span class="type">int</span>, <span class="type">int</span>&gt; cnt;</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> left = <span class="number">0</span>, ans = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> right = <span class="number">0</span>; right &lt; n; right++)&#123;</span><br><span class="line">            ++cnt[fruits[right]];</span><br><span class="line">            <span class="keyword">while</span>(cnt.<span class="built_in">size</span>() &gt; <span class="number">2</span>)&#123;</span><br><span class="line">                <span class="keyword">auto</span> it = cnt.<span class="built_in">find</span>(fruits[left]);</span><br><span class="line">                --it-&gt;second;</span><br><span class="line">                <span class="keyword">if</span>(it-&gt;second == <span class="number">0</span>)&#123;</span><br><span class="line">                    cnt.<span class="built_in">erase</span>(it);</span><br><span class="line">                &#125;</span><br><span class="line">                ++left;</span><br><span class="line">            &#125;</span><br><span class="line">            ans = <span class="built_in">max</span>(ans, right - left + <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 <figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 最小滑窗模板</span></span><br><span class="line"><span class="keyword">while</span> j &lt; <span class="built_in">len</span>(nums):</span><br><span class="line">    判断[i, j]是否满足条件</span><br><span class="line">    <span class="keyword">while</span> 满足条件：</span><br><span class="line">        不断更新结果(注意在<span class="keyword">while</span>内更新！)</span><br><span class="line">        i += <span class="number">1</span> （最大程度的压缩i，使得滑窗尽可能的小）</span><br><span class="line">    j += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 最大滑窗模板</span></span><br><span class="line"><span class="keyword">while</span> j &lt; <span class="built_in">len</span>(nums):</span><br><span class="line">    判断[i, j]是否满足条件</span><br><span class="line">    <span class="keyword">while</span> 不满足条件：</span><br><span class="line">        i += <span class="number">1</span> （最保守的压缩i，一旦满足条件了就退出压缩i的过程，使得滑窗尽可能的大）</span><br><span class="line">    不断更新结果（注意在<span class="keyword">while</span>外更新！）</span><br><span class="line">    j += <span class="number">1</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="1-6、螺旋矩阵II"><a href="#1-6、螺旋矩阵II" class="headerlink" title="1.6、螺旋矩阵II"></a>1.6、螺旋矩阵II</h3><p><a href="https://leetcode.cn/problems/spiral-matrix-ii/description/">LeetCode59.螺旋矩阵II</a></p>
+<p><strong>核心所在：</strong> 与二分法一样要坚持 <strong>循环不变量原则</strong> ，具体而言就是边界信息不变，是左闭右开还是左闭右闭。确认好后依次循环。</p>
+<p><img src="/2023/09/05/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95-%E9%9A%8F%E8%AE%B0%E2%80%94%E2%80%94%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AF%87/image-20230920225702829.png" alt="image-20230920225702829" style="zoom:50%;"></p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">generateMatrix</span>(<span class="type">int</span> n) &#123;</span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">res</span>(n, <span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;(n, <span class="number">0</span>)); <span class="comment">// 使用vector定义一个二维数组</span></span><br><span class="line">        <span class="type">int</span> startx = <span class="number">0</span>, starty = <span class="number">0</span>; <span class="comment">// 定义每循环一个圈的起始位置</span></span><br><span class="line">        <span class="type">int</span> loop = n / <span class="number">2</span>; <span class="comment">// 每个圈循环几次，例如n为奇数3，那么loop = 1 只是循环一圈，矩阵中间的值需要单独处理</span></span><br><span class="line">        <span class="type">int</span> mid = n / <span class="number">2</span>; <span class="comment">// 矩阵中间的位置，例如：n为3， 中间的位置就是(1，1)，n为5，中间位置为(2, 2)</span></span><br><span class="line">        <span class="type">int</span> count = <span class="number">1</span>; <span class="comment">// 用来给矩阵中每一个空格赋值</span></span><br><span class="line">        <span class="type">int</span> offset = <span class="number">1</span>; <span class="comment">// 需要控制每一条边遍历的长度，每次循环右边界收缩一位</span></span><br><span class="line">        <span class="type">int</span> i,j;</span><br><span class="line">        <span class="keyword">while</span> (loop --) &#123;</span><br><span class="line">            i = startx;</span><br><span class="line">            j = starty;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 下面开始的四个for就是模拟转了一圈</span></span><br><span class="line">            <span class="comment">// 模拟填充上行从左到右(左闭右开)</span></span><br><span class="line">            <span class="keyword">for</span> (j = starty; j &lt; n - offset; j++) &#123;</span><br><span class="line">                res[startx][j] = count++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 模拟填充右列从上到下(左闭右开)</span></span><br><span class="line">            <span class="keyword">for</span> (i = startx; i &lt; n - offset; i++) &#123;</span><br><span class="line">                res[i][j] = count++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 模拟填充下行从右到左(左闭右开)</span></span><br><span class="line">            <span class="keyword">for</span> (; j &gt; starty; j--) &#123;</span><br><span class="line">                res[i][j] = count++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 模拟填充左列从下到上(左闭右开)</span></span><br><span class="line">            <span class="keyword">for</span> (; i &gt; startx; i--) &#123;</span><br><span class="line">                res[i][j] = count++;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 第二圈开始的时候，起始位置要各自加1， 例如：第一圈起始位置是(0, 0)，第二圈起始位置是(1, 1)</span></span><br><span class="line">            startx++;</span><br><span class="line">            starty++;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// offset 控制每一圈里每一条边遍历的长度</span></span><br><span class="line">            offset += <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 如果n为奇数的话，需要单独给矩阵最中间的位置赋值</span></span><br><span class="line">        <span class="keyword">if</span> (n % <span class="number">2</span>) &#123;</span><br><span class="line">            res[mid][mid] = count;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 ]]></content>
       <tags>
         <tag>Algorithms</tag>
@@ -3308,7 +3312,62 @@ s=f_{\theta_l}(\Psi_l(\mathbf{T}_l^{-1}\mathbf{p}^W),\gamma(\mathbf{T}_l^{-1}\ma
 </ol>
 <p>通过比较两个子图的最大似然值进行回环更新：</p>
 <script type="math/tex; mode=display">
-\tilde{\mathbf{o}}_{j},\tilde{\mathbf{d}}_{j}=\arg\max p_{r}(r_{j}|\mathbf{o}_{j},\mathbf{d}_{j},\theta_{l},\Psi_{l})</script>]]></content>
+\tilde{\mathbf{o}}_{j},\tilde{\mathbf{d}}_{j}=\arg\max p_{r}(r_{j}|\mathbf{o}_{j},\mathbf{d}_{j},\theta_{l},\Psi_{l})</script><h2 id="6、LONER-LiDAR-Only-Neural-Representations-for-Real-Time-SLAM"><a href="#6、LONER-LiDAR-Only-Neural-Representations-for-Real-Time-SLAM" class="headerlink" title="6、LONER: LiDAR Only Neural Representations for Real-Time SLAM"></a>6、LONER: LiDAR Only Neural Representations for Real-Time SLAM</h2><h3 id="摘要翻译-5"><a href="#摘要翻译-5" class="headerlink" title="摘要翻译"></a>摘要翻译</h3><blockquote>
+<p>本文提出了 LONER，第一个使用神经隐式场景表达的实时 LiDAR SLAM算法。现存的在大场景下的 LiDAR 隐式建图方法展现了富有前途的结果，但他们要么需要位姿真值，要么运行速度远达不到实时性。相反，LONER使用了 LiDAR 数据去实时训练一个 MLP 去预测稠密地图，同时同步估计传感器的轨迹信息。为了达到实时性的表现，本文提出了一种新的信息论损失函数，该函数解释了整个在线训练的过程中，不同地区的地图可以被不同程度地学习的事实。本方法在两个公开数据集上定性定量地进行了评估。评估结果说明了所提出的损失函数比其他使用深度监督的神经隐式框架的损失函数收敛速度更快，几何重建效果更加精确。最终，本文展示了 LONER 跟 SOTA 的 LiDAR SLAM系统相比具有竞争性的轨迹估计能力，同时也产生了与现存的需要位姿真值的隐式建图方法相比具有竞争性的稠密地图。</p>
+</blockquote>
+<h3 id="方法介绍-5"><a href="#方法介绍-5" class="headerlink" title="方法介绍"></a>方法介绍</h3><ul>
+<li><strong>问题定义</strong></li>
+</ul>
+<p>设计一个实时的基于神经隐式表达的 LiDAR SLAM 算法。</p>
+<ul>
+<li><strong>Pipeline</strong> </li>
+</ul>
+<p><img src="/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E5%BA%A6%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230919104523483.png" alt="image-20230919104523483" style="zoom:80%;"></p>
+<ol>
+<li><strong>Tracking</strong></li>
+</ol>
+<p>Tracking部分主要采用 ICP 算法进行跟踪，运动过程采用匀速运动模型。</p>
+<ol>
+<li><strong>Implicit Map Representation</strong></li>
+</ol>
+<p>隐式表达采用 Instant-npg 模型，渲染还是采用体渲染公式：</p>
+<script type="math/tex; mode=display">
+T_i=\exp(-\sum_{j=1}^{i-1}\sigma_j\delta_j) \\
+w_i=T_i\sigma_i \\
+\hat{D}(\vec{r})=\sum_{i=1}^Nw_it_i.</script><ol>
+<li><strong>Mapping</strong><ol>
+<li>关键帧：当添加关键帧时，将当前关键帧以及之前的 $N_W-1$ 个关键帧进行优化更新；</li>
+<li>优化：通过选取的 $N_W$ 个关键帧进行位姿优化；</li>
+<li>采样：随机按选取 $N_R$ 条射线，再通过占据网格从每条射线采样 $N_S$ 个深度采样点。</li>
+</ol>
+</li>
+<li><strong>JS Dynamic Margin Loss Function</strong></li>
+</ol>
+<script type="math/tex; mode=display">
+\mathcal{L}(\Theta)=\mathcal{L}_{JS}+\lambda_1\mathcal{L}_{depth}+\lambda_2\mathcal{L}_{sky}.</script><ul>
+<li><p>JS Loss</p>
+<p>由 LOS Loss修改得到，主要根据目标分布和预测样本分布之间的相似性为每一条射线设置一个动态边界 $\epsilon$ 。学习过的区域设置较低的边距来细化学习到的几何形状，未学习的部分设置较宽的区域加快收敛。</p>
+<p><img src="/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E5%BA%A6%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230919134527285.png" alt="image-20230919134527285" style="zoom:80%;"></p>
+<script type="math/tex; mode=display">
+\mathcal{L}_{JS}(\Theta)=\underbrace{\|w_i^*-w_i\|_1}_{\text{Primary Loss}}+\underbrace{\|1-\sum_iw_i\|_1}_{\text{Opacity Loss}} \\
+w_{i}^{*}=\mathcal{K}_{\epsilon}(t_{i}-z^{*}) \\
+\mathcal{K}_\epsilon=\mathcal{N}(0,(\epsilon/3)^2) \\
+\epsilon_{dyn}=\epsilon_{min}(1+\alpha\mathbf{J}^*) \\
+\mathbf{J}^*=\begin{cases}0&JS(G||S)<JS_{min}\\JS_{max}&JS(G||S)>JS_{max}\\JS(G||S)&\text{otherwise},\end{cases}</script></li>
+<li><p>Depth Loss</p>
+<p>深度损失为测量值和渲染深度之间的误差的平方：</p>
+<script type="math/tex; mode=display">
+\mathcal{L}_{depth}(\Theta)=\|\hat{D}(\vec{r})-z^*\|_2^2</script></li>
+<li><p>Sky Loss</p>
+<p>这个损失主要是区分天空部分的。在没有接受到激光雷达反射信号的情况下，若仰角满足一定的阈值，则判定为天空部分。</p>
+<script type="math/tex; mode=display">
+\mathcal{L}_{sky}(\Theta)=\|w\|_1.</script></li>
+</ul>
+<ol>
+<li><strong>Meshing</strong></li>
+</ol>
+<p>采用 Marching cube 算法进行重建。</p>
+]]></content>
       <tags>
         <tag>SLAM</tag>
         <tag>3D Reconstruction</tag>
