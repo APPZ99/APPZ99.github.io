@@ -421,6 +421,23 @@ e^{i\pi} + 1 = 0</script><h3 id="小结-3"><a href="#小结-3" class="headerlink
       </tags>
   </entry>
   <entry>
+    <title>MVG-随记</title>
+    <url>/2023/09/07/MVG-%E9%9A%8F%E8%AE%B0/</url>
+    <content><![CDATA[<blockquote>
+<p>本书是关于 <em>Multiple View Geometry in Computer Vision</em> （计算机视觉中的多视图几何）中的随笔记录。</p>
+</blockquote>
+<h2 id="零、序章"><a href="#零、序章" class="headerlink" title="零、序章"></a>零、序章</h2><p><strong>计算机视觉的基本问题：</strong> 根据若干幅世界景物的图像求得对真实世界景物结构的理解。</p>
+<p><strong>几何与变换群：</strong> 各种几何的本质是描述几何元素在不同变换群下的不变量。</p>
+<p><strong>马颂德序言：</strong> 这本书对我国长期从事相关数学领域研究的认识也值得一度，计算机视觉涉及的数学，量大面广，是一个典型的数学工作者可有用武之地的领域，但比起其他国家来说，我国的数学家们基本不介入一些有相当实用背景的新兴学科，学科不能交叉，创新从何而来？</p>
+<h2 id="一、第一章：2D射影几何和变换"><a href="#一、第一章：2D射影几何和变换" class="headerlink" title="一、第一章：2D射影几何和变换"></a>一、第一章：2D射影几何和变换</h2><h3 id="1-1、平面几何"><a href="#1-1、平面几何" class="headerlink" title="1.1、平面几何"></a>1.1、平面几何</h3><p><strong>几何与代数：</strong> 几何可以代数化，几何理论可以从代数的观点进行推导。</p>
+<p><strong>几何中采用代数的显著优点：</strong> 这种方法推导出的结果更容易产生算法以及实际的计算方法。</p>
+]]></content>
+      <tags>
+        <tag>Multiple View Geometry</tag>
+        <tag>Computer Vision</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>SLAM导航实战（一）：编程基础</title>
     <url>/2022/01/29/SLAM%E5%AF%BC%E8%88%AA%E5%AE%9E%E6%88%98%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/</url>
     <content><![CDATA[<blockquote>
@@ -1632,6 +1649,146 @@ Wf=0\quad \to \quad \begin{aligned}&\min_f\|Wf\|\\&s.t.\parallel f\parallel=1\en
       </tags>
   </entry>
   <entry>
+    <title>【笔记】基于图像的三维重建——双目立体视觉</title>
+    <url>/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/</url>
+    <content><![CDATA[<blockquote>
+<p>本文主要关于深蓝学院系列课程——基于图像的三维重建的笔记。</p>
+<p>课程链接 <a href="https://www.shenlanxueyuan.com/course/627">基于图像的三维重建</a></p>
+</blockquote>
+<h2 id="1、基于平行视图的双目立体视觉"><a href="#1、基于平行视图的双目立体视觉" class="headerlink" title="1、基于平行视图的双目立体视觉"></a>1、基于平行视图的双目立体视觉</h2><p><strong>平行视图：</strong> 平行视图为极几何的一种特例。</p>
+<ul>
+<li>基线平行于图像平面，极点 $e$ 和 $e’$ 位于无穷远处；</li>
+<li>极线是水平的，平行于 $u$ 轴；</li>
+</ul>
+<script type="math/tex; mode=display">
+K=K^{\prime}\quad\quad R=I\quad\quad\boldsymbol{T}=\begin{pmatrix}t\\0\\0\end{pmatrix}\quad\quad\boldsymbol{e}^{\prime}=\begin{pmatrix}1\\0\\0\end{pmatrix}</script><p><img src="/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/image-20230815184635930.png" alt="image-20230815184635930" style="zoom:80%;"></p>
+<span id="more"></span>
+<p><strong>平行视图的基础矩阵：</strong> </p>
+<p><img src="/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/image-20230815185001159.png" alt="image-20230815185001159" style="zoom:80%;"></p>
+<p>$O_1$ 在右像素平面上的投影点为：</p>
+<script type="math/tex; mode=display">
+\begin{matrix}e^{\prime}=K^{\prime}(R&T)\\\end{matrix}\begin{pmatrix}0\\0\\0\\1\end{pmatrix}=K^{\prime}T</script><p>叉乘性质：对于任何向量 $a$ ，如果 $B$ 可逆，相差一个尺度情况下：</p>
+<script type="math/tex; mode=display">
+[a_{\times}]B=B^{-\mathrm{T}}[(B^{-1}a)_{\times}]</script><p>令 $a=T,B=K^{\prime{-1}}$ ，则：</p>
+<script type="math/tex; mode=display">
+[T_{\times}]K^{\prime{-1}}=K^{\prime\mathrm{T}}[(K^{\prime}T)_{\times}]
+\\\quad[T_{\times}]=K^{\prime\mathrm{T}}[(K^{\prime}T)_{\times}]K^{\prime}</script><p>根据基础矩阵 $F={K^{\prime}}^{-\mathrm{T}}[T_{\times}]RK^{-1}$ ，得到：</p>
+<script type="math/tex; mode=display">
+F=K^{\prime{-T}}[T_{\times}]RK^{-1}=K^{\prime{-T}}K^{\prime\mathrm{T}}[(K^{\prime}T)_{\times}]K^{\prime}RK^{-1}=[(K^{\prime}T)_{\times}]K^{\prime}RK^{-1}=[e^{\prime}{}_{\times}]K^{\prime}RK^{-1}</script><p>代入 （1）式可得：</p>
+<script type="math/tex; mode=display">
+F=[e^{\prime}_\times]K^{\prime}RK^{-1}=[e^{\prime}_\times]=\begin{pmatrix}0&0&0\\0&0&-1\\0&1&0\end{pmatrix}</script><p><strong>平行视图的极线 $l$ 为：</strong> 极线是 <strong>水平的，平行与 $u$ 轴</strong> ：</p>
+<script type="math/tex; mode=display">
+\boldsymbol{l}=\boldsymbol{F}^{\mathrm{T}}\boldsymbol{p}^{\prime}=\begin{pmatrix}0&0&0\\0&0&1\\0&-1&0\end{pmatrix}\begin{pmatrix}p_{u}^{\prime}\\p_{v}^{\prime}\\1\end{pmatrix}=\begin{pmatrix}0\\1\\-p_{v}^{\prime}\end{pmatrix}</script><p><strong>平行视图的 $p$ 和 $p’$ 关系：</strong> 两者 <strong>$v$ 坐标相同</strong>：</p>
+<script type="math/tex; mode=display">
+\\
+\begin{aligned}&\boldsymbol{p^{\prime T}}\boldsymbol{Fp}=0\iff(p_u^{\prime}\quad p_v^{\prime}\quad1)\begin{pmatrix}0&0&0\\0&0&-1\\0&1&0\end{pmatrix}\begin{pmatrix}p_u\\p_v\\1\end{pmatrix}=0\end{aligned} \\
+p_v =p'_v</script><p><strong>平行视图的性质：</strong></p>
+<ul>
+<li>极线是水平的，平行于 $u$ 轴；</li>
+<li>极点位于无穷远；</li>
+<li>$p$ 和 $p’$ 的 $v$ 坐标一样</li>
+</ul>
+<p><strong>平行视图的三角测量：</strong> </p>
+<p><img src="/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/image-20230815190411541.png" alt="image-20230815190411541" style="zoom:80%;"></p>
+<p>根据上图可得：</p>
+<script type="math/tex; mode=display">
+\frac{p_u^{\prime}-p_u}f=\frac Bz \\
+p_{u}-p_{u}^{\prime}=\frac{B\cdot f}{z}</script><p>视差 $p_{u}-p_{u}^{\prime}$ 与深度 $z$ 成<strong>反比</strong>。</p>
+<p><strong>双目立体视觉系统构建的核心问题：</strong></p>
+<ul>
+<li>如何获得平行视图？</li>
+<li>如何建立点对应关系？</li>
+</ul>
+<h2 id="2、图像校正"><a href="#2、图像校正" class="headerlink" title="2、图像校正"></a>2、图像校正</h2><p><img src="/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/image-20230815210732788.png" alt="image-20230815210732788" style="zoom:80%;"></p>
+<p><strong>图像校正步骤：</strong> </p>
+<ol>
+<li>在两副图像 $I$ 和 $I’$ 找到一组匹配点 $p_i \to p’_i$ ，不少于<strong>8个</strong>；</li>
+<li>计算基础矩阵 $F$ ，求解两副图像中的极点 $e$ 和 $e’$ ；</li>
+</ol>
+<script type="math/tex; mode=display">
+l_{i}=F^{\mathrm{T}}p_{i}^{\prime} \\
+\begin{pmatrix}\boldsymbol{l_1^\mathrm{T}}\\\vdots \\\boldsymbol{l_n^\mathrm{T}}\end{pmatrix}\boldsymbol{e=0}</script><ol>
+<li>选择透视变换 $H’$ 将 $e’$ 映射到无穷远点 $(f,0,0)$ ；</li>
+</ol>
+<script type="math/tex; mode=display">
+H^{\prime}=T^{-1}GRT</script><ul>
+<li>$I’$ 的中心点的齐次坐标为$(0,0,1)$ ，$e’$ 的齐次坐标为 $(e’_1,e’_2,1)$ ：</li>
+</ul>
+<script type="math/tex; mode=display">
+\boldsymbol{T}=\begin{pmatrix}1&0&-\frac{width}2\\0&1&-\frac{height}2\\0&0&1\end{pmatrix}</script><ul>
+<li>$e’&gt;0$ 时， $\alpha=1$ ，反之 $\alpha=-1$ ；$e’$ 的齐次坐标$(f,0,1)$ ：</li>
+</ul>
+<script type="math/tex; mode=display">
+R=\begin{pmatrix}\alpha\frac{e_1'}{\sqrt{e_1'^2+e_2'^2}}&\alpha\frac{e_2'}{\sqrt{e_1'^2+e_2'^2}}&0\\-\alpha\frac{e_2'}{\sqrt{e_1'^2+e_2'^2}}&\alpha\frac{e_1'}{\sqrt{e_1'^2+e_2'^2}}&0\\0&0&1\end{pmatrix}</script><ul>
+<li>$e’$ 的齐次坐标为$(f,0,0)$ ：</li>
+</ul>
+<script type="math/tex; mode=display">
+G=\begin{pmatrix}1&0&0\\0&1&0\\-\dfrac{1}{f}&0&1\end{pmatrix}</script><ol>
+<li>寻找对应的透视变换矩阵 $H$ ，使得下式最小：</li>
+</ol>
+<script type="math/tex; mode=display">
+\sum_id(\boldsymbol{Hp}_i,\boldsymbol{H}^{\prime}\boldsymbol{p}_i^{\prime}) \\
+\text{其中：}\quad H=H_AH'M \\
+H_A=\begin{pmatrix}a&b&c\\0&1&0\\0&0&1\end{pmatrix} \\
+M=[e_\times]F</script><p>对上式解释：<strong>平行视图中，对应的极线方程是相同的</strong>：</p>
+<p><img src="/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/image-20230815215607210.png" alt="image-20230815215607210" style="zoom:80%;"></p>
+<p>已知：直线 $l$ 和变换矩阵 $H$ ；</p>
+<p>求解：变换后的直线${\boldsymbol{\ell}}$ </p>
+<script type="math/tex; mode=display">
+\begin{aligned}\boldsymbol{p}^\mathrm{T}\boldsymbol{l}&=0&\boldsymbol{p}^{\prime\mathrm{T}}\boldsymbol{l}^{\prime}&=0\\\boldsymbol{y}&=\boldsymbol{H}\boldsymbol{p}&\boldsymbol{y}^{\prime}&=\boldsymbol{H}^{\prime}\boldsymbol{p}^{\prime}\\\boldsymbol{\ell}&=\boldsymbol{H}^{-\mathrm{T}}\boldsymbol{l}&{\ell}^{\prime}&=\boldsymbol{H}^{\prime{-\mathrm{T}}}\boldsymbol{l}^{\prime}\end{aligned}</script><p>故要最小化 ${\boldsymbol{\ell}}$ 和 ${\boldsymbol{\ell}’}$ 等价于式（15）。</p>
+<ol>
+<li>分别用矩阵 $H$ 和 $H’$ ，对左右两副图像 $I$ 和 $I’$ 进行重采样。</li>
+</ol>
+<h2 id="3、对应点搜索"><a href="#3、对应点搜索" class="headerlink" title="3、对应点搜索"></a>3、对应点搜索</h2><p><strong>双目融合问题：</strong> 给定 3D 点 $P$ ，在左右图像中找到相应的观测值 $p$ 和 $p’$ 。</p>
+<p><strong>平行视图的对应点搜索：</strong> 图像校正后， $p’$ 点沿着<strong>扫描线</strong>寻找即可。</p>
+<p><strong>归一化相关匹配：</strong></p>
+<p><img src="/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/image-20230815223007819.png" alt="image-20230815223007819" style="zoom:80%;"></p>
+<ol>
+<li>$p=(p_u,p_v)$ 处选择一个窗口 $W$ ，建立向量 $w$ ；</li>
+<li>在右图中沿扫描线在每个位置 $s’_u$ 建立窗口 $W’$ ，并获得 $w’$ 向量；</li>
+<li>计算每个 $s’_u$ 位置的$\frac{(w-\overline{w})^\mathrm{T}(w^{\prime}-\overline{w}^{\prime})}{||w-\overline{w}||\times||(w^{\prime}-\overline{w}^{\prime})||}$ 的值； $\overline{w}$ 为向量中每个元素均为 $W$ 内的灰度均值，目的是<strong>消除亮度和曝光的影响。</strong></li>
+<li>$p_{u}^{\prime}=arg\mathrm{max}\frac{(w-\bar{w})^{T}(w^{\prime}-\bar{w}^{\prime})}{||w-\bar{w}||\times||(w^{\prime}-\bar{w}^{\prime})||}$ 。</li>
+</ol>
+<p><strong>窗口大小的影响：</strong> </p>
+<ul>
+<li>较小的窗口：细节丰富；噪声更多；</li>
+<li>较大的窗口：视差图更平滑、噪声更少；细节丢失；</li>
+</ul>
+<p><img src="/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/image-20230815223620942.png" alt="image-20230815223620942" style="zoom:80%;"></p>
+<p><strong>相关法存在的问题：</strong></p>
+<ul>
+<li>透视缩短</li>
+<li>遮挡</li>
+</ul>
+<p><img src="/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/image-20230815223706500.png" alt="image-20230815223706500" style="zoom:80%;"></p>
+<ul>
+<li>基线选择</li>
+<li>同质区域</li>
+<li>重复模式</li>
+</ul>
+<p><img src="/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/image-20230815223836319.png" alt="image-20230815223836319" style="zoom:67%;"></p>
+<p><img src="/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/image-20230815223845875.png" alt="image-20230815223845875" style="zoom:67%;"></p>
+<p><strong>透视缩短和遮挡的解决方法：</strong> 为了减少透视缩短以及遮挡的影响，希望更小的 $B/z$ （基线深度比）比值，但当 $B/z$ 小时，测量值的小误差意味着估算深度的大误差。</p>
+<p><img src="/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/image-20230815224101851.png" alt="image-20230815224101851" style="zoom:80%;"></p>
+<p><img src="/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/image-20230815224110637.png" alt="image-20230815224110637" style="zoom:80%;"></p>
+<p><strong>引入其他约束：</strong> 为解决相关法的缺陷问题，引入其他约束：</p>
+<ul>
+<li>唯一性约束：一张图像中的任何点，在另一张图像中最多只有一个匹配点；</li>
+</ul>
+<p><img src="/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/image-20230815224246356.png" alt="image-20230815224246356" style="zoom:80%;"></p>
+<ul>
+<li>顺序约束/单调性约束：左右视图中的对应点次序一致：</li>
+</ul>
+<p><img src="/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/image-20230815224323714.png" alt="image-20230815224323714" style="zoom:80%;"></p>
+<ul>
+<li>平滑性约束：视差函数通常是平滑的。</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>3D Reconstruction</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>【笔记】基于图像的三维重建——图像特征</title>
     <url>/2023/08/14/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%9B%BE%E5%83%8F%E7%89%B9%E5%BE%81/</url>
     <content><![CDATA[<blockquote>
@@ -1992,241 +2149,542 @@ L\stackrel{\mathrm{def}}{=}\begin{pmatrix}v_1\boldsymbol{P_1^\mathrm{T}}&-u_1\bo
       </tags>
   </entry>
   <entry>
-    <title>【笔记】深蓝学院NeRF系列分享</title>
-    <url>/2023/08/07/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E6%B7%B1%E8%93%9D%E5%AD%A6%E9%99%A2NeRF%E7%B3%BB%E5%88%97%E5%88%86%E4%BA%AB/</url>
-    <content><![CDATA[<blockquote>
-<p>本文主要是关于深蓝学院NeRF系列分享的一些随手笔记。</p>
-</blockquote>
-<h2 id="1、课程链接"><a href="#1、课程链接" class="headerlink" title="1、课程链接"></a>1、课程链接</h2><p>分享课程链接：<a href="https://www.shenlanxueyuan.com/course/504?source=1">深蓝学院——神经辐射场（NeRF）系列分享</a></p>
-<h2 id="2、基于NeRF的三维内容生成"><a href="#2、基于NeRF的三维内容生成" class="headerlink" title="2、基于NeRF的三维内容生成"></a>2、基于NeRF的三维内容生成</h2><ol>
-<li>三维物体的基本属性主要涉及到物体的 <strong>形状、材质和光照</strong>。</li>
-<li><strong>渲染：</strong>三维物体/空间以 <strong>2D</strong> 形式表达； <strong>三维重建：</strong> 反渲染的过程。</li>
-<li>计算机图形学与计算机视觉偏重点的不同： <strong>图形学的重点在渲染过程，视觉的重点在反渲染的过程。</strong></li>
-</ol>
-<p><img src="/2023/08/07/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E6%B7%B1%E8%93%9D%E5%AD%A6%E9%99%A2NeRF%E7%B3%BB%E5%88%97%E5%88%86%E4%BA%AB/Screenshot from 2023-08-07 11-13-24.png" alt="Screenshot from 2023-08-07 11-13-24"></p>
-<ol>
-<li><p>反渲染中的三个关键问题：</p>
-<ol>
-<li><p>What <strong>shape</strong> representations to use?</p>
-<ol>
-<li><strong>Mesh、 Point cloud、Occupancy  field、Signed distance field</strong>.</li>
-</ol>
-<p><img src="/2023/08/07/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E6%B7%B1%E8%93%9D%E5%AD%A6%E9%99%A2NeRF%E7%B3%BB%E5%88%97%E5%88%86%E4%BA%AB/Screenshot from 2023-08-07 14-11-29.png" alt="Screenshot from 2023-08-07 14-11-29" style="zoom:67%;"></p>
-</li>
-<li><p>What <strong>appearance</strong> representation to use?</p>
-<ol>
-<li>Material texture map and environmental lighting：将贴图和环境灯光分离，优点是 <strong>具有较强的操作性、编辑性</strong>，缺点是 <strong>实现难度大，相对的计算资源需求更大</strong>。</li>
-<li>Radiance field：神经辐射场表示，优点 <strong>实现较为简单</strong>，缺点是 <strong>编辑性较差</strong>。</li>
-</ol>
-<p><img src="/2023/08/07/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E6%B7%B1%E8%93%9D%E5%AD%A6%E9%99%A2NeRF%E7%B3%BB%E5%88%97%E5%88%86%E4%BA%AB/Screenshot from 2023-08-07 14-21-31.png" alt="Screenshot from 2023-08-07 14-21-31" style="zoom:67%;"></p>
-</li>
-<li><p>What <strong>rendering</strong> operator to use?</p>
-<ol>
-<li>Ray tracing rendering.</li>
-</ol>
-<p><img src="/2023/08/07/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E6%B7%B1%E8%93%9D%E5%AD%A6%E9%99%A2NeRF%E7%B3%BB%E5%88%97%E5%88%86%E4%BA%AB/Screenshot from 2023-08-07 14-24-39.png" alt="Screenshot from 2023-08-07 14-24-39" style="zoom:67%;"></p>
-</li>
-</ol>
-</li>
-<li><p>NeRF的 shape 和 appearance:</p>
-<ol>
-<li><strong>shape</strong>：是一种 <strong>soft opacity field</strong> 可以理解为一种 <strong>雾(fog)</strong>，也就是论文中的 $\sigma$ .</li>
-<li><strong>appearance</strong>：使用 MLP 网络训练得到。</li>
-</ol>
-</li>
-</ol>
-<p><img src="/2023/08/07/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E6%B7%B1%E8%93%9D%E5%AD%A6%E9%99%A2NeRF%E7%B3%BB%E5%88%97%E5%88%86%E4%BA%AB/Screenshot from 2023-08-07 14-34-11.png" alt="Screenshot from 2023-08-07 14-34-11" style="zoom:67%;"></p>
-]]></content>
-      <tags>
-        <tag>NeRF</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>基于深度学习的人种识别方法</title>
-    <url>/2022/04/29/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%84%E4%BA%BA%E7%A7%8D%E8%AF%86%E5%88%AB%E6%96%B9%E6%B3%95/</url>
-    <content><![CDATA[<blockquote>
-<p><strong>前言</strong></p>
-<p>课程《模式识别》小组作业为基于深度学习的人脸识别，具体识别内容为：通过人脸识别人的性别、年龄、种族、表情、是否为同一人。我在小组内的工作为：通过人脸对人的种族进行识别。</p>
-<p>源码地址贴在此处：<a href="https://github.com/APPZ99/Face-Recognition">Face Recognition</a></p>
-</blockquote>
-<h2 id="任务简介"><a href="#任务简介" class="headerlink" title="任务简介"></a>任务简介</h2><p>用有监督学习机制设计并实现模式识别方法，基于人脸图像进行模式分类，如性别（男性、女性）、年龄（儿童、青少年、成年、老年）、表情（微笑、严肃）或者种族（白种人、黄种人、黑人）等。</p>
-<h3 id="个人任务"><a href="#个人任务" class="headerlink" title="个人任务"></a>个人任务</h3><p>负责通过人脸信息基于神经网络的种族识别网络设计，重点研究神经网络的理论、结构、变体与具体实现方式。</p>
-<span id="more"></span>
-<h3 id="数据库说明"><a href="#数据库说明" class="headerlink" title="数据库说明"></a>数据库说明</h3><p>两个文本文件：</p>
-<ul>
-<li><p>faceDR:每一个人脸数据的说明（2000个人脸），即类别卷标。</p>
-</li>
-<li><p>faceDS:每一个人脸数据的说明（2000个人脸），即类别卷标。</p>
-</li>
-</ul>
-<p>提示：由于数据是真实数据，会有以下情况：</p>
-<ol>
-<li><p>有缺失数据（如1228, 1808, 4056, 4135, 4136, and 5004），建议采取合适的预处理技术。</p>
-</li>
-<li><p>有错误数据，建议对有错误的人脸记录采取合适的预处理。</p>
-</li>
-</ol>
-<p>部分标签如下所示：</p>
-<p><img src="/2022/04/29/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%84%E4%BA%BA%E7%A7%8D%E8%AF%86%E5%88%AB%E6%96%B9%E6%B3%95/image-20220429153404115.png" alt="image-20220429153404115" style="zoom:67%;"></p>
-<h2 id="预处理部分"><a href="#预处理部分" class="headerlink" title="预处理部分"></a>预处理部分</h2><h3 id="缺失部分"><a href="#缺失部分" class="headerlink" title="缺失部分"></a>缺失部分</h3><p>我们小组通过检索所有缺失数据的样本，选择直接剔除。</p>
-<h3 id="错误数据部分"><a href="#错误数据部分" class="headerlink" title="错误数据部分"></a>错误数据部分</h3><p>这方面主要是存在过黑、过曝等问题，小组采用对所有训练数据归一化标准化的方法，具体实现体现为代码<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">transforms.Normalize(train_mean, train_std)</span><br></pre></td></tr></table></figure></p>
-<h3 id="训练集及测试集"><a href="#训练集及测试集" class="headerlink" title="训练集及测试集"></a>训练集及测试集</h3><ul>
-<li>faceDR数据作为训练集</li>
-<li>faceDS数据作为测试集</li>
-</ul>
-<h3 id="图像信息可视化"><a href="#图像信息可视化" class="headerlink" title="图像信息可视化"></a>图像信息可视化</h3><p>小组将所给样本数据统一转换为  <strong>200 X 200</strong> 的<strong>三通道灰度PNG</strong>格式图片。部分图片如下所示：</p>
-<p><img src="/2022/04/29/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%84%E4%BA%BA%E7%A7%8D%E8%AF%86%E5%88%AB%E6%96%B9%E6%B3%95/image-20220429153655690.png" alt="image-20220429153655690" style="zoom:50%;"></p>
-<h2 id="算法实现"><a href="#算法实现" class="headerlink" title="算法实现"></a>算法实现</h2><p>这里主要是记录本次任务自己所学到的一些东西，作为深度学习的门外汉，这里十分感谢<strong>W哥</strong>的指导和帮助，让我在这次任务中受益匪浅。</p>
-<h3 id="给样本打上标签"><a href="#给样本打上标签" class="headerlink" title="给样本打上标签"></a>给样本打上标签</h3><p>具体代码实现主要放在了  <a href="https://github.com/APPZ99/Face-Recognition/blob/master/Label_Processing.ipynb">Label_Processing</a>及<a href="https://github.com/APPZ99/Face-Recognition/blob/master/train.ipynb">train</a>文件下。</p>
-<p>原有数据库中的样本仅为 <strong>(id + .png)</strong> 格式，需要把 id与人种信息进行匹配。</p>
-<h4 id="提取所需标签信息"><a href="#提取所需标签信息" class="headerlink" title="提取所需标签信息"></a>提取所需标签信息</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#  将样本标签分开</span></span><br><span class="line">label_dir = <span class="string">&#x27;facedata/Label&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(label_dir + <span class="string">&#x27;/faceDR&#x27;</span>, encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> dr_label:</span><br><span class="line">    facedr_list = [[buf.strip(<span class="string">&#x27;)&#x27;</span>) <span class="keyword">for</span> buf <span class="keyword">in</span> line.strip().split(<span class="string">&#x27; (_&#x27;</span>)] </span><br><span class="line">                            <span class="keyword">for</span> line <span class="keyword">in</span> dr_label.readlines()]</span><br><span class="line">    </span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(label_dir + <span class="string">&#x27;/faceDS&#x27;</span>, encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> ds_label:</span><br><span class="line">    faceds_list = [[buf.strip(<span class="string">&#x27;)&#x27;</span>) <span class="keyword">for</span> buf <span class="keyword">in</span> line.strip().split(<span class="string">&#x27; (_&#x27;</span>)] </span><br><span class="line">                            <span class="keyword">for</span> line <span class="keyword">in</span> ds_label.readlines()]</span><br><span class="line">    </span><br><span class="line"><span class="comment">#  将 id号与人种组合</span></span><br><span class="line"></span><br><span class="line">facedr = []</span><br><span class="line">faceds = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> facedr_list:</span><br><span class="line">    race = line[<span class="number">3</span>].strip().split(<span class="string">&#x27; &#x27;</span>)[<span class="number">1</span>]</span><br><span class="line">    temp = [line[<span class="number">0</span>], race]</span><br><span class="line">    facedr.append(temp)</span><br><span class="line"><span class="built_in">print</span>(facedr[:<span class="number">10</span>])</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> faceds_list:</span><br><span class="line">    race = line[<span class="number">3</span>].strip().split(<span class="string">&#x27; &#x27;</span>)[<span class="number">1</span>]</span><br><span class="line">    temp = [line[<span class="number">0</span>], race]</span><br><span class="line">    faceds.append(temp)</span><br><span class="line">    </span><br><span class="line"><span class="comment">#  将数据转为npy格式</span></span><br><span class="line"></span><br><span class="line">np.save(<span class="string">&#x27;data.npy&#x27;</span>, facedr)</span><br><span class="line">data = np.load(<span class="string">&#x27;data.npy&#x27;</span>)</span><br><span class="line"></span><br><span class="line">np.save(<span class="string">&#x27;./facedata/Label/train.npy&#x27;</span>, facedr)</span><br><span class="line">np.save(<span class="string">&#x27;./facedata/Label/test.npy&#x27;</span>, faceds)</span><br><span class="line"></span><br><span class="line">train_label = np.load(<span class="string">&#x27;./facedata/Label/train.npy&#x27;</span>)</span><br><span class="line">test_label = np.load(<span class="string">&#x27;./facedata/Label/test.npy&#x27;</span>)</span><br></pre></td></tr></table></figure>
-<h4 id="样本与标签匹配"><a href="#样本与标签匹配" class="headerlink" title="样本与标签匹配"></a>样本与标签匹配</h4><p>基本思想是，每个样本的文件名即其 id，我们已经有了 （ id + 人种 ）的数据，那么遍历所有的文件，若文件名中 id 与（id + 人种）的 id为同一个， 即将该人种信息标注于样本文件名中。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> fname <span class="keyword">in</span> os.listdir(os.path.join(<span class="string">&#x27;facedata&#x27;</span>, <span class="string">&#x27;train&#x27;</span>)):</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> fname.endswith(<span class="string">&#x27;.png&#x27;</span>):</span><br><span class="line">        <span class="keyword">continue</span></span><br><span class="line">    idt, _ = fname.split(<span class="string">&#x27;.&#x27;</span>)</span><br><span class="line">    filepath = os.path.join(<span class="string">&#x27;facedata&#x27;</span>, <span class="string">&#x27;train&#x27;</span>, fname)</span><br><span class="line">    idt_num = <span class="built_in">int</span>(idt)</span><br><span class="line">    <span class="keyword">for</span> label <span class="keyword">in</span> train_label:</span><br><span class="line">        <span class="keyword">if</span> idt == label[<span class="number">0</span>]:</span><br><span class="line">            os.rename(filepath, filepath.replace(<span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span> + label[<span class="number">1</span>] + <span class="string">&#x27;.&#x27;</span>) )</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> fname <span class="keyword">in</span> os.listdir(os.path.join(<span class="string">&#x27;facedata&#x27;</span>, <span class="string">&#x27;test&#x27;</span>)):</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> fname.endswith(<span class="string">&#x27;.png&#x27;</span>):</span><br><span class="line">        <span class="keyword">continue</span></span><br><span class="line">    idt, _ = fname.split(<span class="string">&#x27;.&#x27;</span>)</span><br><span class="line">    filepath = os.path.join(<span class="string">&#x27;facedata&#x27;</span>, <span class="string">&#x27;test&#x27;</span>, fname)</span><br><span class="line">    idt_num = <span class="built_in">int</span>(idt)</span><br><span class="line">    <span class="keyword">for</span> label <span class="keyword">in</span> test_label:</span><br><span class="line">        <span class="keyword">if</span> idt == label[<span class="number">0</span>]:</span><br><span class="line">            os.rename(filepath, filepath.replace(<span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span> + label[<span class="number">1</span>] + <span class="string">&#x27;.&#x27;</span>) )</span><br></pre></td></tr></table></figure>
-<p>最后查看一下训练集与测试集中的样本分布</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">facedr_cnt = &#123;&#125;</span><br><span class="line">faceds_cnt = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> value <span class="keyword">in</span> train_label:</span><br><span class="line">    facedr_cnt[value[<span class="number">1</span>]] = facedr_cnt.get(value[<span class="number">1</span>], <span class="number">0</span>) + <span class="number">1</span></span><br><span class="line">        </span><br><span class="line"><span class="keyword">for</span> value <span class="keyword">in</span> test_label:</span><br><span class="line">     faceds_cnt[value[<span class="number">1</span>]] = faceds_cnt.get(value[<span class="number">1</span>], <span class="number">0</span>) + <span class="number">1</span></span><br><span class="line">        </span><br><span class="line"><span class="built_in">print</span>(facedr_cnt)</span><br><span class="line"><span class="built_in">print</span>(faceds_cnt)</span><br></pre></td></tr></table></figure>
-<p>得到如下分布：</p>
-<p><img src="/2022/04/29/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%84%E4%BA%BA%E7%A7%8D%E8%AF%86%E5%88%AB%E6%96%B9%E6%B3%95/image-20220429162132547.png" alt="image-20220429162132547"></p>
-<p>可以看到数据是极度不平衡，在不增加小样本的前提下，这对整个识别系统的训练是十分不友好的，也是后续改进的主要难点。</p>
-]]></content>
-      <tags>
-        <tag>DL</tag>
-        <tag>Face Recognize</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>【笔记】基于图像的三维重建——双目立体视觉</title>
-    <url>/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/</url>
+    <title>【笔记】基于图像的三维重建——稠密点云重建</title>
+    <url>/2023/08/17/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%A8%A0%E5%AF%86%E7%82%B9%E4%BA%91%E9%87%8D%E5%BB%BA/</url>
     <content><![CDATA[<blockquote>
 <p>本文主要关于深蓝学院系列课程——基于图像的三维重建的笔记。</p>
 <p>课程链接 <a href="https://www.shenlanxueyuan.com/course/627">基于图像的三维重建</a></p>
 </blockquote>
-<h2 id="1、基于平行视图的双目立体视觉"><a href="#1、基于平行视图的双目立体视觉" class="headerlink" title="1、基于平行视图的双目立体视觉"></a>1、基于平行视图的双目立体视觉</h2><p><strong>平行视图：</strong> 平行视图为极几何的一种特例。</p>
-<ul>
-<li>基线平行于图像平面，极点 $e$ 和 $e’$ 位于无穷远处；</li>
-<li>极线是水平的，平行于 $u$ 轴；</li>
+<h2 id="1、稠密点云的获取方式"><a href="#1、稠密点云的获取方式" class="headerlink" title="1、稠密点云的获取方式"></a>1、稠密点云的获取方式</h2><ul>
+<li>主动式：<ul>
+<li>LiDAR扫描：精度高（毫米级别），效率高，有效范围几米到几百米，价格昂贵；受限于高反光、玻璃表面和吸收表面；</li>
+<li>Kinect：使用方便，价格适中，速度较快；精度较低，有效距离短；</li>
+<li>结构光：高精度，高效率，近距离数据获取。</li>
 </ul>
-<script type="math/tex; mode=display">
-K=K^{\prime}\quad\quad R=I\quad\quad\boldsymbol{T}=\begin{pmatrix}t\\0\\0\end{pmatrix}\quad\quad\boldsymbol{e}^{\prime}=\begin{pmatrix}1\\0\\0\end{pmatrix}</script><p><img src="/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/image-20230815184635930.png" alt="image-20230815184635930" style="zoom:80%;"></p>
+</li>
+<li>被动式：<ul>
+<li>Multi-view Stereo：无源被动式，成本低，图像来源广，计算速度慢，精度较高。</li>
+</ul>
+</li>
+</ul>
 <span id="more"></span>
-<p><strong>平行视图的基础矩阵：</strong> </p>
-<p><img src="/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/image-20230815185001159.png" alt="image-20230815185001159" style="zoom:80%;"></p>
-<p>$O_1$ 在右像素平面上的投影点为：</p>
+<h2 id="2、基于深度图的多视图立体几何"><a href="#2、基于深度图的多视图立体几何" class="headerlink" title="2、基于深度图的多视图立体几何"></a>2、基于深度图的多视图立体几何</h2><p><img src="/2023/08/17/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%A8%A0%E5%AF%86%E7%82%B9%E4%BA%91%E9%87%8D%E5%BB%BA/image-20230817144447957.png" alt="image-20230817144447957" style="zoom:80%;"></p>
+<h3 id="2-1、基础知识"><a href="#2-1、基础知识" class="headerlink" title="2.1、基础知识"></a>2.1、基础知识</h3><p><strong>像素点以及其对应的三维点之间的坐标关系：</strong></p>
+<ul>
+<li>像素点与相机坐标系下的三维点坐标关系：</li>
+</ul>
 <script type="math/tex; mode=display">
-\begin{matrix}e^{\prime}=K^{\prime}(R&T)\\\end{matrix}\begin{pmatrix}0\\0\\0\\1\end{pmatrix}=K^{\prime}T</script><p>叉乘性质：对于任何向量 $a$ ，如果 $B$ 可逆，相差一个尺度情况下：</p>
+\begin{aligned}&\boldsymbol{q}={\begin{pmatrix}\alpha&0&c_x&0\\0&\beta&c_y&0\\0&0&1&0\end{pmatrix}}\begin{pmatrix}\mathrm{x}_C\\y_C\\z_C\\1\end{pmatrix}=\boldsymbol{M}_i\boldsymbol{P}_c\\\\&\boldsymbol{q}={\begin{pmatrix}\alpha&0&c_x\\0&\beta&c_y\\0&0&1\end{pmatrix}}\begin{pmatrix}\mathrm{x}_C\\y_C\\z_C\end{pmatrix}=\boldsymbol{K}_i\widetilde{\boldsymbol{P}}_c \\\\
+\end{aligned}</script><script type="math/tex; mode=display">
+\boldsymbol{p}=\begin{pmatrix}u\\v\\1\end{pmatrix}=\frac{1}{z}{\begin{pmatrix}\alpha&0\\0&\beta&c_y\\0&0&1\end{pmatrix}}\begin{pmatrix}X_C\\y_C\\z_C\end{pmatrix}=\frac{1}{z}\boldsymbol{K}_i\widetilde{\boldsymbol{P}}_c\\\\
+\tilde{\boldsymbol{P}}_{c}=\lambda\boldsymbol{K}_{i}^{-1}\boldsymbol{p}</script><ul>
+<li>像素点与世界坐标系下的三维点的坐标关系：</li>
+</ul>
 <script type="math/tex; mode=display">
-[a_{\times}]B=B^{-\mathrm{T}}[(B^{-1}a)_{\times}]</script><p>令 $a=T,B=K^{\prime{-1}}$ ，则：</p>
+\begin{aligned}\widetilde{\boldsymbol{P}}_c&=\boldsymbol{R}_i\widetilde{\boldsymbol{P}}+\boldsymbol{T}_i\\\\\widetilde{\boldsymbol{P}}&=\boldsymbol{R}_i^\mathrm{T}\widetilde{\boldsymbol{P}}_c-\boldsymbol{R}_i^\mathrm{T}\boldsymbol{T}_i\end{aligned}</script><p>相机坐标原点与世界坐标系的关系：</p>
 <script type="math/tex; mode=display">
-[T_{\times}]K^{\prime{-1}}=K^{\prime\mathrm{T}}[(K^{\prime}T)_{\times}]
-\\\quad[T_{\times}]=K^{\prime\mathrm{T}}[(K^{\prime}T)_{\times}]K^{\prime}</script><p>根据基础矩阵 $F={K^{\prime}}^{-\mathrm{T}}[T_{\times}]RK^{-1}$ ，得到：</p>
+\\\begin{pmatrix}0\\0\\0\end{pmatrix}=\boldsymbol{R}_i\boldsymbol{C}_i+\boldsymbol{T}_i\quad \\\\\boldsymbol{C}_i=-\boldsymbol{R}_i^\mathrm{T}\boldsymbol{T}_i</script><p>最终得到：</p>
 <script type="math/tex; mode=display">
-F=K^{\prime{-T}}[T_{\times}]RK^{-1}=K^{\prime{-T}}K^{\prime\mathrm{T}}[(K^{\prime}T)_{\times}]K^{\prime}RK^{-1}=[(K^{\prime}T)_{\times}]K^{\prime}RK^{-1}=[e^{\prime}{}_{\times}]K^{\prime}RK^{-1}</script><p>代入 （1）式可得：</p>
+\widetilde{P}=R_{i}^{\mathrm{T}}\widetilde{P}_{c}+C_{i} \\\\
+\widetilde{\boldsymbol{P}}=\lambda R_{i}^{\mathrm{T}}K_{i}^{-1}\boldsymbol{p}+C_{i}</script><p><strong>面片模型：</strong> </p>
+<p>概念：面片是三维物体表面的局部切平面，可以近似地表示某一局部范围内的物体表面。</p>
+<p><img src="/2023/08/17/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%A8%A0%E5%AF%86%E7%82%B9%E4%BA%91%E9%87%8D%E5%BB%BA/image-20230817145514848.png" alt="image-20230817145514848" style="zoom:80%;"></p>
+<p>表示：面片 $p$ 是三维和空间中的一个矩形，由中心点 $\widetilde{P}$ 、单位法向量 $\boldsymbol{n}$ 表示，记作 $\boldsymbol{f_p=\{\widetilde{P} ,n\}}$</p>
 <script type="math/tex; mode=display">
-F=[e^{\prime}_\times]K^{\prime}RK^{-1}=[e^{\prime}_\times]=\begin{pmatrix}0&0&0\\0&0&-1\\0&1&0\end{pmatrix}</script><p><strong>平行视图的极线 $l$ 为：</strong> 极线是 <strong>水平的，平行与 $u$ 轴</strong> ：</p>
+\widetilde{P}=\lambda R_{i}^{T}K_{i}^{-1}\boldsymbol{p}+C_{i} \\\\
+\boldsymbol{n}_i=\begin{bmatrix}cos\boldsymbol{\theta}sin\boldsymbol{\phi}\\sin\boldsymbol{\theta}sin\boldsymbol{\phi}\\cos\boldsymbol{\phi}\end{bmatrix}</script><p>确定：面片由 $\lambda、\theta、\phi$ 决定，且一般限定范围为：</p>
 <script type="math/tex; mode=display">
-\boldsymbol{l}=\boldsymbol{F}^{\mathrm{T}}\boldsymbol{p}^{\prime}=\begin{pmatrix}0&0&0\\0&0&1\\0&-1&0\end{pmatrix}\begin{pmatrix}p_{u}^{\prime}\\p_{v}^{\prime}\\1\end{pmatrix}=\begin{pmatrix}0\\1\\-p_{v}^{\prime}\end{pmatrix}</script><p><strong>平行视图的 $p$ 和 $p’$ 关系：</strong> 两者 <strong>$v$ 坐标相同</strong>：</p>
+\lambda\in[\lambda_{min},\lambda_{max}],\theta\in[0^{\circ},360^{\circ}],\phi\in[0^{\circ},60^{\circ}].</script><p><strong>光度一致性：</strong> </p>
+<p><img src="/2023/08/17/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%A8%A0%E5%AF%86%E7%82%B9%E4%BA%91%E9%87%8D%E5%BB%BA/image-20230817150747348.png" alt="image-20230817150747348" style="zoom:80%;"></p>
+<p>归一化相关系数：</p>
 <script type="math/tex; mode=display">
+NCC\big(\boldsymbol{q}_1,\boldsymbol{H}_{ij}(\boldsymbol{q}_1)\big)=\frac{\sum_{j=1}^{w\times\boldsymbol{w}}\big(q_\mathrm{j}-\overline{\boldsymbol{q}}\big)\cdot\big(\boldsymbol{H}_{ij}(q_\mathrm{j})-\overline{\boldsymbol{H}_{ij}(q_\mathrm{j})}\big)}{\sqrt{\Sigma_{j=1}^{w\times\boldsymbol{w}}\big(q_\mathrm{j}-\overline{\boldsymbol{q}}\big)^2\sum_{j=1}^{w\times\boldsymbol{w}}\big(\boldsymbol{H}_{ij}(q_\mathrm{j})-\overline{\boldsymbol{H}_{ij}(q_\mathrm{j})}\big)^2}}</script><p>其中 $H_{ij}$ 为相机 $i,j$ 的单应矩阵。</p>
+<p>光度一致性函数：</p>
+<script type="math/tex; mode=display">
+m(p,\boldsymbol{f}_p)=1-NCC(\boldsymbol{q}_1,\boldsymbol{H}_{ij}(\boldsymbol{q}_1))</script><h3 id="2-2、基于深度图的重建流程"><a href="#2-2、基于深度图的重建流程" class="headerlink" title="2.2、基于深度图的重建流程"></a>2.2、基于深度图的重建流程</h3><p><strong>核心重建步骤：</strong> </p>
+<ol>
+<li>立体对选择</li>
+<li>深度图计算</li>
+<li>深度图细化</li>
+<li>深度图融合</li>
+</ol>
+<p><strong>立体对选择：</strong> </p>
+<p><img src="/2023/08/17/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%A8%A0%E5%AF%86%E7%82%B9%E4%BA%91%E9%87%8D%E5%BB%BA/image-20230817151156593.png" alt="image-20230817151156593" style="zoom:80%;"></p>
+<ol>
+<li>计算平均角度值： $m$ 为图像 $i,j$ 在 SfM系统中建立的对应点个数：</li>
+</ol>
+<script type="math/tex; mode=display">
+{\theta_{ij}}=\frac{1}{m}\sum_{k=1}^{m}\theta_{k}\quad\quad\quad{5^{\circ}}<\theta_{ij}<60^{\circ}</script><ol>
+<li>计算基线距离： $\hat{d}$ 为所有 $d_{ij}, j=1,…,n$ 的中位数：</li>
+</ol>
+<script type="math/tex; mode=display">
+{d_{ij}}>2\overline{d}\quad\quad d_{ij}<0.05\overline{d}</script><ol>
+<li>按照 ${\theta_{ij}\cdot d_{ij}}$ 值的升序排列，选前 $k_1$ 个构建图像 $i$ 的邻域几何 $N(i)$ ；（升序是为了防止视距缩短以及遮挡问题）</li>
+<li>参考帧为 $N(i)$ 中 ${\theta_{ij}\cdot d_{ij}}$ 最小的图像。</li>
+</ol>
+<p><strong>深度图计算：</strong> </p>
+<p>如果迭代次数小于等于 $k_2(\text{如：}k_2=3)$ ，则对于图像 $i$ 的每个像素进行如下操作：</p>
+<ul>
+<li>空间传播：判断邻域像素的面片参数是否更优（即光度一致性的值是否更低）。如果更优，利用邻域像素的面片参数设置当前像素的面片参数；</li>
+</ul>
+<p><img src="/2023/08/17/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%A8%A0%E5%AF%86%E7%82%B9%E4%BA%91%E9%87%8D%E5%BB%BA/image-20230817152233584.png" alt="image-20230817152233584" style="zoom:80%;"></p>
+<ul>
+<li>随机分配：通过随机采样，寻找光度一致性的值更低的面片参数。<ul>
+<li>若给定三个值 $\{\Delta\lambda,\Delta\theta,\Delta\phi\}$ ，在范围 $\lambda^{\prime}\in(\lambda-\Delta\lambda,\lambda+ \Delta\lambda),\theta^{‘}\in(\theta-\Delta\theta,\theta+\Delta\theta),\phi^{‘}\in(\phi-\Delta\phi,\phi+\Delta\phi)$ 中随机选择一组平面参数 $\{\lambda^{\prime},\theta^{\prime},\phi^{\prime}\}$ ；</li>
+<li>使用公式 $\boldsymbol{X}_{i}=\lambda\boldsymbol{K}_{i}^{-1}\boldsymbol{p}、\boldsymbol{n}_{i}=\begin{bmatrix}cos\theta sin\phi\\sin\theta sin\phi\\cos\phi\end{bmatrix}$ ，重新计算新的平面 $f_{p}^{\prime}$ ；</li>
+<li>如果 $m(p,f_{p}^{\prime})&lt;m(p,f_{p}),\text{则令：}f_{p}=f_{p}^{\prime},\lambda=\lambda^{\prime},\theta=\theta^{\prime},\phi=\phi^{\prime}$ ；</li>
+<li>将范围 $\{\Delta\lambda,\Delta\theta,\Delta\phi\}$ 减半；</li>
+<li>如果迭代次数小于等于制定次数 $k_3$ ，则回到第一步；否则，退出。</li>
+</ul>
+</li>
+</ul>
+<p><strong>深度图细化：</strong> </p>
+<ol>
+<li><p>剔除光度一致性所有光度一致性高于 $\tau_1$ 的重建点；</p>
+</li>
+<li><p>假设 $N_k$ 是 $N(i)$ 中的第 $k$ 个相邻图像，使用 $d(X,N_k)$ 表示 $X$ 相对相机 $N_k$ 的深度，$\lambda(X,N_k)$ 表示将 $X$ 投影到 $N_k$ 的深度图上得到的投影处的深度值：</p>
+<ol>
+<li>如果 $\lambda(X,N_k)$ 与 $d(X,N_k)$ 足够接近，则认为两者具有深度一致性， $\tau_2$ 为阈值：<script type="math/tex; mode=display">
+\frac{|d(X,N_k)-\lambda(X,N_k)|}{\lambda(X,N_k)}<\tau_2</script></li>
+<li>如果 $X$ 与 $N(i)$ 中至少 $k_4$ 张图像是一致的，则认为该点是可靠的，否则从 $I_i$ 的深度图中删除像素 $p$ 。</li>
+</ol>
+</li>
+</ol>
+<p><strong>深度图融合：</strong> </p>
+<p><img src="/2023/08/17/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%A8%A0%E5%AF%86%E7%82%B9%E4%BA%91%E9%87%8D%E5%BB%BA/image-20230817160415734.png" alt="image-20230817160415734" style="zoom:80%;"></p>
+<ul>
+<li>剔除：在邻域视图中，剔除被遮挡的像素，如 $N_1,N_2$ 图像中的像素点；</li>
+<li>去冗余：在邻域视图中，融合深度值相近的像素，如 $N4$ 图像中的像素点；</li>
+<li>深度图融合： $\widetilde{X}=\lambda R_{i}^{T}K_{i}^{-1}\boldsymbol{p}+\boldsymbol{C}_{i}$ 。</li>
+</ul>
+<h2 id="3、基于体素的多视图立体几何"><a href="#3、基于体素的多视图立体几何" class="headerlink" title="3、基于体素的多视图立体几何"></a>3、基于体素的多视图立体几何</h2><p><strong>体素重建：</strong> <strong>基于体素的方法需要已知相机的内、外参数矩阵！！！</strong></p>
+<ul>
+<li>假设给定的工作体积包含待重建物体；</li>
+<li>将工作体积内的三维点 $P$ 投影到多个视点的图像上；</li>
+<li>验证 $P$ 点在各个视图上的投影点的“一致性”，以确定点 $P$ 是否属于待重建的物体。</li>
+</ul>
+<p><img src="/2023/08/17/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%A8%A0%E5%AF%86%E7%82%B9%E4%BA%91%E9%87%8D%E5%BB%BA/image-20230817170231718.png" alt="image-20230817170231718" style="zoom:80%;"></p>
+<h3 id="3-1、空间雕刻法"><a href="#3-1、空间雕刻法" class="headerlink" title="3.1、空间雕刻法"></a>3.1、空间雕刻法</h3><p><strong>基本概念：</strong> </p>
+<ul>
+<li>表观轮廓：物体表面可见部分和遮挡部分的分界线在图像平面上的投影。</li>
+<li>剪影：图像平面中由表观轮廓包围的区域。</li>
+<li>视锥：由相机中心和图像平面中对象的表观轮廓定义的包络面（待重建物体完全位于视锥内）。</li>
+</ul>
+<p><img src="/2023/08/17/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%A8%A0%E5%AF%86%E7%82%B9%E4%BA%91%E9%87%8D%E5%BB%BA/image-20230817170712879.png" alt="image-20230817170712879" style="zoom:80%;"></p>
+<p><strong>视觉外壳计算：</strong> </p>
+<p>视觉外壳概念：艘有视锥的相交区域，它是待重建物体形状的逼近。</p>
+<p>视觉外壳计算：对每个视锥建立参数方程，然后连理参数方程求解视锥交集，但过于复杂。</p>
+<p><img src="/2023/08/17/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%A8%A0%E5%AF%86%E7%82%B9%E4%BA%91%E9%87%8D%E5%BB%BA/image-20230817170846380.png" alt="image-20230817170846380" style="zoom:80%;"></p>
+<p><strong>空间雕刻法的“一致性”定义：</strong> 给定工作体积中的一个点，将其投影到某个视图上时，如果投影点罗在该视图的剪影内，则称当前点满足该视图一致性要求。</p>
+<p><strong>空间雕刻法具体实现：</strong> </p>
+<ol>
+<li>将工作体积（立方体）分解为子体积（子立方体），也称为体素；</li>
+<li>评估所有体素：将待判定的体素投影到所有视点的图像中，只要有一个视图不满足一致性要求，即投影点在视图的剪影外，则将该体素标记为空；否则标记为满（红色）；</li>
+<li>得到所有相机视锥交集的近似估计。</li>
+</ol>
+<p>注意：剪影法获得的视觉外壳是待重建物体形状的一个上限估计，即重建物体的任何部分都在外壳内，但外壳内的某些部分可能不属于物体。</p>
+<p><img src="/2023/08/17/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%A8%A0%E5%AF%86%E7%82%B9%E4%BA%91%E9%87%8D%E5%BB%BA/image-20230817171820258.png" alt="image-20230817171820258" style="zoom:80%;"></p>
+<p><strong>复杂度及解决：</strong> 采用上述方法对每个体素进行一致性估计，其计算复杂度太高，因此引入 <strong>八叉树</strong> 来解决。</p>
+<p><strong>八叉树：</strong> 基于八叉树的空间雕刻法，能在提高重建精度的同时，尽量减少计算复杂度。</p>
+<p><img src="/2023/08/17/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%A8%A0%E5%AF%86%E7%82%B9%E4%BA%91%E9%87%8D%E5%BB%BA/image-20230817172125192.png" alt="image-20230817172125192" style="zoom:80%;"></p>
+<p><img src="/2023/08/17/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%A8%A0%E5%AF%86%E7%82%B9%E4%BA%91%E9%87%8D%E5%BB%BA/image-20230817172134620.png" alt="image-20230817172134620" style="zoom:80%;"></p>
+<p><strong>空间雕刻法优缺点：</strong> </p>
+<ul>
+<li>优点：<ul>
+<li>简单且具有鲁棒性；</li>
+<li>不需要计算视图之间对应点的关系。</li>
+</ul>
+</li>
+<li>缺点：<ul>
+<li>对视图数量的依赖；</li>
+<li>无法对物体的凹面进行建模。</li>
+</ul>
+</li>
+</ul>
+<p><img src="/2023/08/17/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%A8%A0%E5%AF%86%E7%82%B9%E4%BA%91%E9%87%8D%E5%BB%BA/image-20230817172331559.png" alt="image-20230817172331559" style="zoom:80%;"></p>
+<h3 id="3-2、体素着色法"><a href="#3-2、体素着色法" class="headerlink" title="3.2、体素着色法"></a>3.2、体素着色法</h3><p><strong>体素着色法中的一致性：</strong> 使用投影点的色彩值来计算外观一致性。</p>
+<p><strong>计算步骤：</strong> 工作体积中的每个体素都被投影到图像中，因为体素具有一定的物理尺寸，所以它的投影很可能包含多个像素；计算这些像素的标准差，直接将其与某个阈值 $\lambda$ 比较来确认一致性。</p>
+<p><strong>色彩赋予：</strong> 对于那些通过外观一致性检测的体素，可以将其在图像上的投影点的色彩赋予它。</p>
+<p><strong>注意：</strong> 体素着色法仅适用于朗伯表面的重建任务，重建物体各个位置的感知亮度不随视点位姿变化而改变。</p>
+<p><img src="/2023/08/17/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%A8%A0%E5%AF%86%E7%82%B9%E4%BA%91%E9%87%8D%E5%BB%BA/image-20230817232135746.png" alt="image-20230817232135746" style="zoom:80%;"></p>
+<p><strong>解决不唯一性问题的有效途径之一：</strong> 引入可见性约束，即遵循特定的顺序便利体素以消除歧义。</p>
+<p><strong>执行过程：</strong> 逐层探索体素一致性，从靠近相机的那些体素开始，然后逐渐到远离相机的那些体素。按照这个顺序，对每个体素执行一致性检查，并相应地将体素标记为满（占用）或者空（为占用）。</p>
+<p><img src="/2023/08/17/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%A8%A0%E5%AF%86%E7%82%B9%E4%BA%91%E9%87%8D%E5%BB%BA/image-20230817232458623.png" alt="image-20230817232458623" style="zoom:80%;"></p>
+]]></content>
+      <tags>
+        <tag>3D Reconstruction</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【笔记】基于图像的三维重建——纹理图像生成</title>
+    <url>/2023/08/20/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%BA%B9%E7%90%86%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90/</url>
+    <content><![CDATA[<blockquote>
+<p>本文主要关于深蓝学院系列课程——基于图像的三维重建的笔记。</p>
+<p>课程链接 <a href="https://www.shenlanxueyuan.com/course/627">基于图像的三维重建</a></p>
+</blockquote>
+<h2 id="1、纹理图像的自动创建"><a href="#1、纹理图像的自动创建" class="headerlink" title="1、纹理图像的自动创建"></a>1、纹理图像的自动创建</h2><h3 id="1-1、基础知识"><a href="#1-1、基础知识" class="headerlink" title="1.1、基础知识"></a>1.1、基础知识</h3><p><strong>纹理贴图：</strong> 同一三维模型采用不同纹理图案进行渲染。</p>
+<p><img src="/2023/08/20/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%BA%B9%E7%90%86%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90/image-20230820170629280.png" alt="image-20230820170629280" style="zoom:80%;"></p>
+<span id="more"></span>
+<p><strong>纹理坐标：</strong> 三维网格中的面片与纹理图像的映射关系。</p>
+<p><strong>基本算法流程：</strong></p>
+<ol>
+<li>输入模型</li>
+<li>模型参数化</li>
+<li>纹理图像绘制</li>
+<li>纹理模型</li>
+</ol>
+<p><img src="/2023/08/20/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%BA%B9%E7%90%86%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90/image-20230820170924489.png" alt="image-20230820170924489" style="zoom:80%;"></p>
+<p><strong>纹理图像的创建方式：</strong></p>
+<ul>
+<li>交互软件</li>
+<li>自动计算</li>
+</ul>
+<p><img src="/2023/08/20/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%BA%B9%E7%90%86%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90/image-20230820171004533.png" alt="image-20230820171004533" style="zoom:80%;"></p>
+<h3 id="1-2、纹理图像的自动创建"><a href="#1-2、纹理图像的自动创建" class="headerlink" title="1.2、纹理图像的自动创建"></a>1.2、纹理图像的自动创建</h3><p><strong>算法流程：</strong> </p>
+<ol>
+<li>视角选择</li>
+<li>纹理坐标的计算</li>
+<li>全局颜色调整</li>
+<li>柏松图像编辑</li>
+</ol>
+<p><img src="/2023/08/20/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%BA%B9%E7%90%86%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90/image-20230820171701402.png" alt="image-20230820171701402" style="zoom:80%;"></p>
+<p><strong>视角选择：</strong> </p>
+<p>选择标准：</p>
+<ul>
+<li>图像的尺寸</li>
+<li>图像的细节丰富程度</li>
+<li>图像的可视化</li>
+<li>邻域平滑性</li>
+</ul>
+<p>数学模型：</p>
+<ul>
+<li>将视角选择建模成多标签的分配问题：为每一个三角形分配一个标签（视角）；</li>
+<li>将网格上建立 <strong>MRF 随机场</strong>，每个面片代表随机场的一个顶点；</li>
+<li>能量函数分为数据项 $E_{data}$ 和平滑项 $E_{smooth}$ </li>
+</ul>
+<script type="math/tex; mode=display">
+E(l)=\sum_{F_i\in\mathrm{Faces}}E_{\mathrm{data}}(F_i,l_i)+\sum_{(F_i,F_j)\in\mathrm{Edges}}E_{\mathrm{smooth}}(F_i,F_j,l_i,l_j)</script><p>数据项：</p>
+<ul>
+<li>图像质量：<ul>
+<li>纹理细节：投影三角形的平均梯度；</li>
+<li>尺度：投影三角形的面积。</li>
+</ul>
+</li>
+</ul>
+<script type="math/tex; mode=display">
+E_\text{data}=-\int_{\phi(F_i,l_i)}\|\nabla(I_{l_i}(p))\|_2\mathrm{d}p \\
+\begin{aligned}
+&l_{i}\quad \text{表示视角}; \\
+&\nabla\left(I_{l_{i}}(p)\right)\quad \text{表示投影点处的梯度;} \\
+&\phi(F_{i},l_{i})\quad \text{表示三角形的投影区域。}
+\end{aligned}</script><ul>
+<li>可视性：</li>
+</ul>
+<p><img src="/2023/08/20/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%BA%B9%E7%90%86%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90/image-20230820172852183.png" alt="image-20230820172852183" style="zoom:80%;"></p>
+<p>平滑项：通过保持邻域的平滑性使得相邻三角形有相同的视角，从而可以减少缝隙为后续的处理提供便利。</p>
+<script type="math/tex; mode=display">
+E_{\mathrm{smooth}}=[l_i\neq l_j]\\
+[\quad] \text{为艾佛森括号（Iverson bracket）}</script><p>MRF 视角选择常用优化方法：</p>
+<ul>
+<li>$\alpha - expansion$ </li>
+<li>$\alpha-\beta \quad swap$ </li>
+</ul>
+<p>顶点处的视角标签：</p>
+<p>视角选择是以 facet 为优化对象，边界上的 Vertex 会具有所有相邻 facet 的标签，即具有多个纹理坐标。</p>
+<p><img src="/2023/08/20/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%BA%B9%E7%90%86%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90/image-20230820173421023.png" alt="image-20230820173421023" style="zoom:80%;"></p>
+<p><strong>纹理坐标的计算：</strong></p>
+<ul>
+<li><p>投影到对应的图像上，街区最小包围盒范围内的图像作为纹理图像；</p>
+</li>
+<li><p>投影的坐标归一化后作为纹理坐标；</p>
+</li>
+</ul>
+<p><img src="/2023/08/20/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%BA%B9%E7%90%86%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90/image-20230820173613701.png" alt="image-20230820173613701" style="zoom:80%;"></p>
+<p><strong>全局颜色调整：</strong> </p>
+<p>问题引入：由于不同视角间存在相机曝光或者光照差异导致不同， Texture Patch 边界处存在明显缝隙。</p>
+<p><img src="/2023/08/20/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%BA%B9%E7%90%86%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90/image-20230820173751619.png" alt="image-20230820173751619" style="zoom:80%;"></p>
+<p>解决思路：每个像素添加一个颜色调整量使得：</p>
+<ul>
+<li>缝隙处的颜色差异尽量小；</li>
+<li>Patch 内部相邻像素的调整尽量近似。</li>
+</ul>
+<p>参数量爆炸问题：</p>
+<ul>
+<li>每个像素对应一个参数，使得整体参数量过大，计算量太大？</li>
+<li>解决：仅考虑顶点处的色彩调整量<ul>
+<li>首先为每个顶点 $v_i$ ，添加一个调整量 $g_i$ ；</li>
+<li>通过插值的方式得到每个像素的调整值</li>
+</ul>
+</li>
+</ul>
+<p><img src="/2023/08/20/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%BA%B9%E7%90%86%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90/image-20230820174220901.png" alt="image-20230820174220901" style="zoom:80%;"></p>
+<p>缝隙处顶点的调整量定义问题：</p>
+<p>对缝隙处的顶点进行拆分，假设缝隙上的顶点 $v_i$ 的视角标签为 $\boldsymbol{l}_{i}=\{l_{i}^{0},l_{i}^{1},…l_{i}^{n_{v_{i}}-1}\},n_{v_{i}}$ 为标签个数，则顶点 $v_i$ 将被分为 $n_{v_i}$ 个顶点。</p>
+<script type="math/tex; mode=display">
+v_{i}\rightarrow\{v_{i}^{l_{i}^{0}},v_{i}^{l_{i}^{1}},...,v_{i}^{l_{i}^{n_{v_{i}-1}}}\}</script><p> 相应的颜色调整量 $g_i$ ：</p>
+<script type="math/tex; mode=display">
+g_{i}\rightarrow\{g_{i}^{l_{i}^{0}},g_{i}^{l_{i}^{1}},\ldots,g_{i}^{l_{i}^{n_{v_{i}-1}}}\}</script><p>变量总个数：</p>
+<script type="math/tex; mode=display">
+\sum_i^Nn_{v_i}</script><p>函数能量定义为：$f_{i}^{l_{i}^{j}}$ 表示 $v_i$ 在视角 $l_{i}^j$ 中的颜色</p>
+<script type="math/tex; mode=display">
+\begin{gathered}
+E(g) =\sum_{v_{i}\in seam}\sum_{(l_{i}^{j},l_{i}^{k})\in l_{i}}\left(f_{i}^{l_{i}^{j}}+g_{i}^{l_{i}^{j}}-(f_{i}^{l_{i}^{k}}+g_{i}^{l_{i}^{k}})\right)^{2} 
++\lambda\sum_{v_{i}}\sum_{v_{j}\in N(v_{i})}\sum_{l\in l_{i}\cap l_{j}}(g_{i}^{l}-g_{j}^{l})^{2} 
+\end{gathered}</script><p><img src="/2023/08/20/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%BA%B9%E7%90%86%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90/image-20230820175024165.png" alt="image-20230820175024165" style="zoom:80%;"></p>
+<p>建模后的能量函数一般为 <strong>稀疏线性方程</strong> ，针对大规模的线性稀疏方程可以采用 **共轭梯度法（Conjugate Gradient）进行优化。</p>
+<p><strong>柏松图像编辑：</strong> </p>
+<p>问题引入：对于缝隙比较严重的区域，全局颜色调整并不能保证完全去除缝隙，还需要进一步处理。</p>
+<p><img src="/2023/08/20/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%BA%B9%E7%90%86%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90/image-20230820193014328.png" alt="image-20230820193014328" style="zoom:80%;"></p>
+<p>算法原理：</p>
+<ul>
+<li>边界上的像素值与背景图像相同；</li>
+<li>前景区域内的梯度与引导梯度场相同。</li>
+</ul>
+<p>数学模型：</p>
+<script type="math/tex; mode=display">
+min_f\iint_{\Omega}|\nabla f-\boldsymbol{v}|,wrt.f|_{\partial\Omega}=f^*|_{\partial\Omega} \\
+\text{等价于：}\Delta f=\operatorname{div}\boldsymbol{v}over\Omega,wrt.f|_{\partial\Omega}=f^*|_{\partial\Omega}\\\\
+\begin{aligned}
+&\text{v 是引导梯度场}&& \text{S 是背景区域}  \\
+&\text{Ω 是前景区域}&& f^* 是背景区的光度函数  \\
+&\partial\Omega 是边界区域&& \text{f 是待求的前景区的光度函数} 
+\end{aligned}
 \\
-\begin{aligned}&\boldsymbol{p^{\prime T}}\boldsymbol{Fp}=0\iff(p_u^{\prime}\quad p_v^{\prime}\quad1)\begin{pmatrix}0&0&0\\0&0&-1\\0&1&0\end{pmatrix}\begin{pmatrix}p_u\\p_v\\1\end{pmatrix}=0\end{aligned} \\
-p_v =p'_v</script><p><strong>平行视图的性质：</strong></p>
-<ul>
-<li>极线是水平的，平行于 $u$ 轴；</li>
-<li>极点位于无穷远；</li>
-<li>$p$ 和 $p’$ 的 $v$ 坐标一样</li>
-</ul>
-<p><strong>平行视图的三角测量：</strong> </p>
-<p><img src="/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/image-20230815190411541.png" alt="image-20230815190411541" style="zoom:80%;"></p>
-<p>根据上图可得：</p>
+\operatorname{\text{其中}div}\boldsymbol{v}={\frac{\partial u}{\partial x}}+{\frac{\partial v}{\partial y}},{\text{是梯度}}\boldsymbol{v}=(u,v)\text{的散度}</script><p>散度计算：</p>
+<p><img src="/2023/08/20/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%BA%B9%E7%90%86%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90/image-20230820193455794.png" alt="image-20230820193455794" style="zoom:80%;"></p>
 <script type="math/tex; mode=display">
-\frac{p_u^{\prime}-p_u}f=\frac Bz \\
-p_{u}-p_{u}^{\prime}=\frac{B\cdot f}{z}</script><p>视差 $p_{u}-p_{u}^{\prime}$ 与深度 $z$ 成<strong>反比</strong>。</p>
-<p><strong>双目立体视觉系统构建的核心问题：</strong></p>
+\begin{array}{c}\Delta f(p,q)=f_{p-1,q}+f_{p,q-1}+f_{p,q+1}+f_{p+1,q}-4*f_{p,q}\end{array}</script><p>能量函数通过构建线性系统进行求解：</p>
+<p><img src="/2023/08/20/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%BA%B9%E7%90%86%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90/image-20230820193532145.png" alt="image-20230820193532145" style="zoom:80%;"></p>
+<p>加速策略：</p>
 <ul>
-<li>如何获得平行视图？</li>
-<li>如何建立点对应关系？</li>
+<li>进行全局颜色调整之后，只需要在缝隙处进行泊松编辑即可；</li>
+<li>可以通过控制内部区域的范围，（如由当前边界往前景区域扩充3个像素的作为前景进行计算），从而减少线性系统的规模。</li>
 </ul>
-<h2 id="2、图像校正"><a href="#2、图像校正" class="headerlink" title="2、图像校正"></a>2、图像校正</h2><p><img src="/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/image-20230815210732788.png" alt="image-20230815210732788" style="zoom:80%;"></p>
-<p><strong>图像校正步骤：</strong> </p>
+<p><img src="/2023/08/20/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%BA%B9%E7%90%86%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90/image-20230820193629111.png" alt="image-20230820193629111" style="zoom: 67%;"></p>
+<p><strong>OBJ 文件：</strong></p>
+<p><img src="/2023/08/20/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%BA%B9%E7%90%86%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90/image-20230820193735117.png" alt="image-20230820193735117" style="zoom:80%;"></p>
+<h2 id="2、基于光度一致性的网格细节优化"><a href="#2、基于光度一致性的网格细节优化" class="headerlink" title="2、基于光度一致性的网格细节优化"></a>2、基于光度一致性的网格细节优化</h2><p><strong>离散网格上定义能量函数：</strong></p>
+<p>每个顶点的梯度相当于 $1-ring$ 范围内所有点的梯度的加权和。</p>
+<p><img src="/2023/08/20/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%BA%B9%E7%90%86%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90/image-20230820201808554.png" alt="image-20230820201808554" style="zoom:80%;"></p>
+<script type="math/tex; mode=display">
+\frac{\mathrm{d}\mathrm{E}(S)}{\mathrm{d}X_i}=\int_S\phi_i(x)\nabla\mathrm{E}(x)\mathrm{d}x\quad i\in[1,n]</script><p><strong>基于 surface 的光度一致性的度量：</strong> </p>
+<p><img src="/2023/08/20/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%BA%B9%E7%90%86%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90/image-20230820202701002.png" alt="image-20230820202701002" style="zoom:80%;"></p>
+<script type="math/tex; mode=display">
+\mathrm{E}_{\mathrm{error}}(S)=\sum_{i,j}\int_{\Omega_{ij}^S}h(I_i,I_{ij}^S)(x_i)\mathrm{d}x_i,</script><ul>
+<li>$h(I,J)(x_{i})$ 表示在图像 $I$ 和 $J$ 之间在像素 $x_i$ 处的光度一致性；</li>
+<li>$I_{ij}^{S}=I_{j}\circ\prod_{j}\circ\prod_{i}^{-1}$ 表示将图像 $I_j$ 通过曲面 $S$ 重投影到图像 $I_i$ 上；</li>
+<li>$\Omega_{ij}^{\mathcal{S}}$ 表示重投影的有效区域；</li>
+<li>$\prod_i$ 和 $\prod_i^{-1}$ 分别表示第 $i$ 帧图像的投影和逆投影。</li>
+</ul>
+<script type="math/tex; mode=display">
+\begin{aligned}
+&\mathrm{E}_{\mathrm{error}}(S)=\sum_{i,j}\int_{\Omega_{ij}^{S}}h(I_{i},I_{ij}^{S})(x_{i})\mathrm{d}x_{i} \\
+&\operatorname{E}_{\mathrm{error}}(S)=\sum_{i,j}\mathcal{M}_{ij}(S) \\
+&\nabla\mathrm{E}_{\mathrm{error}}(S)=\sum_{i,j}\nabla\mathcal{M}_{ij}(S).
+\end{aligned}</script><ul>
+<li>其中 $\mathrm{d}x_i=-\mathbf{N}^T\mathbf{d}_i\mathrm{d}x/z_i^3$ </li>
+</ul>
+<script type="math/tex; mode=display">
+\begin{aligned}
+&\nabla\mathcal{M}_{ij}(x)=-\left[\partial_{2}M(x_{i})DI_{j}(x_{j})D\Pi_{j}(x)\frac{\mathbf{d}_{i}}{z_{i}^{3}}\right]\mathbf{N} \\\\
+&\begin{aligned}f_{ij}(x_{i})=\partial_{2}M(x_{i})DI_{j}(x_{j})D\Pi_{j}(x)\mathbf{d}_{i}\end{aligned} \\\\
+&\nabla\mathcal{M}_{ij}(x)=-f_{ij}(x_{i})\mathbf{N}/z_{i}^{3}
+\end{aligned}</script><p>得到：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+&{\frac{\mathrm{d}\mathrm{E}_{\mathrm{error}}(S)}{\mathrm{d}X}}=\int_{S}\phi(x)\sum_{i,j}\nabla\mathcal{M}_{ij}(x)\mathrm{d}x \\
+&=-\int_{S}\phi(x)\sum_{i,j}f_{ij}(x_{i})\mathbf{N}/z_{i}^{3}\mathrm{d}x \\
+&=-\sum_{ii}\int_{S}\phi(x)f_{ij}(x_{i})\mathbf{N}/z_{i}^{3}\mathrm{d}x
+\end{aligned}</script><p>根据$\mathrm{d}x_i=-\mathbf{N}^T\mathbf{d}_i\mathrm{d}x/z_i^3$ ：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+&{\frac{\mathrm{d}\mathrm{E}_{\mathrm{error}}(S)}{\mathrm{d}X}}=\int_{S}\phi(x)\sum_{i,j}\nabla\mathcal{M}_{ij}(x)\mathrm{d}x  \\
+&=\sum_{i,j}\int_{\Omega_{ij}}\phi(x)f_{ij}(x_{i})\mathbf{N}/z_{i}^{3}\frac{z_{i}^{3}}{\mathbf{N}^{T}\mathbf{d}_{i}}\mathbf{N}\mathrm{d}x_{i}\\&=\sum_{i,j}\int_{\Omega_{ij}}\phi(x)f_{ij}(x_{i})/(\mathbf{N}^{T}\mathbf{d}_{i})\mathbf{N}\mathrm{d}x_{i}\end{aligned}</script><p><strong>保持 surface 本身的平滑性（对曲率进行约束）：</strong> </p>
+<script type="math/tex; mode=display">
+\operatorname{E}_{\mathrm{fair}}(S)=\int_{S}(\kappa_{1}^{2}+\kappa_{2}^{2})\mathrm{d}S</script><p><strong>得到最终梯度：</strong></p>
+<script type="math/tex; mode=display">
+\nabla E(x)=\nabla E_{\mathrm{erior}}(x)+{\nabla E_{\mathrm{fair}}(x)}</script><p><img src="/2023/08/20/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%BA%B9%E7%90%86%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90/image-20230820203245661.png" alt="image-20230820203245661" style="zoom:80%;"></p>
+]]></content>
+      <tags>
+        <tag>3D Reconstruction</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【笔记】基于图像的三维重建——表面重建</title>
+    <url>/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/</url>
+    <content><![CDATA[<blockquote>
+<p>本文主要关于深蓝学院系列课程——基于图像的三维重建的笔记。</p>
+<p>课程链接 <a href="https://www.shenlanxueyuan.com/course/627">基于图像的三维重建</a></p>
+</blockquote>
+<h2 id="1、三维物体的表面表达方式"><a href="#1、三维物体的表面表达方式" class="headerlink" title="1、三维物体的表面表达方式"></a>1、三维物体的表面表达方式</h2><p><strong>边界表示法（Boundary Representation）：</strong> 将物体表面表示成一组封闭物体空间的四边形、三角形、参数曲面或者非参数的曲面，具有稳定性强、灵活性强、有助于表示表面细节。</p>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819160257192.png" alt="image-20230819160257192" style="zoom:80%;"></p>
+<span id="more"></span>
+<p><strong>空间划分法（Spatial-Partitioning Representations）：</strong> 将物体内部的空间划分成细小、不重叠的连续实体来描述物体的形状。</p>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819160400266.png" alt="image-20230819160400266" style="zoom:80%;"></p>
+<p><strong>构造体素法（Boundary Constructive Solid Geometry）：</strong>  通过集合运算（并、交、差）将简单规则的形状组合成更加复杂的形状，操作简单、便于实现，但是只能用来表示较为简单的实体，无法用于形状复杂或者表面精细的物体。</p>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819160514460.png" alt="image-20230819160514460" style="zoom:80%;"></p>
+<p><strong>三角网格（Triangular Mesh）：</strong> 最常见的三维模型表述方式。计算机图形学和计算机视觉中的三维网格处理绝大部分都是基于三角网格。</p>
+<ul>
+<li>三角网格的基本结构：<ul>
+<li>顶点（Vertex）</li>
+<li>面片（Facet）</li>
+<li>边（Edge）</li>
+</ul>
+</li>
+<li>点线和面上的各种属性<ul>
+<li>颜色（Color）</li>
+<li>法向量（Normal）</li>
+<li>纹理坐标（Texture Coordinate）</li>
+</ul>
+</li>
+</ul>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819160838707.png" alt="image-20230819160838707" style="zoom:80%;"></p>
+<h2 id="2、基于符号距离场的表面重建方法"><a href="#2、基于符号距离场的表面重建方法" class="headerlink" title="2、基于符号距离场的表面重建方法"></a>2、基于符号距离场的表面重建方法</h2><h3 id="2-1、基本概念"><a href="#2-1、基本概念" class="headerlink" title="2.1、基本概念"></a>2.1、基本概念</h3><p><strong>符号距离函数（Signed Distance Function）：</strong> 符号距离函数Signed Distance Function是某度量空间 $X$ 中的一个集合 $\Omega $ 的函数，决定 $X$ 中任一点到 $\Omega$ 边界 $\partial\Omega $ 的距离，并且由 $x$ 是在 $\Omega $ 内还是 $\Omega $ 外确定 SDF 的正负号：当 $x$ 在 $\Omega $ 内时，SDF 为正； 当 $x$ 在 $\Omega $ 外时， SDF 为负。</p>
+<script type="math/tex; mode=display">
+F(x)=\begin{cases}d(x,\partial\Omega)&ifx\in\Omega_i\\-d(x,\partial\Omega)&ifx\in\Omega_o\end{cases}</script><p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819161733649.png" alt="image-20230819161733649" style="zoom:80%;"></p>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819161746835.png" alt="image-20230819161746835" style="zoom:80%;"></p>
+<h3 id="2-2、基于隐函数的表面重建"><a href="#2-2、基于隐函数的表面重建" class="headerlink" title="2.2、基于隐函数的表面重建"></a>2.2、基于隐函数的表面重建</h3><p><strong>空间划分：</strong> 主要用于对隐函数进行离散化，即划分区域的每个区域计算一个符号距离值。</p>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819162012782.png" alt="image-20230819162012782" style="zoom:80%;"></p>
+<p><strong>八叉树构建：</strong> </p>
 <ol>
-<li>在两副图像 $I$ 和 $I’$ 找到一组匹配点 $p_i \to p’_i$ ，不少于<strong>8个</strong>；</li>
-<li>计算基础矩阵 $F$ ，求解两副图像中的极点 $e$ 和 $e’$ ；</li>
+<li>设定最大递归深度；</li>
+<li>找出场景的最大尺寸，并以此尺寸建立第一个立方体；</li>
+<li>依序将元素丢入能被包含且没有子节点的立方体；</li>
+<li>若没达到最大递归深度，就进行细分八等份，再将该立方体所装的元素全部分给八个子立方体；</li>
+<li><strong>若发现子立方体所分配到的元素数量不为零且跟父立方体是一样的，则该子立方体停止细分；</strong></li>
+<li>重复3，直到达到最大递归深度。</li>
 </ol>
-<script type="math/tex; mode=display">
-l_{i}=F^{\mathrm{T}}p_{i}^{\prime} \\
-\begin{pmatrix}\boldsymbol{l_1^\mathrm{T}}\\\vdots \\\boldsymbol{l_n^\mathrm{T}}\end{pmatrix}\boldsymbol{e=0}</script><ol>
-<li>选择透视变换 $H’$ 将 $e’$ 映射到无穷远点 $(f,0,0)$ ；</li>
-</ol>
-<script type="math/tex; mode=display">
-H^{\prime}=T^{-1}GRT</script><ul>
-<li>$I’$ 的中心点的齐次坐标为$(0,0,1)$ ，$e’$ 的齐次坐标为 $(e’_1,e’_2,1)$ ：</li>
+<p><strong>符号距离场构建：</strong></p>
+<ul>
+<li>对于grid，根据邻域中的样本点计算每个node的符号距离；</li>
+<li>对于octree，根据邻域中的样本点计算每个叶子结点的符号距离值。</li>
 </ul>
+<p><strong>符号距离场构建——局部方法：</strong> </p>
+<p>符号距离场函数的一般定义：</p>
 <script type="math/tex; mode=display">
-\boldsymbol{T}=\begin{pmatrix}1&0&-\frac{width}2\\0&1&-\frac{height}2\\0&0&1\end{pmatrix}</script><ul>
-<li>$e’&gt;0$ 时， $\alpha=1$ ，反之 $\alpha=-1$ ；$e’$ 的齐次坐标$(f,0,1)$ ：</li>
-</ul>
+F(\boldsymbol{x})=\frac{\sum_ic_iw_i(\boldsymbol{x})f_i(\boldsymbol{x})}{\sum_ic_iw_i(\boldsymbol{x})}</script><p>一种简单的情况：</p>
 <script type="math/tex; mode=display">
-R=\begin{pmatrix}\alpha\frac{e_1'}{\sqrt{e_1'^2+e_2'^2}}&\alpha\frac{e_2'}{\sqrt{e_1'^2+e_2'^2}}&0\\-\alpha\frac{e_2'}{\sqrt{e_1'^2+e_2'^2}}&\alpha\frac{e_1'}{\sqrt{e_1'^2+e_2'^2}}&0\\0&0&1\end{pmatrix}</script><ul>
-<li>$e’$ 的齐次坐标为$(f,0,0)$ ：</li>
-</ul>
+\begin{aligned}f_i(x)&=(x-p_i)\cdot n_i\\\\w_i(x)&=\exp(-||x-p_i||^2)\end{aligned}</script><p><strong>FSSR方法</strong>的符号距离函数定义：</p>
 <script type="math/tex; mode=display">
-G=\begin{pmatrix}1&0&0\\0&1&0\\-\dfrac{1}{f}&0&1\end{pmatrix}</script><ol>
-<li>寻找对应的透视变换矩阵 $H$ ，使得下式最小：</li>
-</ol>
+\begin{aligned}f(x_i)&=f_x(x)f_y(y)f_z(z)=\frac{x}{\sigma^42\pi}\cdot e^{\frac{-1}{2\sigma^2}(x^2+y^2+z^2)}\\\\f_x(x)&=\frac{x}{\sigma^2}e^{\frac{-x^2}{2\sigma^2}}\quad f_y(x)=f_z(x)=\frac{1}{\sigma\sqrt{2\pi}}e^{\frac{-x^2}{2\sigma^2}}\end{aligned}</script><p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163125131.png" alt="image-20230819163125131" style="zoom:80%;"></p>
 <script type="math/tex; mode=display">
-\sum_id(\boldsymbol{Hp}_i,\boldsymbol{H}^{\prime}\boldsymbol{p}_i^{\prime}) \\
-\text{其中：}\quad H=H_AH'M \\
-H_A=\begin{pmatrix}a&b&c\\0&1&0\\0&0&1\end{pmatrix} \\
-M=[e_\times]F</script><p>对上式解释：<strong>平行视图中，对应的极线方程是相同的</strong>：</p>
-<p><img src="/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/image-20230815215607210.png" alt="image-20230815215607210" style="zoom:80%;"></p>
-<p>已知：直线 $l$ 和变换矩阵 $H$ ；</p>
-<p>求解：变换后的直线${\boldsymbol{\ell}}$ </p>
+\begin{array}{rcl}w(\boldsymbol{x}_i)&=&w_x(x)\cdot w_{yz}(\sqrt{y^2+z^2})\\\\w_x(x)&=&\begin{cases}\frac{1}{9}\frac{x^2}{\sigma^2}+\frac{2}{3}\frac{x}{\sigma}+1&x\in[-3\sigma,0)\\\frac{2}{27}\frac{x^3}{\sigma^3}-\frac{1}{3}\frac{x^2}{\sigma^2}+1&x\in[0,3\sigma)\\0&\mathrm{otherwise}\end{cases}\\\\w_{yz}(r)&=&\begin{cases}\frac{2}{27}\frac{r^3}{\sigma^3}-\frac{1}{3}\frac{r^2}{\sigma^2}+1&r<3\sigma\\0&\mathrm{otherwise}\end{cases}\\\\r&=&\sqrt{y^2+z^2}.\end{array}</script><p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163226820.png" alt="image-20230819163226820" style="zoom:80%;"></p>
+<p>效果：</p>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163248618.png" alt="image-20230819163248618" style="zoom:80%;"></p>
+<p><strong>符号距离场的构建——全局方式：</strong> 将有向点看做是对隐函数的梯度的采样，全局的方法的 <strong>优点是鲁棒</strong> ，能够很好地处理噪声和空洞，主要 <strong>缺点是计算量大</strong> ，需要求解大规模的方程。</p>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163540042.png" alt="image-20230819163540042" style="zoom:80%;"></p>
 <script type="math/tex; mode=display">
-\begin{aligned}\boldsymbol{p}^\mathrm{T}\boldsymbol{l}&=0&\boldsymbol{p}^{\prime\mathrm{T}}\boldsymbol{l}^{\prime}&=0\\\boldsymbol{y}&=\boldsymbol{H}\boldsymbol{p}&\boldsymbol{y}^{\prime}&=\boldsymbol{H}^{\prime}\boldsymbol{p}^{\prime}\\\boldsymbol{\ell}&=\boldsymbol{H}^{-\mathrm{T}}\boldsymbol{l}&{\ell}^{\prime}&=\boldsymbol{H}^{\prime{-\mathrm{T}}}\boldsymbol{l}^{\prime}\end{aligned}</script><p>故要最小化 ${\boldsymbol{\ell}}$ 和 ${\boldsymbol{\ell}’}$ 等价于式（15）。</p>
+\begin{aligned}
+&\operatorname*{min}_{\chi_{M}}\|\nabla\chi_{M}-\vec{V}\| \\\\
+&\nabla\cdot(\nabla\chi_{M})=\nabla\cdot\vec{V} \\\\
+&\Delta\chi_{M} =\nabla\cdot\vec{\boldsymbol{V}} \\\\
+&\chi_M(p)=\begin{cases}1&\text{if}p\in M\\0&\text{if}p\notin M\end{cases}
+\end{aligned}</script><p><strong>柏松表面重建方法：</strong> </p>
 <ol>
-<li>分别用矩阵 $H$ 和 $H’$ ，对左右两副图像 $I$ 和 $I’$ 进行重采样。</li>
+<li>构建八叉树：</li>
 </ol>
-<h2 id="3、对应点搜索"><a href="#3、对应点搜索" class="headerlink" title="3、对应点搜索"></a>3、对应点搜索</h2><p><strong>双目融合问题：</strong> 给定 3D 点 $P$ ，在左右图像中找到相应的观测值 $p$ 和 $p’$ 。</p>
-<p><strong>平行视图的对应点搜索：</strong> 图像校正后， $p’$ 点沿着<strong>扫描线</strong>寻找即可。</p>
-<p><strong>归一化相关匹配：</strong></p>
-<p><img src="/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/image-20230815223007819.png" alt="image-20230815223007819" style="zoom:80%;"></p>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163723124.png" alt="image-20230819163723124" style="zoom:67%;"></p>
 <ol>
-<li>$p=(p_u,p_v)$ 处选择一个窗口 $W$ ，建立向量 $w$ ；</li>
-<li>在右图中沿扫描线在每个位置 $s’_u$ 建立窗口 $W’$ ，并获得 $w’$ 向量；</li>
-<li>计算每个 $s’_u$ 位置的$\frac{(w-\overline{w})^\mathrm{T}(w^{\prime}-\overline{w}^{\prime})}{||w-\overline{w}||\times||(w^{\prime}-\overline{w}^{\prime})||}$ 的值； $\overline{w}$ 为向量中每个元素均为 $W$ 内的灰度均值，目的是<strong>消除亮度和曝光的影响。</strong></li>
-<li>$p_{u}^{\prime}=arg\mathrm{max}\frac{(w-\bar{w})^{T}(w^{\prime}-\bar{w}^{\prime})}{||w-\bar{w}||\times||(w^{\prime}-\bar{w}^{\prime})||}$ 。</li>
+<li>创建向量场 $\vec{V}$ ：</li>
 </ol>
-<p><strong>窗口大小的影响：</strong> </p>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163758887.png" alt="image-20230819163758887" style="zoom:67%;"></p>
+<ol>
+<li>计算指示函数 $\Delta\chi_{M} =\nabla\cdot\vec{\boldsymbol{V}}$：</li>
+</ol>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163854016.png" alt="image-20230819163854016" style="zoom:67%;"></p>
+<p>不同分辨率下的指示函数表达：</p>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163927387.png" alt="image-20230819163927387" style="zoom:67%;"></p>
+<ol>
+<li>提取等值面：</li>
+</ol>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163955023.png" alt="image-20230819163955023" style="zoom:67%;"></p>
+<p><strong>Marching Cube 生成表面：</strong> </p>
 <ul>
-<li>较小的窗口：细节丰富；噪声更多；</li>
-<li>较大的窗口：视差图更平滑、噪声更少；细节丢失；</li>
+<li>二维：根据四边形的 4个 顶点的符号距离值，通过插值的方法生成直线段。 总共 $2^4 =16$ 种分布状态。</li>
 </ul>
-<p><img src="/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/image-20230815223620942.png" alt="image-20230815223620942" style="zoom:80%;"></p>
-<p><strong>相关法存在的问题：</strong></p>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819164151204.png" alt="image-20230819164151204" style="zoom:80%;"></p>
 <ul>
-<li>透视缩短</li>
-<li>遮挡</li>
+<li>三维：通过插值法生成面片，共 $2^8 = 256$ 种分布状态，通过对称性可以简化成 <strong>15种</strong> 状态。</li>
 </ul>
-<p><img src="/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/image-20230815223706500.png" alt="image-20230815223706500" style="zoom:80%;"></p>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819164346994.png" alt="image-20230819164346994" style="zoom:80%;"></p>
+<h2 id="3、基于二元分割的表面重建方法"><a href="#3、基于二元分割的表面重建方法" class="headerlink" title="3、基于二元分割的表面重建方法"></a>3、基于二元分割的表面重建方法</h2><h3 id="3-1、基本概念"><a href="#3-1、基本概念" class="headerlink" title="3.1、基本概念"></a>3.1、基本概念</h3><p><strong>主要思想：</strong> 将空间划分成一组 cell（voxel/tetrahedron），采用而远分割的思想，将这些 cell 划分成内部和外部两类，介于 interior 和 exterior 面，即为物体的 surface。</p>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819164814242.png" alt="image-20230819164814242" style="zoom:80%;"></p>
+<p><strong>Delaunay Triangulation：</strong> </p>
 <ul>
-<li>基线选择</li>
-<li>同质区域</li>
-<li>重复模式</li>
+<li>空圆特性：点集 $P$ 的德劳内三角剖分满足 $P$ 内任意一个点都不在 $P$ 内任意一个三角面片的外界圆内；任意 3个 点的外界圆不包含第 4个 点，即任意 3个 点的外界圆是空的；</li>
 </ul>
-<p><img src="/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/image-20230815223836319.png" alt="image-20230815223836319" style="zoom:67%;"></p>
-<p><img src="/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/image-20230815223845875.png" alt="image-20230815223845875" style="zoom:67%;"></p>
-<p><strong>透视缩短和遮挡的解决方法：</strong> 为了减少透视缩短以及遮挡的影响，希望更小的 $B/z$ （基线深度比）比值，但当 $B/z$ 小时，测量值的小误差意味着估算深度的大误差。</p>
-<p><img src="/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/image-20230815224101851.png" alt="image-20230815224101851" style="zoom:80%;"></p>
-<p><img src="/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/image-20230815224110637.png" alt="image-20230815224110637" style="zoom:80%;"></p>
-<p><strong>引入其他约束：</strong> 为解决相关法的缺陷问题，引入其他约束：</p>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819165149096.png" alt="image-20230819165149096" style="zoom:80%;"></p>
 <ul>
-<li>唯一性约束：一张图像中的任何点，在另一张图像中最多只有一个匹配点；</li>
+<li>最大化最小角：德劳内三角剖分最大化三角面片内三角形的最小角。</li>
 </ul>
-<p><img src="/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/image-20230815224246356.png" alt="image-20230815224246356" style="zoom:80%;"></p>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819165405523.png" alt="image-20230819165405523" style="zoom:80%;"></p>
+<p>翻转前的内角： $\alpha_{1}+\alpha_{2},\quad\alpha_{3},\quad\alpha_{4},\quad\underline{\alpha_{1}},\quad\underline{\alpha_{2}},\quad\overline{\alpha_{3}}+\overline{\alpha_{4}}$ ；</p>
+<p>翻转后的内角： $\alpha_{1},\quad\alpha_{2},\quad\overline{\alpha_{3}},\quad\overline{\alpha_{4}},\quad\underline{\alpha_{1}}+\alpha_{4},\quad\underline{\alpha_{2}}+\alpha_{3}$ ；</p>
+<p>满足： 每一次翻转都是在增大三角剖分的最小角；</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+&&\alpha_{1}&& >\underline{\alpha_{1}},  \\
+&&\alpha_2&& >\alpha_{2},  \\
+&&\overline{\alpha_{3}}&& >\alpha_{3},  \\
+&&\overline{\alpha_{4}}&& >\alpha_{4},  \\
+&&\underline{\alpha_{1}}+\alpha_{4}&& >\alpha_{4},  \\
+&& \underline{\alpha_{2}}+\alpha_{3}&&>\alpha_{3}
+\end{aligned}</script><p><strong>一种增量的德劳内三角剖分算法——Bowyer-Watson算法：</strong> </p>
+<ol>
+<li>假定已生成了链接若干个顶点的德劳内三角网络；</li>
+<li>加入一个新的节点，找出所有外界圆包含新加入节点的三角形，并将这些三角形删除，形成一个空腔。</li>
+<li>空腔的节点与新加入的节点连接，形成新的 Delaunay 三角形网络；</li>
+<li>不断循环直到遍历完所有点。</li>
+</ol>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819170439677.png" alt="image-20230819170439677" style="zoom:80%;"></p>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819170840910.png" alt="image-20230819170840910" style="zoom:80%;"></p>
+<h3 id="3-2、四面体剖分"><a href="#3-2、四面体剖分" class="headerlink" title="3.2、四面体剖分"></a>3.2、四面体剖分</h3><p><strong>四面体剖分：</strong> 3D 空间对应的是德劳内四面体剖分。在创建过程中，将点插入三角剖分前需要进行判断：</p>
 <ul>
-<li>顺序约束/单调性约束：左右视图中的对应点次序一致：</li>
+<li>如果和已有的顶点距离较远，则直接插入新的顶点；</li>
+<li>如果已经存在一个较近的顶点，则对该顶点进行更新。</li>
 </ul>
-<p><img src="/2023/08/15/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E5%8F%8C%E7%9B%AE%E7%AB%8B%E4%BD%93%E8%A7%86%E8%A7%89/image-20230815224323714.png" alt="image-20230815224323714" style="zoom:80%;"></p>
+<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819170722592.png" alt="image-20230819170722592" style="zoom:80%;"></p>
+<p><strong>数学模型：</strong> </p>
 <ul>
-<li>平滑性约束：视差函数通常是平滑的。</li>
+<li>有向图的顶点对应四面体（tetrahedron），边界对应三角形（triangle）；</li>
+<li>最小化下式将四面体划分成内部和外部两类：</li>
+</ul>
+<script type="math/tex; mode=display">{ }
+E(S)=E_{vis}(S,P,v)+\lambda_{qual}E_{qual}(S)\\
+\begin{aligned}
+&E_{vis}\colon\text{ 可视性代价}; \\
+&E_{qual}\colon\text{ 表面质量代价}; \\
+&S\colon\text{重建的表面;} \\
+&P\colon{\text{点云;}} \\
+&v\colon\text{ 摄像机位姿};
+\end{aligned}</script><p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819171317696.png" alt="image-20230819171317696" style="zoom:80%;"></p>
+<p><strong>图割（Graph cut）：最大流（Max-flow）与最小割（Min-cut）：</strong> </p>
+<ul>
+<li>有向加权图 $\mathcal{G}=\langle\mathcal{V},\mathcal{E}\rangle $ ，包含两个特殊的 terminal nodes： source 和 sink；</li>
+<li>图割将所有节点 划分成没有交集的两部分，划分的代价定义为：</li>
+</ul>
+<script type="math/tex; mode=display">
+\mathfrak{c}(\mathcal{S},\mathcal{T})=\sum_{v_i\in\mathcal{S}\setminus\{s\}\atop v_j\in T\setminus\{t\}}w_{ij}+\sum_{v_i\in\mathcal{S}\setminus\{s\}}t_i+\sum_{v_i\in T\setminus\{t\}}s_i</script><p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819171647039.png" alt="image-20230819171647039" style="zoom:80%;"></p>
+<p><strong>可视性约束和局部平滑性的构建：</strong>  被 vertex 到相机中心的 ray 穿越的四面体倾向于 visible；</p>
+<p>邻接表面可能存在的几种情况：外部-内部；内部-外部；外部-外部；内部-内部；</p>
+<script type="math/tex; mode=display">
+E_{vis}(S,P,v)=\sum_{p\in P}\sum_{q\in v_{p}}\left\{D_{out}\left(l_{\tau_{1}^{Q\rightarrow P}}\right)+\sum_{i=1}^{N_{[QP]}-1}V_{align}(l_{\tau_{l}^{Q\rightarrow P}},l_{\tau_{l+1}^{Q\rightarrow P}})+D_{in}(l_{\tau_{\mathcal{N}_{[QP]^{+1}}}^{Q\rightarrow P}})\right\}</script><p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819172150977.png" alt="image-20230819172150977" style="zoom:80%;"></p>
+<p><strong>表面质量约束：</strong> </p>
+<script type="math/tex; mode=display">
+E_{qual}(s)=\sum_{f}w_{f}=1-\min\{\cos(\phi),\cos(\varphi)\}</script><p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819172215720.png" alt="image-20230819172215720" style="zoom:80%;"></p>
+<p><strong>总结：</strong></p>
+<ul>
+<li>算法流程简单，容易实现；</li>
+<li>适用于大规模场景以及小物体的重建，能够处理复杂表面；</li>
+<li>重建的效果以来 Delaunay Triangulation 的质量，容易受到噪声和外点的影响；</li>
+<li>通常需要结合 Mesh refinement 获得更加细致的表面细节。</li>
+</ul>
+<p><strong>常用的重建算法：</strong></p>
+<ul>
+<li><a href="https://github.com/cdcseacave/openMVS">Delaunay Triangualtion + Graph Cut</a></li>
+<li><a href="http://hhoppe.com/proj/poissonrecon/">泊松表面重建算法</a></li>
+<li><a href="http://mesh.brown.edu/ssd/paper.html">SSd 重建算法</a></li>
+<li><a href="http://www.regard3d.org/index.php/documentation/details/surface">FSSR 重建算法</a></li>
 </ul>
 ]]></content>
       <tags>
@@ -2456,546 +2914,53 @@ F=SH</script><ul>
       </tags>
   </entry>
   <entry>
-    <title>【笔记】基于图像的三维重建——稠密点云重建</title>
-    <url>/2023/08/17/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%A8%A0%E5%AF%86%E7%82%B9%E4%BA%91%E9%87%8D%E5%BB%BA/</url>
+    <title>【笔记】深蓝学院NeRF系列分享</title>
+    <url>/2023/08/07/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E6%B7%B1%E8%93%9D%E5%AD%A6%E9%99%A2NeRF%E7%B3%BB%E5%88%97%E5%88%86%E4%BA%AB/</url>
     <content><![CDATA[<blockquote>
-<p>本文主要关于深蓝学院系列课程——基于图像的三维重建的笔记。</p>
-<p>课程链接 <a href="https://www.shenlanxueyuan.com/course/627">基于图像的三维重建</a></p>
+<p>本文主要是关于深蓝学院NeRF系列分享的一些随手笔记。</p>
 </blockquote>
-<h2 id="1、稠密点云的获取方式"><a href="#1、稠密点云的获取方式" class="headerlink" title="1、稠密点云的获取方式"></a>1、稠密点云的获取方式</h2><ul>
-<li>主动式：<ul>
-<li>LiDAR扫描：精度高（毫米级别），效率高，有效范围几米到几百米，价格昂贵；受限于高反光、玻璃表面和吸收表面；</li>
-<li>Kinect：使用方便，价格适中，速度较快；精度较低，有效距离短；</li>
-<li>结构光：高精度，高效率，近距离数据获取。</li>
-</ul>
-</li>
-<li>被动式：<ul>
-<li>Multi-view Stereo：无源被动式，成本低，图像来源广，计算速度慢，精度较高。</li>
-</ul>
-</li>
-</ul>
-<span id="more"></span>
-<h2 id="2、基于深度图的多视图立体几何"><a href="#2、基于深度图的多视图立体几何" class="headerlink" title="2、基于深度图的多视图立体几何"></a>2、基于深度图的多视图立体几何</h2><p><img src="/2023/08/17/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%A8%A0%E5%AF%86%E7%82%B9%E4%BA%91%E9%87%8D%E5%BB%BA/image-20230817144447957.png" alt="image-20230817144447957" style="zoom:80%;"></p>
-<h3 id="2-1、基础知识"><a href="#2-1、基础知识" class="headerlink" title="2.1、基础知识"></a>2.1、基础知识</h3><p><strong>像素点以及其对应的三维点之间的坐标关系：</strong></p>
-<ul>
-<li>像素点与相机坐标系下的三维点坐标关系：</li>
-</ul>
-<script type="math/tex; mode=display">
-\begin{aligned}&\boldsymbol{q}={\begin{pmatrix}\alpha&0&c_x&0\\0&\beta&c_y&0\\0&0&1&0\end{pmatrix}}\begin{pmatrix}\mathrm{x}_C\\y_C\\z_C\\1\end{pmatrix}=\boldsymbol{M}_i\boldsymbol{P}_c\\\\&\boldsymbol{q}={\begin{pmatrix}\alpha&0&c_x\\0&\beta&c_y\\0&0&1\end{pmatrix}}\begin{pmatrix}\mathrm{x}_C\\y_C\\z_C\end{pmatrix}=\boldsymbol{K}_i\widetilde{\boldsymbol{P}}_c \\\\
-\end{aligned}</script><script type="math/tex; mode=display">
-\boldsymbol{p}=\begin{pmatrix}u\\v\\1\end{pmatrix}=\frac{1}{z}{\begin{pmatrix}\alpha&0\\0&\beta&c_y\\0&0&1\end{pmatrix}}\begin{pmatrix}X_C\\y_C\\z_C\end{pmatrix}=\frac{1}{z}\boldsymbol{K}_i\widetilde{\boldsymbol{P}}_c\\\\
-\tilde{\boldsymbol{P}}_{c}=\lambda\boldsymbol{K}_{i}^{-1}\boldsymbol{p}</script><ul>
-<li>像素点与世界坐标系下的三维点的坐标关系：</li>
-</ul>
-<script type="math/tex; mode=display">
-\begin{aligned}\widetilde{\boldsymbol{P}}_c&=\boldsymbol{R}_i\widetilde{\boldsymbol{P}}+\boldsymbol{T}_i\\\\\widetilde{\boldsymbol{P}}&=\boldsymbol{R}_i^\mathrm{T}\widetilde{\boldsymbol{P}}_c-\boldsymbol{R}_i^\mathrm{T}\boldsymbol{T}_i\end{aligned}</script><p>相机坐标原点与世界坐标系的关系：</p>
-<script type="math/tex; mode=display">
-\\\begin{pmatrix}0\\0\\0\end{pmatrix}=\boldsymbol{R}_i\boldsymbol{C}_i+\boldsymbol{T}_i\quad \\\\\boldsymbol{C}_i=-\boldsymbol{R}_i^\mathrm{T}\boldsymbol{T}_i</script><p>最终得到：</p>
-<script type="math/tex; mode=display">
-\widetilde{P}=R_{i}^{\mathrm{T}}\widetilde{P}_{c}+C_{i} \\\\
-\widetilde{\boldsymbol{P}}=\lambda R_{i}^{\mathrm{T}}K_{i}^{-1}\boldsymbol{p}+C_{i}</script><p><strong>面片模型：</strong> </p>
-<p>概念：面片是三维物体表面的局部切平面，可以近似地表示某一局部范围内的物体表面。</p>
-<p><img src="/2023/08/17/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%A8%A0%E5%AF%86%E7%82%B9%E4%BA%91%E9%87%8D%E5%BB%BA/image-20230817145514848.png" alt="image-20230817145514848" style="zoom:80%;"></p>
-<p>表示：面片 $p$ 是三维和空间中的一个矩形，由中心点 $\widetilde{P}$ 、单位法向量 $\boldsymbol{n}$ 表示，记作 $\boldsymbol{f_p=\{\widetilde{P} ,n\}}$</p>
-<script type="math/tex; mode=display">
-\widetilde{P}=\lambda R_{i}^{T}K_{i}^{-1}\boldsymbol{p}+C_{i} \\\\
-\boldsymbol{n}_i=\begin{bmatrix}cos\boldsymbol{\theta}sin\boldsymbol{\phi}\\sin\boldsymbol{\theta}sin\boldsymbol{\phi}\\cos\boldsymbol{\phi}\end{bmatrix}</script><p>确定：面片由 $\lambda、\theta、\phi$ 决定，且一般限定范围为：</p>
-<script type="math/tex; mode=display">
-\lambda\in[\lambda_{min},\lambda_{max}],\theta\in[0^{\circ},360^{\circ}],\phi\in[0^{\circ},60^{\circ}].</script><p><strong>光度一致性：</strong> </p>
-<p><img src="/2023/08/17/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%A8%A0%E5%AF%86%E7%82%B9%E4%BA%91%E9%87%8D%E5%BB%BA/image-20230817150747348.png" alt="image-20230817150747348" style="zoom:80%;"></p>
-<p>归一化相关系数：</p>
-<script type="math/tex; mode=display">
-NCC\big(\boldsymbol{q}_1,\boldsymbol{H}_{ij}(\boldsymbol{q}_1)\big)=\frac{\sum_{j=1}^{w\times\boldsymbol{w}}\big(q_\mathrm{j}-\overline{\boldsymbol{q}}\big)\cdot\big(\boldsymbol{H}_{ij}(q_\mathrm{j})-\overline{\boldsymbol{H}_{ij}(q_\mathrm{j})}\big)}{\sqrt{\Sigma_{j=1}^{w\times\boldsymbol{w}}\big(q_\mathrm{j}-\overline{\boldsymbol{q}}\big)^2\sum_{j=1}^{w\times\boldsymbol{w}}\big(\boldsymbol{H}_{ij}(q_\mathrm{j})-\overline{\boldsymbol{H}_{ij}(q_\mathrm{j})}\big)^2}}</script><p>其中 $H_{ij}$ 为相机 $i,j$ 的单应矩阵。</p>
-<p>光度一致性函数：</p>
-<script type="math/tex; mode=display">
-m(p,\boldsymbol{f}_p)=1-NCC(\boldsymbol{q}_1,\boldsymbol{H}_{ij}(\boldsymbol{q}_1))</script><h3 id="2-2、基于深度图的重建流程"><a href="#2-2、基于深度图的重建流程" class="headerlink" title="2.2、基于深度图的重建流程"></a>2.2、基于深度图的重建流程</h3><p><strong>核心重建步骤：</strong> </p>
+<h2 id="1、课程链接"><a href="#1、课程链接" class="headerlink" title="1、课程链接"></a>1、课程链接</h2><p>分享课程链接：<a href="https://www.shenlanxueyuan.com/course/504?source=1">深蓝学院——神经辐射场（NeRF）系列分享</a></p>
+<h2 id="2、基于NeRF的三维内容生成"><a href="#2、基于NeRF的三维内容生成" class="headerlink" title="2、基于NeRF的三维内容生成"></a>2、基于NeRF的三维内容生成</h2><ol>
+<li>三维物体的基本属性主要涉及到物体的 <strong>形状、材质和光照</strong>。</li>
+<li><strong>渲染：</strong>三维物体/空间以 <strong>2D</strong> 形式表达； <strong>三维重建：</strong> 反渲染的过程。</li>
+<li>计算机图形学与计算机视觉偏重点的不同： <strong>图形学的重点在渲染过程，视觉的重点在反渲染的过程。</strong></li>
+</ol>
+<p><img src="/2023/08/07/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E6%B7%B1%E8%93%9D%E5%AD%A6%E9%99%A2NeRF%E7%B3%BB%E5%88%97%E5%88%86%E4%BA%AB/Screenshot from 2023-08-07 11-13-24.png" alt="Screenshot from 2023-08-07 11-13-24"></p>
 <ol>
-<li>立体对选择</li>
-<li>深度图计算</li>
-<li>深度图细化</li>
-<li>深度图融合</li>
-</ol>
-<p><strong>立体对选择：</strong> </p>
-<p><img src="/2023/08/17/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%A8%A0%E5%AF%86%E7%82%B9%E4%BA%91%E9%87%8D%E5%BB%BA/image-20230817151156593.png" alt="image-20230817151156593" style="zoom:80%;"></p>
+<li><p>反渲染中的三个关键问题：</p>
 <ol>
-<li>计算平均角度值： $m$ 为图像 $i,j$ 在 SfM系统中建立的对应点个数：</li>
-</ol>
-<script type="math/tex; mode=display">
-{\theta_{ij}}=\frac{1}{m}\sum_{k=1}^{m}\theta_{k}\quad\quad\quad{5^{\circ}}<\theta_{ij}<60^{\circ}</script><ol>
-<li>计算基线距离： $\hat{d}$ 为所有 $d_{ij}, j=1,…,n$ 的中位数：</li>
-</ol>
-<script type="math/tex; mode=display">
-{d_{ij}}>2\overline{d}\quad\quad d_{ij}<0.05\overline{d}</script><ol>
-<li>按照 ${\theta_{ij}\cdot d_{ij}}$ 值的升序排列，选前 $k_1$ 个构建图像 $i$ 的邻域几何 $N(i)$ ；（升序是为了防止视距缩短以及遮挡问题）</li>
-<li>参考帧为 $N(i)$ 中 ${\theta_{ij}\cdot d_{ij}}$ 最小的图像。</li>
-</ol>
-<p><strong>深度图计算：</strong> </p>
-<p>如果迭代次数小于等于 $k_2(\text{如：}k_2=3)$ ，则对于图像 $i$ 的每个像素进行如下操作：</p>
-<ul>
-<li>空间传播：判断邻域像素的面片参数是否更优（即光度一致性的值是否更低）。如果更优，利用邻域像素的面片参数设置当前像素的面片参数；</li>
-</ul>
-<p><img src="/2023/08/17/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%A8%A0%E5%AF%86%E7%82%B9%E4%BA%91%E9%87%8D%E5%BB%BA/image-20230817152233584.png" alt="image-20230817152233584" style="zoom:80%;"></p>
-<ul>
-<li>随机分配：通过随机采样，寻找光度一致性的值更低的面片参数。<ul>
-<li>若给定三个值 $\{\Delta\lambda,\Delta\theta,\Delta\phi\}$ ，在范围 $\lambda^{\prime}\in(\lambda-\Delta\lambda,\lambda+ \Delta\lambda),\theta^{‘}\in(\theta-\Delta\theta,\theta+\Delta\theta),\phi^{‘}\in(\phi-\Delta\phi,\phi+\Delta\phi)$ 中随机选择一组平面参数 $\{\lambda^{\prime},\theta^{\prime},\phi^{\prime}\}$ ；</li>
-<li>使用公式 $\boldsymbol{X}_{i}=\lambda\boldsymbol{K}_{i}^{-1}\boldsymbol{p}、\boldsymbol{n}_{i}=\begin{bmatrix}cos\theta sin\phi\\sin\theta sin\phi\\cos\phi\end{bmatrix}$ ，重新计算新的平面 $f_{p}^{\prime}$ ；</li>
-<li>如果 $m(p,f_{p}^{\prime})&lt;m(p,f_{p}),\text{则令：}f_{p}=f_{p}^{\prime},\lambda=\lambda^{\prime},\theta=\theta^{\prime},\phi=\phi^{\prime}$ ；</li>
-<li>将范围 $\{\Delta\lambda,\Delta\theta,\Delta\phi\}$ 减半；</li>
-<li>如果迭代次数小于等于制定次数 $k_3$ ，则回到第一步；否则，退出。</li>
-</ul>
-</li>
-</ul>
-<p><strong>深度图细化：</strong> </p>
+<li><p>What <strong>shape</strong> representations to use?</p>
 <ol>
-<li><p>剔除光度一致性所有光度一致性高于 $\tau_1$ 的重建点；</p>
+<li><strong>Mesh、 Point cloud、Occupancy  field、Signed distance field</strong>.</li>
+</ol>
+<p><img src="/2023/08/07/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E6%B7%B1%E8%93%9D%E5%AD%A6%E9%99%A2NeRF%E7%B3%BB%E5%88%97%E5%88%86%E4%BA%AB/Screenshot from 2023-08-07 14-11-29.png" alt="Screenshot from 2023-08-07 14-11-29" style="zoom:67%;"></p>
 </li>
-<li><p>假设 $N_k$ 是 $N(i)$ 中的第 $k$ 个相邻图像，使用 $d(X,N_k)$ 表示 $X$ 相对相机 $N_k$ 的深度，$\lambda(X,N_k)$ 表示将 $X$ 投影到 $N_k$ 的深度图上得到的投影处的深度值：</p>
+<li><p>What <strong>appearance</strong> representation to use?</p>
 <ol>
-<li>如果 $\lambda(X,N_k)$ 与 $d(X,N_k)$ 足够接近，则认为两者具有深度一致性， $\tau_2$ 为阈值：<script type="math/tex; mode=display">
-\frac{|d(X,N_k)-\lambda(X,N_k)|}{\lambda(X,N_k)}<\tau_2</script></li>
-<li>如果 $X$ 与 $N(i)$ 中至少 $k_4$ 张图像是一致的，则认为该点是可靠的，否则从 $I_i$ 的深度图中删除像素 $p$ 。</li>
+<li>Material texture map and environmental lighting：将贴图和环境灯光分离，优点是 <strong>具有较强的操作性、编辑性</strong>，缺点是 <strong>实现难度大，相对的计算资源需求更大</strong>。</li>
+<li>Radiance field：神经辐射场表示，优点 <strong>实现较为简单</strong>，缺点是 <strong>编辑性较差</strong>。</li>
 </ol>
+<p><img src="/2023/08/07/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E6%B7%B1%E8%93%9D%E5%AD%A6%E9%99%A2NeRF%E7%B3%BB%E5%88%97%E5%88%86%E4%BA%AB/Screenshot from 2023-08-07 14-21-31.png" alt="Screenshot from 2023-08-07 14-21-31" style="zoom:67%;"></p>
 </li>
-</ol>
-<p><strong>深度图融合：</strong> </p>
-<p><img src="/2023/08/17/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%A8%A0%E5%AF%86%E7%82%B9%E4%BA%91%E9%87%8D%E5%BB%BA/image-20230817160415734.png" alt="image-20230817160415734" style="zoom:80%;"></p>
-<ul>
-<li>剔除：在邻域视图中，剔除被遮挡的像素，如 $N_1,N_2$ 图像中的像素点；</li>
-<li>去冗余：在邻域视图中，融合深度值相近的像素，如 $N4$ 图像中的像素点；</li>
-<li>深度图融合： $\widetilde{X}=\lambda R_{i}^{T}K_{i}^{-1}\boldsymbol{p}+\boldsymbol{C}_{i}$ 。</li>
-</ul>
-<h2 id="3、基于体素的多视图立体几何"><a href="#3、基于体素的多视图立体几何" class="headerlink" title="3、基于体素的多视图立体几何"></a>3、基于体素的多视图立体几何</h2><p><strong>体素重建：</strong> <strong>基于体素的方法需要已知相机的内、外参数矩阵！！！</strong></p>
-<ul>
-<li>假设给定的工作体积包含待重建物体；</li>
-<li>将工作体积内的三维点 $P$ 投影到多个视点的图像上；</li>
-<li>验证 $P$ 点在各个视图上的投影点的“一致性”，以确定点 $P$ 是否属于待重建的物体。</li>
-</ul>
-<p><img src="/2023/08/17/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%A8%A0%E5%AF%86%E7%82%B9%E4%BA%91%E9%87%8D%E5%BB%BA/image-20230817170231718.png" alt="image-20230817170231718" style="zoom:80%;"></p>
-<h3 id="3-1、空间雕刻法"><a href="#3-1、空间雕刻法" class="headerlink" title="3.1、空间雕刻法"></a>3.1、空间雕刻法</h3><p><strong>基本概念：</strong> </p>
-<ul>
-<li>表观轮廓：物体表面可见部分和遮挡部分的分界线在图像平面上的投影。</li>
-<li>剪影：图像平面中由表观轮廓包围的区域。</li>
-<li>视锥：由相机中心和图像平面中对象的表观轮廓定义的包络面（待重建物体完全位于视锥内）。</li>
-</ul>
-<p><img src="/2023/08/17/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%A8%A0%E5%AF%86%E7%82%B9%E4%BA%91%E9%87%8D%E5%BB%BA/image-20230817170712879.png" alt="image-20230817170712879" style="zoom:80%;"></p>
-<p><strong>视觉外壳计算：</strong> </p>
-<p>视觉外壳概念：艘有视锥的相交区域，它是待重建物体形状的逼近。</p>
-<p>视觉外壳计算：对每个视锥建立参数方程，然后连理参数方程求解视锥交集，但过于复杂。</p>
-<p><img src="/2023/08/17/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%A8%A0%E5%AF%86%E7%82%B9%E4%BA%91%E9%87%8D%E5%BB%BA/image-20230817170846380.png" alt="image-20230817170846380" style="zoom:80%;"></p>
-<p><strong>空间雕刻法的“一致性”定义：</strong> 给定工作体积中的一个点，将其投影到某个视图上时，如果投影点罗在该视图的剪影内，则称当前点满足该视图一致性要求。</p>
-<p><strong>空间雕刻法具体实现：</strong> </p>
+<li><p>What <strong>rendering</strong> operator to use?</p>
 <ol>
-<li>将工作体积（立方体）分解为子体积（子立方体），也称为体素；</li>
-<li>评估所有体素：将待判定的体素投影到所有视点的图像中，只要有一个视图不满足一致性要求，即投影点在视图的剪影外，则将该体素标记为空；否则标记为满（红色）；</li>
-<li>得到所有相机视锥交集的近似估计。</li>
+<li>Ray tracing rendering.</li>
 </ol>
-<p>注意：剪影法获得的视觉外壳是待重建物体形状的一个上限估计，即重建物体的任何部分都在外壳内，但外壳内的某些部分可能不属于物体。</p>
-<p><img src="/2023/08/17/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%A8%A0%E5%AF%86%E7%82%B9%E4%BA%91%E9%87%8D%E5%BB%BA/image-20230817171820258.png" alt="image-20230817171820258" style="zoom:80%;"></p>
-<p><strong>复杂度及解决：</strong> 采用上述方法对每个体素进行一致性估计，其计算复杂度太高，因此引入 <strong>八叉树</strong> 来解决。</p>
-<p><strong>八叉树：</strong> 基于八叉树的空间雕刻法，能在提高重建精度的同时，尽量减少计算复杂度。</p>
-<p><img src="/2023/08/17/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%A8%A0%E5%AF%86%E7%82%B9%E4%BA%91%E9%87%8D%E5%BB%BA/image-20230817172125192.png" alt="image-20230817172125192" style="zoom:80%;"></p>
-<p><img src="/2023/08/17/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%A8%A0%E5%AF%86%E7%82%B9%E4%BA%91%E9%87%8D%E5%BB%BA/image-20230817172134620.png" alt="image-20230817172134620" style="zoom:80%;"></p>
-<p><strong>空间雕刻法优缺点：</strong> </p>
-<ul>
-<li>优点：<ul>
-<li>简单且具有鲁棒性；</li>
-<li>不需要计算视图之间对应点的关系。</li>
-</ul>
+<p><img src="/2023/08/07/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E6%B7%B1%E8%93%9D%E5%AD%A6%E9%99%A2NeRF%E7%B3%BB%E5%88%97%E5%88%86%E4%BA%AB/Screenshot from 2023-08-07 14-24-39.png" alt="Screenshot from 2023-08-07 14-24-39" style="zoom:67%;"></p>
 </li>
-<li>缺点：<ul>
-<li>对视图数量的依赖；</li>
-<li>无法对物体的凹面进行建模。</li>
-</ul>
+</ol>
 </li>
-</ul>
-<p><img src="/2023/08/17/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%A8%A0%E5%AF%86%E7%82%B9%E4%BA%91%E9%87%8D%E5%BB%BA/image-20230817172331559.png" alt="image-20230817172331559" style="zoom:80%;"></p>
-<h3 id="3-2、体素着色法"><a href="#3-2、体素着色法" class="headerlink" title="3.2、体素着色法"></a>3.2、体素着色法</h3><p><strong>体素着色法中的一致性：</strong> 使用投影点的色彩值来计算外观一致性。</p>
-<p><strong>计算步骤：</strong> 工作体积中的每个体素都被投影到图像中，因为体素具有一定的物理尺寸，所以它的投影很可能包含多个像素；计算这些像素的标准差，直接将其与某个阈值 $\lambda$ 比较来确认一致性。</p>
-<p><strong>色彩赋予：</strong> 对于那些通过外观一致性检测的体素，可以将其在图像上的投影点的色彩赋予它。</p>
-<p><strong>注意：</strong> 体素着色法仅适用于朗伯表面的重建任务，重建物体各个位置的感知亮度不随视点位姿变化而改变。</p>
-<p><img src="/2023/08/17/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%A8%A0%E5%AF%86%E7%82%B9%E4%BA%91%E9%87%8D%E5%BB%BA/image-20230817232135746.png" alt="image-20230817232135746" style="zoom:80%;"></p>
-<p><strong>解决不唯一性问题的有效途径之一：</strong> 引入可见性约束，即遵循特定的顺序便利体素以消除歧义。</p>
-<p><strong>执行过程：</strong> 逐层探索体素一致性，从靠近相机的那些体素开始，然后逐渐到远离相机的那些体素。按照这个顺序，对每个体素执行一致性检查，并相应地将体素标记为满（占用）或者空（为占用）。</p>
-<p><img src="/2023/08/17/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%A8%A0%E5%AF%86%E7%82%B9%E4%BA%91%E9%87%8D%E5%BB%BA/image-20230817232458623.png" alt="image-20230817232458623" style="zoom:80%;"></p>
+<li><p>NeRF的 shape 和 appearance:</p>
+<ol>
+<li><strong>shape</strong>：是一种 <strong>soft opacity field</strong> 可以理解为一种 <strong>雾(fog)</strong>，也就是论文中的 $\sigma$ .</li>
+<li><strong>appearance</strong>：使用 MLP 网络训练得到。</li>
+</ol>
+</li>
+</ol>
+<p><img src="/2023/08/07/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E6%B7%B1%E8%93%9D%E5%AD%A6%E9%99%A2NeRF%E7%B3%BB%E5%88%97%E5%88%86%E4%BA%AB/Screenshot from 2023-08-07 14-34-11.png" alt="Screenshot from 2023-08-07 14-34-11" style="zoom:67%;"></p>
 ]]></content>
       <tags>
-        <tag>3D Reconstruction</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>【笔记】基于图像的三维重建——表面重建</title>
-    <url>/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/</url>
-    <content><![CDATA[<blockquote>
-<p>本文主要关于深蓝学院系列课程——基于图像的三维重建的笔记。</p>
-<p>课程链接 <a href="https://www.shenlanxueyuan.com/course/627">基于图像的三维重建</a></p>
-</blockquote>
-<h2 id="1、三维物体的表面表达方式"><a href="#1、三维物体的表面表达方式" class="headerlink" title="1、三维物体的表面表达方式"></a>1、三维物体的表面表达方式</h2><p><strong>边界表示法（Boundary Representation）：</strong> 将物体表面表示成一组封闭物体空间的四边形、三角形、参数曲面或者非参数的曲面，具有稳定性强、灵活性强、有助于表示表面细节。</p>
-<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819160257192.png" alt="image-20230819160257192" style="zoom:80%;"></p>
-<span id="more"></span>
-<p><strong>空间划分法（Spatial-Partitioning Representations）：</strong> 将物体内部的空间划分成细小、不重叠的连续实体来描述物体的形状。</p>
-<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819160400266.png" alt="image-20230819160400266" style="zoom:80%;"></p>
-<p><strong>构造体素法（Boundary Constructive Solid Geometry）：</strong>  通过集合运算（并、交、差）将简单规则的形状组合成更加复杂的形状，操作简单、便于实现，但是只能用来表示较为简单的实体，无法用于形状复杂或者表面精细的物体。</p>
-<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819160514460.png" alt="image-20230819160514460" style="zoom:80%;"></p>
-<p><strong>三角网格（Triangular Mesh）：</strong> 最常见的三维模型表述方式。计算机图形学和计算机视觉中的三维网格处理绝大部分都是基于三角网格。</p>
-<ul>
-<li>三角网格的基本结构：<ul>
-<li>顶点（Vertex）</li>
-<li>面片（Facet）</li>
-<li>边（Edge）</li>
-</ul>
-</li>
-<li>点线和面上的各种属性<ul>
-<li>颜色（Color）</li>
-<li>法向量（Normal）</li>
-<li>纹理坐标（Texture Coordinate）</li>
-</ul>
-</li>
-</ul>
-<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819160838707.png" alt="image-20230819160838707" style="zoom:80%;"></p>
-<h2 id="2、基于符号距离场的表面重建方法"><a href="#2、基于符号距离场的表面重建方法" class="headerlink" title="2、基于符号距离场的表面重建方法"></a>2、基于符号距离场的表面重建方法</h2><h3 id="2-1、基本概念"><a href="#2-1、基本概念" class="headerlink" title="2.1、基本概念"></a>2.1、基本概念</h3><p><strong>符号距离函数（Signed Distance Function）：</strong> 符号距离函数Signed Distance Function是某度量空间 $X$ 中的一个集合 $\Omega $ 的函数，决定 $X$ 中任一点到 $\Omega$ 边界 $\partial\Omega $ 的距离，并且由 $x$ 是在 $\Omega $ 内还是 $\Omega $ 外确定 SDF 的正负号：当 $x$ 在 $\Omega $ 内时，SDF 为正； 当 $x$ 在 $\Omega $ 外时， SDF 为负。</p>
-<script type="math/tex; mode=display">
-F(x)=\begin{cases}d(x,\partial\Omega)&ifx\in\Omega_i\\-d(x,\partial\Omega)&ifx\in\Omega_o\end{cases}</script><p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819161733649.png" alt="image-20230819161733649" style="zoom:80%;"></p>
-<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819161746835.png" alt="image-20230819161746835" style="zoom:80%;"></p>
-<h3 id="2-2、基于隐函数的表面重建"><a href="#2-2、基于隐函数的表面重建" class="headerlink" title="2.2、基于隐函数的表面重建"></a>2.2、基于隐函数的表面重建</h3><p><strong>空间划分：</strong> 主要用于对隐函数进行离散化，即划分区域的每个区域计算一个符号距离值。</p>
-<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819162012782.png" alt="image-20230819162012782" style="zoom:80%;"></p>
-<p><strong>八叉树构建：</strong> </p>
-<ol>
-<li>设定最大递归深度；</li>
-<li>找出场景的最大尺寸，并以此尺寸建立第一个立方体；</li>
-<li>依序将元素丢入能被包含且没有子节点的立方体；</li>
-<li>若没达到最大递归深度，就进行细分八等份，再将该立方体所装的元素全部分给八个子立方体；</li>
-<li><strong>若发现子立方体所分配到的元素数量不为零且跟父立方体是一样的，则该子立方体停止细分；</strong></li>
-<li>重复3，直到达到最大递归深度。</li>
-</ol>
-<p><strong>符号距离场构建：</strong></p>
-<ul>
-<li>对于grid，根据邻域中的样本点计算每个node的符号距离；</li>
-<li>对于octree，根据邻域中的样本点计算每个叶子结点的符号距离值。</li>
-</ul>
-<p><strong>符号距离场构建——局部方法：</strong> </p>
-<p>符号距离场函数的一般定义：</p>
-<script type="math/tex; mode=display">
-F(\boldsymbol{x})=\frac{\sum_ic_iw_i(\boldsymbol{x})f_i(\boldsymbol{x})}{\sum_ic_iw_i(\boldsymbol{x})}</script><p>一种简单的情况：</p>
-<script type="math/tex; mode=display">
-\begin{aligned}f_i(x)&=(x-p_i)\cdot n_i\\\\w_i(x)&=\exp(-||x-p_i||^2)\end{aligned}</script><p><strong>FSSR方法</strong>的符号距离函数定义：</p>
-<script type="math/tex; mode=display">
-\begin{aligned}f(x_i)&=f_x(x)f_y(y)f_z(z)=\frac{x}{\sigma^42\pi}\cdot e^{\frac{-1}{2\sigma^2}(x^2+y^2+z^2)}\\\\f_x(x)&=\frac{x}{\sigma^2}e^{\frac{-x^2}{2\sigma^2}}\quad f_y(x)=f_z(x)=\frac{1}{\sigma\sqrt{2\pi}}e^{\frac{-x^2}{2\sigma^2}}\end{aligned}</script><p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163125131.png" alt="image-20230819163125131" style="zoom:80%;"></p>
-<script type="math/tex; mode=display">
-\begin{array}{rcl}w(\boldsymbol{x}_i)&=&w_x(x)\cdot w_{yz}(\sqrt{y^2+z^2})\\\\w_x(x)&=&\begin{cases}\frac{1}{9}\frac{x^2}{\sigma^2}+\frac{2}{3}\frac{x}{\sigma}+1&x\in[-3\sigma,0)\\\frac{2}{27}\frac{x^3}{\sigma^3}-\frac{1}{3}\frac{x^2}{\sigma^2}+1&x\in[0,3\sigma)\\0&\mathrm{otherwise}\end{cases}\\\\w_{yz}(r)&=&\begin{cases}\frac{2}{27}\frac{r^3}{\sigma^3}-\frac{1}{3}\frac{r^2}{\sigma^2}+1&r<3\sigma\\0&\mathrm{otherwise}\end{cases}\\\\r&=&\sqrt{y^2+z^2}.\end{array}</script><p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163226820.png" alt="image-20230819163226820" style="zoom:80%;"></p>
-<p>效果：</p>
-<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163248618.png" alt="image-20230819163248618" style="zoom:80%;"></p>
-<p><strong>符号距离场的构建——全局方式：</strong> 将有向点看做是对隐函数的梯度的采样，全局的方法的 <strong>优点是鲁棒</strong> ，能够很好地处理噪声和空洞，主要 <strong>缺点是计算量大</strong> ，需要求解大规模的方程。</p>
-<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163540042.png" alt="image-20230819163540042" style="zoom:80%;"></p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-&\operatorname*{min}_{\chi_{M}}\|\nabla\chi_{M}-\vec{V}\| \\\\
-&\nabla\cdot(\nabla\chi_{M})=\nabla\cdot\vec{V} \\\\
-&\Delta\chi_{M} =\nabla\cdot\vec{\boldsymbol{V}} \\\\
-&\chi_M(p)=\begin{cases}1&\text{if}p\in M\\0&\text{if}p\notin M\end{cases}
-\end{aligned}</script><p><strong>柏松表面重建方法：</strong> </p>
-<ol>
-<li>构建八叉树：</li>
-</ol>
-<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163723124.png" alt="image-20230819163723124" style="zoom:67%;"></p>
-<ol>
-<li>创建向量场 $\vec{V}$ ：</li>
-</ol>
-<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163758887.png" alt="image-20230819163758887" style="zoom:67%;"></p>
-<ol>
-<li>计算指示函数 $\Delta\chi_{M} =\nabla\cdot\vec{\boldsymbol{V}}$：</li>
-</ol>
-<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163854016.png" alt="image-20230819163854016" style="zoom:67%;"></p>
-<p>不同分辨率下的指示函数表达：</p>
-<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163927387.png" alt="image-20230819163927387" style="zoom:67%;"></p>
-<ol>
-<li>提取等值面：</li>
-</ol>
-<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819163955023.png" alt="image-20230819163955023" style="zoom:67%;"></p>
-<p><strong>Marching Cube 生成表面：</strong> </p>
-<ul>
-<li>二维：根据四边形的 4个 顶点的符号距离值，通过插值的方法生成直线段。 总共 $2^4 =16$ 种分布状态。</li>
-</ul>
-<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819164151204.png" alt="image-20230819164151204" style="zoom:80%;"></p>
-<ul>
-<li>三维：通过插值法生成面片，共 $2^8 = 256$ 种分布状态，通过对称性可以简化成 <strong>15种</strong> 状态。</li>
-</ul>
-<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819164346994.png" alt="image-20230819164346994" style="zoom:80%;"></p>
-<h2 id="3、基于二元分割的表面重建方法"><a href="#3、基于二元分割的表面重建方法" class="headerlink" title="3、基于二元分割的表面重建方法"></a>3、基于二元分割的表面重建方法</h2><h3 id="3-1、基本概念"><a href="#3-1、基本概念" class="headerlink" title="3.1、基本概念"></a>3.1、基本概念</h3><p><strong>主要思想：</strong> 将空间划分成一组 cell（voxel/tetrahedron），采用而远分割的思想，将这些 cell 划分成内部和外部两类，介于 interior 和 exterior 面，即为物体的 surface。</p>
-<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819164814242.png" alt="image-20230819164814242" style="zoom:80%;"></p>
-<p><strong>Delaunay Triangulation：</strong> </p>
-<ul>
-<li>空圆特性：点集 $P$ 的德劳内三角剖分满足 $P$ 内任意一个点都不在 $P$ 内任意一个三角面片的外界圆内；任意 3个 点的外界圆不包含第 4个 点，即任意 3个 点的外界圆是空的；</li>
-</ul>
-<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819165149096.png" alt="image-20230819165149096" style="zoom:80%;"></p>
-<ul>
-<li>最大化最小角：德劳内三角剖分最大化三角面片内三角形的最小角。</li>
-</ul>
-<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819165405523.png" alt="image-20230819165405523" style="zoom:80%;"></p>
-<p>翻转前的内角： $\alpha_{1}+\alpha_{2},\quad\alpha_{3},\quad\alpha_{4},\quad\underline{\alpha_{1}},\quad\underline{\alpha_{2}},\quad\overline{\alpha_{3}}+\overline{\alpha_{4}}$ ；</p>
-<p>翻转后的内角： $\alpha_{1},\quad\alpha_{2},\quad\overline{\alpha_{3}},\quad\overline{\alpha_{4}},\quad\underline{\alpha_{1}}+\alpha_{4},\quad\underline{\alpha_{2}}+\alpha_{3}$ ；</p>
-<p>满足： 每一次翻转都是在增大三角剖分的最小角；</p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-&&\alpha_{1}&& >\underline{\alpha_{1}},  \\
-&&\alpha_2&& >\alpha_{2},  \\
-&&\overline{\alpha_{3}}&& >\alpha_{3},  \\
-&&\overline{\alpha_{4}}&& >\alpha_{4},  \\
-&&\underline{\alpha_{1}}+\alpha_{4}&& >\alpha_{4},  \\
-&& \underline{\alpha_{2}}+\alpha_{3}&&>\alpha_{3}
-\end{aligned}</script><p><strong>一种增量的德劳内三角剖分算法——Bowyer-Watson算法：</strong> </p>
-<ol>
-<li>假定已生成了链接若干个顶点的德劳内三角网络；</li>
-<li>加入一个新的节点，找出所有外界圆包含新加入节点的三角形，并将这些三角形删除，形成一个空腔。</li>
-<li>空腔的节点与新加入的节点连接，形成新的 Delaunay 三角形网络；</li>
-<li>不断循环直到遍历完所有点。</li>
-</ol>
-<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819170439677.png" alt="image-20230819170439677" style="zoom:80%;"></p>
-<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819170840910.png" alt="image-20230819170840910" style="zoom:80%;"></p>
-<h3 id="3-2、四面体剖分"><a href="#3-2、四面体剖分" class="headerlink" title="3.2、四面体剖分"></a>3.2、四面体剖分</h3><p><strong>四面体剖分：</strong> 3D 空间对应的是德劳内四面体剖分。在创建过程中，将点插入三角剖分前需要进行判断：</p>
-<ul>
-<li>如果和已有的顶点距离较远，则直接插入新的顶点；</li>
-<li>如果已经存在一个较近的顶点，则对该顶点进行更新。</li>
-</ul>
-<p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819170722592.png" alt="image-20230819170722592" style="zoom:80%;"></p>
-<p><strong>数学模型：</strong> </p>
-<ul>
-<li>有向图的顶点对应四面体（tetrahedron），边界对应三角形（triangle）；</li>
-<li>最小化下式将四面体划分成内部和外部两类：</li>
-</ul>
-<script type="math/tex; mode=display">{ }
-E(S)=E_{vis}(S,P,v)+\lambda_{qual}E_{qual}(S)\\
-\begin{aligned}
-&E_{vis}\colon\text{ 可视性代价}; \\
-&E_{qual}\colon\text{ 表面质量代价}; \\
-&S\colon\text{重建的表面;} \\
-&P\colon{\text{点云;}} \\
-&v\colon\text{ 摄像机位姿};
-\end{aligned}</script><p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819171317696.png" alt="image-20230819171317696" style="zoom:80%;"></p>
-<p><strong>图割（Graph cut）：最大流（Max-flow）与最小割（Min-cut）：</strong> </p>
-<ul>
-<li>有向加权图 $\mathcal{G}=\langle\mathcal{V},\mathcal{E}\rangle $ ，包含两个特殊的 terminal nodes： source 和 sink；</li>
-<li>图割将所有节点 划分成没有交集的两部分，划分的代价定义为：</li>
-</ul>
-<script type="math/tex; mode=display">
-\mathfrak{c}(\mathcal{S},\mathcal{T})=\sum_{v_i\in\mathcal{S}\setminus\{s\}\atop v_j\in T\setminus\{t\}}w_{ij}+\sum_{v_i\in\mathcal{S}\setminus\{s\}}t_i+\sum_{v_i\in T\setminus\{t\}}s_i</script><p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819171647039.png" alt="image-20230819171647039" style="zoom:80%;"></p>
-<p><strong>可视性约束和局部平滑性的构建：</strong>  被 vertex 到相机中心的 ray 穿越的四面体倾向于 visible；</p>
-<p>邻接表面可能存在的几种情况：外部-内部；内部-外部；外部-外部；内部-内部；</p>
-<script type="math/tex; mode=display">
-E_{vis}(S,P,v)=\sum_{p\in P}\sum_{q\in v_{p}}\left\{D_{out}\left(l_{\tau_{1}^{Q\rightarrow P}}\right)+\sum_{i=1}^{N_{[QP]}-1}V_{align}(l_{\tau_{l}^{Q\rightarrow P}},l_{\tau_{l+1}^{Q\rightarrow P}})+D_{in}(l_{\tau_{\mathcal{N}_{[QP]^{+1}}}^{Q\rightarrow P}})\right\}</script><p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819172150977.png" alt="image-20230819172150977" style="zoom:80%;"></p>
-<p><strong>表面质量约束：</strong> </p>
-<script type="math/tex; mode=display">
-E_{qual}(s)=\sum_{f}w_{f}=1-\min\{\cos(\phi),\cos(\varphi)\}</script><p><img src="/2023/08/19/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E8%A1%A8%E9%9D%A2%E9%87%8D%E5%BB%BA/image-20230819172215720.png" alt="image-20230819172215720" style="zoom:80%;"></p>
-<p><strong>总结：</strong></p>
-<ul>
-<li>算法流程简单，容易实现；</li>
-<li>适用于大规模场景以及小物体的重建，能够处理复杂表面；</li>
-<li>重建的效果以来 Delaunay Triangulation 的质量，容易受到噪声和外点的影响；</li>
-<li>通常需要结合 Mesh refinement 获得更加细致的表面细节。</li>
-</ul>
-<p><strong>常用的重建算法：</strong></p>
-<ul>
-<li><a href="https://github.com/cdcseacave/openMVS">Delaunay Triangualtion + Graph Cut</a></li>
-<li><a href="http://hhoppe.com/proj/poissonrecon/">泊松表面重建算法</a></li>
-<li><a href="http://mesh.brown.edu/ssd/paper.html">SSd 重建算法</a></li>
-<li><a href="http://www.regard3d.org/index.php/documentation/details/surface">FSSR 重建算法</a></li>
-</ul>
-]]></content>
-      <tags>
-        <tag>3D Reconstruction</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>【笔记】基于图像的三维重建——纹理图像生成</title>
-    <url>/2023/08/20/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%BA%B9%E7%90%86%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90/</url>
-    <content><![CDATA[<blockquote>
-<p>本文主要关于深蓝学院系列课程——基于图像的三维重建的笔记。</p>
-<p>课程链接 <a href="https://www.shenlanxueyuan.com/course/627">基于图像的三维重建</a></p>
-</blockquote>
-<h2 id="1、纹理图像的自动创建"><a href="#1、纹理图像的自动创建" class="headerlink" title="1、纹理图像的自动创建"></a>1、纹理图像的自动创建</h2><h3 id="1-1、基础知识"><a href="#1-1、基础知识" class="headerlink" title="1.1、基础知识"></a>1.1、基础知识</h3><p><strong>纹理贴图：</strong> 同一三维模型采用不同纹理图案进行渲染。</p>
-<p><img src="/2023/08/20/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%BA%B9%E7%90%86%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90/image-20230820170629280.png" alt="image-20230820170629280" style="zoom:80%;"></p>
-<span id="more"></span>
-<p><strong>纹理坐标：</strong> 三维网格中的面片与纹理图像的映射关系。</p>
-<p><strong>基本算法流程：</strong></p>
-<ol>
-<li>输入模型</li>
-<li>模型参数化</li>
-<li>纹理图像绘制</li>
-<li>纹理模型</li>
-</ol>
-<p><img src="/2023/08/20/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%BA%B9%E7%90%86%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90/image-20230820170924489.png" alt="image-20230820170924489" style="zoom:80%;"></p>
-<p><strong>纹理图像的创建方式：</strong></p>
-<ul>
-<li>交互软件</li>
-<li>自动计算</li>
-</ul>
-<p><img src="/2023/08/20/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%BA%B9%E7%90%86%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90/image-20230820171004533.png" alt="image-20230820171004533" style="zoom:80%;"></p>
-<h3 id="1-2、纹理图像的自动创建"><a href="#1-2、纹理图像的自动创建" class="headerlink" title="1.2、纹理图像的自动创建"></a>1.2、纹理图像的自动创建</h3><p><strong>算法流程：</strong> </p>
-<ol>
-<li>视角选择</li>
-<li>纹理坐标的计算</li>
-<li>全局颜色调整</li>
-<li>柏松图像编辑</li>
-</ol>
-<p><img src="/2023/08/20/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%BA%B9%E7%90%86%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90/image-20230820171701402.png" alt="image-20230820171701402" style="zoom:80%;"></p>
-<p><strong>视角选择：</strong> </p>
-<p>选择标准：</p>
-<ul>
-<li>图像的尺寸</li>
-<li>图像的细节丰富程度</li>
-<li>图像的可视化</li>
-<li>邻域平滑性</li>
-</ul>
-<p>数学模型：</p>
-<ul>
-<li>将视角选择建模成多标签的分配问题：为每一个三角形分配一个标签（视角）；</li>
-<li>将网格上建立 <strong>MRF 随机场</strong>，每个面片代表随机场的一个顶点；</li>
-<li>能量函数分为数据项 $E_{data}$ 和平滑项 $E_{smooth}$ </li>
-</ul>
-<script type="math/tex; mode=display">
-E(l)=\sum_{F_i\in\mathrm{Faces}}E_{\mathrm{data}}(F_i,l_i)+\sum_{(F_i,F_j)\in\mathrm{Edges}}E_{\mathrm{smooth}}(F_i,F_j,l_i,l_j)</script><p>数据项：</p>
-<ul>
-<li>图像质量：<ul>
-<li>纹理细节：投影三角形的平均梯度；</li>
-<li>尺度：投影三角形的面积。</li>
-</ul>
-</li>
-</ul>
-<script type="math/tex; mode=display">
-E_\text{data}=-\int_{\phi(F_i,l_i)}\|\nabla(I_{l_i}(p))\|_2\mathrm{d}p \\
-\begin{aligned}
-&l_{i}\quad \text{表示视角}; \\
-&\nabla\left(I_{l_{i}}(p)\right)\quad \text{表示投影点处的梯度;} \\
-&\phi(F_{i},l_{i})\quad \text{表示三角形的投影区域。}
-\end{aligned}</script><ul>
-<li>可视性：</li>
-</ul>
-<p><img src="/2023/08/20/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%BA%B9%E7%90%86%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90/image-20230820172852183.png" alt="image-20230820172852183" style="zoom:80%;"></p>
-<p>平滑项：通过保持邻域的平滑性使得相邻三角形有相同的视角，从而可以减少缝隙为后续的处理提供便利。</p>
-<script type="math/tex; mode=display">
-E_{\mathrm{smooth}}=[l_i\neq l_j]\\
-[\quad] \text{为艾佛森括号（Iverson bracket）}</script><p>MRF 视角选择常用优化方法：</p>
-<ul>
-<li>$\alpha - expansion$ </li>
-<li>$\alpha-\beta \quad swap$ </li>
-</ul>
-<p>顶点处的视角标签：</p>
-<p>视角选择是以 facet 为优化对象，边界上的 Vertex 会具有所有相邻 facet 的标签，即具有多个纹理坐标。</p>
-<p><img src="/2023/08/20/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%BA%B9%E7%90%86%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90/image-20230820173421023.png" alt="image-20230820173421023" style="zoom:80%;"></p>
-<p><strong>纹理坐标的计算：</strong></p>
-<ul>
-<li><p>投影到对应的图像上，街区最小包围盒范围内的图像作为纹理图像；</p>
-</li>
-<li><p>投影的坐标归一化后作为纹理坐标；</p>
-</li>
-</ul>
-<p><img src="/2023/08/20/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%BA%B9%E7%90%86%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90/image-20230820173613701.png" alt="image-20230820173613701" style="zoom:80%;"></p>
-<p><strong>全局颜色调整：</strong> </p>
-<p>问题引入：由于不同视角间存在相机曝光或者光照差异导致不同， Texture Patch 边界处存在明显缝隙。</p>
-<p><img src="/2023/08/20/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%BA%B9%E7%90%86%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90/image-20230820173751619.png" alt="image-20230820173751619" style="zoom:80%;"></p>
-<p>解决思路：每个像素添加一个颜色调整量使得：</p>
-<ul>
-<li>缝隙处的颜色差异尽量小；</li>
-<li>Patch 内部相邻像素的调整尽量近似。</li>
-</ul>
-<p>参数量爆炸问题：</p>
-<ul>
-<li>每个像素对应一个参数，使得整体参数量过大，计算量太大？</li>
-<li>解决：仅考虑顶点处的色彩调整量<ul>
-<li>首先为每个顶点 $v_i$ ，添加一个调整量 $g_i$ ；</li>
-<li>通过插值的方式得到每个像素的调整值</li>
-</ul>
-</li>
-</ul>
-<p><img src="/2023/08/20/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%BA%B9%E7%90%86%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90/image-20230820174220901.png" alt="image-20230820174220901" style="zoom:80%;"></p>
-<p>缝隙处顶点的调整量定义问题：</p>
-<p>对缝隙处的顶点进行拆分，假设缝隙上的顶点 $v_i$ 的视角标签为 $\boldsymbol{l}_{i}=\{l_{i}^{0},l_{i}^{1},…l_{i}^{n_{v_{i}}-1}\},n_{v_{i}}$ 为标签个数，则顶点 $v_i$ 将被分为 $n_{v_i}$ 个顶点。</p>
-<script type="math/tex; mode=display">
-v_{i}\rightarrow\{v_{i}^{l_{i}^{0}},v_{i}^{l_{i}^{1}},...,v_{i}^{l_{i}^{n_{v_{i}-1}}}\}</script><p> 相应的颜色调整量 $g_i$ ：</p>
-<script type="math/tex; mode=display">
-g_{i}\rightarrow\{g_{i}^{l_{i}^{0}},g_{i}^{l_{i}^{1}},\ldots,g_{i}^{l_{i}^{n_{v_{i}-1}}}\}</script><p>变量总个数：</p>
-<script type="math/tex; mode=display">
-\sum_i^Nn_{v_i}</script><p>函数能量定义为：$f_{i}^{l_{i}^{j}}$ 表示 $v_i$ 在视角 $l_{i}^j$ 中的颜色</p>
-<script type="math/tex; mode=display">
-\begin{gathered}
-E(g) =\sum_{v_{i}\in seam}\sum_{(l_{i}^{j},l_{i}^{k})\in l_{i}}\left(f_{i}^{l_{i}^{j}}+g_{i}^{l_{i}^{j}}-(f_{i}^{l_{i}^{k}}+g_{i}^{l_{i}^{k}})\right)^{2} 
-+\lambda\sum_{v_{i}}\sum_{v_{j}\in N(v_{i})}\sum_{l\in l_{i}\cap l_{j}}(g_{i}^{l}-g_{j}^{l})^{2} 
-\end{gathered}</script><p><img src="/2023/08/20/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%BA%B9%E7%90%86%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90/image-20230820175024165.png" alt="image-20230820175024165" style="zoom:80%;"></p>
-<p>建模后的能量函数一般为 <strong>稀疏线性方程</strong> ，针对大规模的线性稀疏方程可以采用 **共轭梯度法（Conjugate Gradient）进行优化。</p>
-<p><strong>柏松图像编辑：</strong> </p>
-<p>问题引入：对于缝隙比较严重的区域，全局颜色调整并不能保证完全去除缝隙，还需要进一步处理。</p>
-<p><img src="/2023/08/20/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%BA%B9%E7%90%86%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90/image-20230820193014328.png" alt="image-20230820193014328" style="zoom:80%;"></p>
-<p>算法原理：</p>
-<ul>
-<li>边界上的像素值与背景图像相同；</li>
-<li>前景区域内的梯度与引导梯度场相同。</li>
-</ul>
-<p>数学模型：</p>
-<script type="math/tex; mode=display">
-min_f\iint_{\Omega}|\nabla f-\boldsymbol{v}|,wrt.f|_{\partial\Omega}=f^*|_{\partial\Omega} \\
-\text{等价于：}\Delta f=\operatorname{div}\boldsymbol{v}over\Omega,wrt.f|_{\partial\Omega}=f^*|_{\partial\Omega}\\\\
-\begin{aligned}
-&\text{v 是引导梯度场}&& \text{S 是背景区域}  \\
-&\text{Ω 是前景区域}&& f^* 是背景区的光度函数  \\
-&\partial\Omega 是边界区域&& \text{f 是待求的前景区的光度函数} 
-\end{aligned}
-\\
-\operatorname{\text{其中}div}\boldsymbol{v}={\frac{\partial u}{\partial x}}+{\frac{\partial v}{\partial y}},{\text{是梯度}}\boldsymbol{v}=(u,v)\text{的散度}</script><p>散度计算：</p>
-<p><img src="/2023/08/20/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%BA%B9%E7%90%86%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90/image-20230820193455794.png" alt="image-20230820193455794" style="zoom:80%;"></p>
-<script type="math/tex; mode=display">
-\begin{array}{c}\Delta f(p,q)=f_{p-1,q}+f_{p,q-1}+f_{p,q+1}+f_{p+1,q}-4*f_{p,q}\end{array}</script><p>能量函数通过构建线性系统进行求解：</p>
-<p><img src="/2023/08/20/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%BA%B9%E7%90%86%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90/image-20230820193532145.png" alt="image-20230820193532145" style="zoom:80%;"></p>
-<p>加速策略：</p>
-<ul>
-<li>进行全局颜色调整之后，只需要在缝隙处进行泊松编辑即可；</li>
-<li>可以通过控制内部区域的范围，（如由当前边界往前景区域扩充3个像素的作为前景进行计算），从而减少线性系统的规模。</li>
-</ul>
-<p><img src="/2023/08/20/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%BA%B9%E7%90%86%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90/image-20230820193629111.png" alt="image-20230820193629111" style="zoom: 67%;"></p>
-<p><strong>OBJ 文件：</strong></p>
-<p><img src="/2023/08/20/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%BA%B9%E7%90%86%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90/image-20230820193735117.png" alt="image-20230820193735117" style="zoom:80%;"></p>
-<h2 id="2、基于光度一致性的网格细节优化"><a href="#2、基于光度一致性的网格细节优化" class="headerlink" title="2、基于光度一致性的网格细节优化"></a>2、基于光度一致性的网格细节优化</h2><p><strong>离散网格上定义能量函数：</strong></p>
-<p>每个顶点的梯度相当于 $1-ring$ 范围内所有点的梯度的加权和。</p>
-<p><img src="/2023/08/20/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%BA%B9%E7%90%86%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90/image-20230820201808554.png" alt="image-20230820201808554" style="zoom:80%;"></p>
-<script type="math/tex; mode=display">
-\frac{\mathrm{d}\mathrm{E}(S)}{\mathrm{d}X_i}=\int_S\phi_i(x)\nabla\mathrm{E}(x)\mathrm{d}x\quad i\in[1,n]</script><p><strong>基于 surface 的光度一致性的度量：</strong> </p>
-<p><img src="/2023/08/20/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%BA%B9%E7%90%86%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90/image-20230820202701002.png" alt="image-20230820202701002" style="zoom:80%;"></p>
-<script type="math/tex; mode=display">
-\mathrm{E}_{\mathrm{error}}(S)=\sum_{i,j}\int_{\Omega_{ij}^S}h(I_i,I_{ij}^S)(x_i)\mathrm{d}x_i,</script><ul>
-<li>$h(I,J)(x_{i})$ 表示在图像 $I$ 和 $J$ 之间在像素 $x_i$ 处的光度一致性；</li>
-<li>$I_{ij}^{S}=I_{j}\circ\prod_{j}\circ\prod_{i}^{-1}$ 表示将图像 $I_j$ 通过曲面 $S$ 重投影到图像 $I_i$ 上；</li>
-<li>$\Omega_{ij}^{\mathcal{S}}$ 表示重投影的有效区域；</li>
-<li>$\prod_i$ 和 $\prod_i^{-1}$ 分别表示第 $i$ 帧图像的投影和逆投影。</li>
-</ul>
-<script type="math/tex; mode=display">
-\begin{aligned}
-&\mathrm{E}_{\mathrm{error}}(S)=\sum_{i,j}\int_{\Omega_{ij}^{S}}h(I_{i},I_{ij}^{S})(x_{i})\mathrm{d}x_{i} \\
-&\operatorname{E}_{\mathrm{error}}(S)=\sum_{i,j}\mathcal{M}_{ij}(S) \\
-&\nabla\mathrm{E}_{\mathrm{error}}(S)=\sum_{i,j}\nabla\mathcal{M}_{ij}(S).
-\end{aligned}</script><ul>
-<li>其中 $\mathrm{d}x_i=-\mathbf{N}^T\mathbf{d}_i\mathrm{d}x/z_i^3$ </li>
-</ul>
-<script type="math/tex; mode=display">
-\begin{aligned}
-&\nabla\mathcal{M}_{ij}(x)=-\left[\partial_{2}M(x_{i})DI_{j}(x_{j})D\Pi_{j}(x)\frac{\mathbf{d}_{i}}{z_{i}^{3}}\right]\mathbf{N} \\\\
-&\begin{aligned}f_{ij}(x_{i})=\partial_{2}M(x_{i})DI_{j}(x_{j})D\Pi_{j}(x)\mathbf{d}_{i}\end{aligned} \\\\
-&\nabla\mathcal{M}_{ij}(x)=-f_{ij}(x_{i})\mathbf{N}/z_{i}^{3}
-\end{aligned}</script><p>得到：</p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-&{\frac{\mathrm{d}\mathrm{E}_{\mathrm{error}}(S)}{\mathrm{d}X}}=\int_{S}\phi(x)\sum_{i,j}\nabla\mathcal{M}_{ij}(x)\mathrm{d}x \\
-&=-\int_{S}\phi(x)\sum_{i,j}f_{ij}(x_{i})\mathbf{N}/z_{i}^{3}\mathrm{d}x \\
-&=-\sum_{ii}\int_{S}\phi(x)f_{ij}(x_{i})\mathbf{N}/z_{i}^{3}\mathrm{d}x
-\end{aligned}</script><p>根据$\mathrm{d}x_i=-\mathbf{N}^T\mathbf{d}_i\mathrm{d}x/z_i^3$ ：</p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-&{\frac{\mathrm{d}\mathrm{E}_{\mathrm{error}}(S)}{\mathrm{d}X}}=\int_{S}\phi(x)\sum_{i,j}\nabla\mathcal{M}_{ij}(x)\mathrm{d}x  \\
-&=\sum_{i,j}\int_{\Omega_{ij}}\phi(x)f_{ij}(x_{i})\mathbf{N}/z_{i}^{3}\frac{z_{i}^{3}}{\mathbf{N}^{T}\mathbf{d}_{i}}\mathbf{N}\mathrm{d}x_{i}\\&=\sum_{i,j}\int_{\Omega_{ij}}\phi(x)f_{ij}(x_{i})/(\mathbf{N}^{T}\mathbf{d}_{i})\mathbf{N}\mathrm{d}x_{i}\end{aligned}</script><p><strong>保持 surface 本身的平滑性（对曲率进行约束）：</strong> </p>
-<script type="math/tex; mode=display">
-\operatorname{E}_{\mathrm{fair}}(S)=\int_{S}(\kappa_{1}^{2}+\kappa_{2}^{2})\mathrm{d}S</script><p><strong>得到最终梯度：</strong></p>
-<script type="math/tex; mode=display">
-\nabla E(x)=\nabla E_{\mathrm{erior}}(x)+{\nabla E_{\mathrm{fair}}(x)}</script><p><img src="/2023/08/20/%E3%80%90%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA%E2%80%94%E2%80%94%E7%BA%B9%E7%90%86%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90/image-20230820203245661.png" alt="image-20230820203245661" style="zoom:80%;"></p>
-]]></content>
-      <tags>
-        <tag>3D Reconstruction</tag>
+        <tag>NeRF</tag>
       </tags>
   </entry>
   <entry>
@@ -3071,20 +3036,55 @@ min_f\iint_{\Omega}|\nabla f-\boldsymbol{v}|,wrt.f|_{\partial\Omega}=f^*|_{\part
       </tags>
   </entry>
   <entry>
-    <title>MVG-随记</title>
-    <url>/2023/09/07/MVG-%E9%9A%8F%E8%AE%B0/</url>
+    <title>基于深度学习的人种识别方法</title>
+    <url>/2022/04/29/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%84%E4%BA%BA%E7%A7%8D%E8%AF%86%E5%88%AB%E6%96%B9%E6%B3%95/</url>
     <content><![CDATA[<blockquote>
-<p>本书是关于 <em>Multiple View Geometry in Computer Vision</em> （计算机视觉中的多视图几何）中的随笔记录。</p>
+<p><strong>前言</strong></p>
+<p>课程《模式识别》小组作业为基于深度学习的人脸识别，具体识别内容为：通过人脸识别人的性别、年龄、种族、表情、是否为同一人。我在小组内的工作为：通过人脸对人的种族进行识别。</p>
+<p>源码地址贴在此处：<a href="https://github.com/APPZ99/Face-Recognition">Face Recognition</a></p>
 </blockquote>
-<h2 id="零、序章"><a href="#零、序章" class="headerlink" title="零、序章"></a>零、序章</h2><p><strong>计算机视觉的基本问题：</strong> 根据若干幅世界景物的图像求得对真实世界景物结构的理解。</p>
-<p><strong>几何与变换群：</strong> 各种几何的本质是描述几何元素在不同变换群下的不变量。</p>
-<p><strong>马颂德序言：</strong> 这本书对我国长期从事相关数学领域研究的认识也值得一度，计算机视觉涉及的数学，量大面广，是一个典型的数学工作者可有用武之地的领域，但比起其他国家来说，我国的数学家们基本不介入一些有相当实用背景的新兴学科，学科不能交叉，创新从何而来？</p>
-<h2 id="一、第一章：2D射影几何和变换"><a href="#一、第一章：2D射影几何和变换" class="headerlink" title="一、第一章：2D射影几何和变换"></a>一、第一章：2D射影几何和变换</h2><h3 id="1-1、平面几何"><a href="#1-1、平面几何" class="headerlink" title="1.1、平面几何"></a>1.1、平面几何</h3><p><strong>几何与代数：</strong> 几何可以代数化，几何理论可以从代数的观点进行推导。</p>
-<p><strong>几何中采用代数的显著优点：</strong> 这种方法推导出的结果更容易产生算法以及实际的计算方法。</p>
+<h2 id="任务简介"><a href="#任务简介" class="headerlink" title="任务简介"></a>任务简介</h2><p>用有监督学习机制设计并实现模式识别方法，基于人脸图像进行模式分类，如性别（男性、女性）、年龄（儿童、青少年、成年、老年）、表情（微笑、严肃）或者种族（白种人、黄种人、黑人）等。</p>
+<h3 id="个人任务"><a href="#个人任务" class="headerlink" title="个人任务"></a>个人任务</h3><p>负责通过人脸信息基于神经网络的种族识别网络设计，重点研究神经网络的理论、结构、变体与具体实现方式。</p>
+<span id="more"></span>
+<h3 id="数据库说明"><a href="#数据库说明" class="headerlink" title="数据库说明"></a>数据库说明</h3><p>两个文本文件：</p>
+<ul>
+<li><p>faceDR:每一个人脸数据的说明（2000个人脸），即类别卷标。</p>
+</li>
+<li><p>faceDS:每一个人脸数据的说明（2000个人脸），即类别卷标。</p>
+</li>
+</ul>
+<p>提示：由于数据是真实数据，会有以下情况：</p>
+<ol>
+<li><p>有缺失数据（如1228, 1808, 4056, 4135, 4136, and 5004），建议采取合适的预处理技术。</p>
+</li>
+<li><p>有错误数据，建议对有错误的人脸记录采取合适的预处理。</p>
+</li>
+</ol>
+<p>部分标签如下所示：</p>
+<p><img src="/2022/04/29/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%84%E4%BA%BA%E7%A7%8D%E8%AF%86%E5%88%AB%E6%96%B9%E6%B3%95/image-20220429153404115.png" alt="image-20220429153404115" style="zoom:67%;"></p>
+<h2 id="预处理部分"><a href="#预处理部分" class="headerlink" title="预处理部分"></a>预处理部分</h2><h3 id="缺失部分"><a href="#缺失部分" class="headerlink" title="缺失部分"></a>缺失部分</h3><p>我们小组通过检索所有缺失数据的样本，选择直接剔除。</p>
+<h3 id="错误数据部分"><a href="#错误数据部分" class="headerlink" title="错误数据部分"></a>错误数据部分</h3><p>这方面主要是存在过黑、过曝等问题，小组采用对所有训练数据归一化标准化的方法，具体实现体现为代码<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">transforms.Normalize(train_mean, train_std)</span><br></pre></td></tr></table></figure></p>
+<h3 id="训练集及测试集"><a href="#训练集及测试集" class="headerlink" title="训练集及测试集"></a>训练集及测试集</h3><ul>
+<li>faceDR数据作为训练集</li>
+<li>faceDS数据作为测试集</li>
+</ul>
+<h3 id="图像信息可视化"><a href="#图像信息可视化" class="headerlink" title="图像信息可视化"></a>图像信息可视化</h3><p>小组将所给样本数据统一转换为  <strong>200 X 200</strong> 的<strong>三通道灰度PNG</strong>格式图片。部分图片如下所示：</p>
+<p><img src="/2022/04/29/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%84%E4%BA%BA%E7%A7%8D%E8%AF%86%E5%88%AB%E6%96%B9%E6%B3%95/image-20220429153655690.png" alt="image-20220429153655690" style="zoom:50%;"></p>
+<h2 id="算法实现"><a href="#算法实现" class="headerlink" title="算法实现"></a>算法实现</h2><p>这里主要是记录本次任务自己所学到的一些东西，作为深度学习的门外汉，这里十分感谢<strong>W哥</strong>的指导和帮助，让我在这次任务中受益匪浅。</p>
+<h3 id="给样本打上标签"><a href="#给样本打上标签" class="headerlink" title="给样本打上标签"></a>给样本打上标签</h3><p>具体代码实现主要放在了  <a href="https://github.com/APPZ99/Face-Recognition/blob/master/Label_Processing.ipynb">Label_Processing</a>及<a href="https://github.com/APPZ99/Face-Recognition/blob/master/train.ipynb">train</a>文件下。</p>
+<p>原有数据库中的样本仅为 <strong>(id + .png)</strong> 格式，需要把 id与人种信息进行匹配。</p>
+<h4 id="提取所需标签信息"><a href="#提取所需标签信息" class="headerlink" title="提取所需标签信息"></a>提取所需标签信息</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#  将样本标签分开</span></span><br><span class="line">label_dir = <span class="string">&#x27;facedata/Label&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(label_dir + <span class="string">&#x27;/faceDR&#x27;</span>, encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> dr_label:</span><br><span class="line">    facedr_list = [[buf.strip(<span class="string">&#x27;)&#x27;</span>) <span class="keyword">for</span> buf <span class="keyword">in</span> line.strip().split(<span class="string">&#x27; (_&#x27;</span>)] </span><br><span class="line">                            <span class="keyword">for</span> line <span class="keyword">in</span> dr_label.readlines()]</span><br><span class="line">    </span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(label_dir + <span class="string">&#x27;/faceDS&#x27;</span>, encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> ds_label:</span><br><span class="line">    faceds_list = [[buf.strip(<span class="string">&#x27;)&#x27;</span>) <span class="keyword">for</span> buf <span class="keyword">in</span> line.strip().split(<span class="string">&#x27; (_&#x27;</span>)] </span><br><span class="line">                            <span class="keyword">for</span> line <span class="keyword">in</span> ds_label.readlines()]</span><br><span class="line">    </span><br><span class="line"><span class="comment">#  将 id号与人种组合</span></span><br><span class="line"></span><br><span class="line">facedr = []</span><br><span class="line">faceds = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> facedr_list:</span><br><span class="line">    race = line[<span class="number">3</span>].strip().split(<span class="string">&#x27; &#x27;</span>)[<span class="number">1</span>]</span><br><span class="line">    temp = [line[<span class="number">0</span>], race]</span><br><span class="line">    facedr.append(temp)</span><br><span class="line"><span class="built_in">print</span>(facedr[:<span class="number">10</span>])</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> faceds_list:</span><br><span class="line">    race = line[<span class="number">3</span>].strip().split(<span class="string">&#x27; &#x27;</span>)[<span class="number">1</span>]</span><br><span class="line">    temp = [line[<span class="number">0</span>], race]</span><br><span class="line">    faceds.append(temp)</span><br><span class="line">    </span><br><span class="line"><span class="comment">#  将数据转为npy格式</span></span><br><span class="line"></span><br><span class="line">np.save(<span class="string">&#x27;data.npy&#x27;</span>, facedr)</span><br><span class="line">data = np.load(<span class="string">&#x27;data.npy&#x27;</span>)</span><br><span class="line"></span><br><span class="line">np.save(<span class="string">&#x27;./facedata/Label/train.npy&#x27;</span>, facedr)</span><br><span class="line">np.save(<span class="string">&#x27;./facedata/Label/test.npy&#x27;</span>, faceds)</span><br><span class="line"></span><br><span class="line">train_label = np.load(<span class="string">&#x27;./facedata/Label/train.npy&#x27;</span>)</span><br><span class="line">test_label = np.load(<span class="string">&#x27;./facedata/Label/test.npy&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="样本与标签匹配"><a href="#样本与标签匹配" class="headerlink" title="样本与标签匹配"></a>样本与标签匹配</h4><p>基本思想是，每个样本的文件名即其 id，我们已经有了 （ id + 人种 ）的数据，那么遍历所有的文件，若文件名中 id 与（id + 人种）的 id为同一个， 即将该人种信息标注于样本文件名中。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> fname <span class="keyword">in</span> os.listdir(os.path.join(<span class="string">&#x27;facedata&#x27;</span>, <span class="string">&#x27;train&#x27;</span>)):</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> fname.endswith(<span class="string">&#x27;.png&#x27;</span>):</span><br><span class="line">        <span class="keyword">continue</span></span><br><span class="line">    idt, _ = fname.split(<span class="string">&#x27;.&#x27;</span>)</span><br><span class="line">    filepath = os.path.join(<span class="string">&#x27;facedata&#x27;</span>, <span class="string">&#x27;train&#x27;</span>, fname)</span><br><span class="line">    idt_num = <span class="built_in">int</span>(idt)</span><br><span class="line">    <span class="keyword">for</span> label <span class="keyword">in</span> train_label:</span><br><span class="line">        <span class="keyword">if</span> idt == label[<span class="number">0</span>]:</span><br><span class="line">            os.rename(filepath, filepath.replace(<span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span> + label[<span class="number">1</span>] + <span class="string">&#x27;.&#x27;</span>) )</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> fname <span class="keyword">in</span> os.listdir(os.path.join(<span class="string">&#x27;facedata&#x27;</span>, <span class="string">&#x27;test&#x27;</span>)):</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> fname.endswith(<span class="string">&#x27;.png&#x27;</span>):</span><br><span class="line">        <span class="keyword">continue</span></span><br><span class="line">    idt, _ = fname.split(<span class="string">&#x27;.&#x27;</span>)</span><br><span class="line">    filepath = os.path.join(<span class="string">&#x27;facedata&#x27;</span>, <span class="string">&#x27;test&#x27;</span>, fname)</span><br><span class="line">    idt_num = <span class="built_in">int</span>(idt)</span><br><span class="line">    <span class="keyword">for</span> label <span class="keyword">in</span> test_label:</span><br><span class="line">        <span class="keyword">if</span> idt == label[<span class="number">0</span>]:</span><br><span class="line">            os.rename(filepath, filepath.replace(<span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;.&#x27;</span> + label[<span class="number">1</span>] + <span class="string">&#x27;.&#x27;</span>) )</span><br></pre></td></tr></table></figure>
+<p>最后查看一下训练集与测试集中的样本分布</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">facedr_cnt = &#123;&#125;</span><br><span class="line">faceds_cnt = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> value <span class="keyword">in</span> train_label:</span><br><span class="line">    facedr_cnt[value[<span class="number">1</span>]] = facedr_cnt.get(value[<span class="number">1</span>], <span class="number">0</span>) + <span class="number">1</span></span><br><span class="line">        </span><br><span class="line"><span class="keyword">for</span> value <span class="keyword">in</span> test_label:</span><br><span class="line">     faceds_cnt[value[<span class="number">1</span>]] = faceds_cnt.get(value[<span class="number">1</span>], <span class="number">0</span>) + <span class="number">1</span></span><br><span class="line">        </span><br><span class="line"><span class="built_in">print</span>(facedr_cnt)</span><br><span class="line"><span class="built_in">print</span>(faceds_cnt)</span><br></pre></td></tr></table></figure>
+<p>得到如下分布：</p>
+<p><img src="/2022/04/29/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%84%E4%BA%BA%E7%A7%8D%E8%AF%86%E5%88%AB%E6%96%B9%E6%B3%95/image-20220429162132547.png" alt="image-20220429162132547"></p>
+<p>可以看到数据是极度不平衡，在不增加小样本的前提下，这对整个识别系统的训练是十分不友好的，也是后续改进的主要难点。</p>
 ]]></content>
       <tags>
-        <tag>Multiple View Geometry</tag>
-        <tag>Computer Vision</tag>
+        <tag>DL</tag>
+        <tag>Face Recognize</tag>
       </tags>
   </entry>
   <entry>
