@@ -29,35 +29,38 @@
 
   <meta name="description" content="本文是近期阅读NeRF + LiDAR SLAM 相关论文的精度笔记。  1、LiDAR-NeRF: Novel LiDAR View Synthesis via Neural Radiance Fields摘要翻译 我们引入了一种新的任务，即激光雷达传感器的新视图合成。虽然传统的基于模型的带有风格转移神经网络的激光雷达模拟器可以应用于渲染新视图，但由于渲染器依赖于显式的 3D 重建和利用游戏引">
 <meta property="og:type" content="article">
-<meta property="og:title" content="论文精度——NeRF+LiDAR SLAM">
-<meta property="og:url" content="http://example.com/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E5%BA%A6%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/index.html">
+<meta property="og:title" content="论文精读——NeRF+LiDAR SLAM">
+<meta property="og:url" content="http://example.com/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/index.html">
 <meta property="og:site_name" content="AppZ99&#39;s Blog">
 <meta property="og:description" content="本文是近期阅读NeRF + LiDAR SLAM 相关论文的精度笔记。  1、LiDAR-NeRF: Novel LiDAR View Synthesis via Neural Radiance Fields摘要翻译 我们引入了一种新的任务，即激光雷达传感器的新视图合成。虽然传统的基于模型的带有风格转移神经网络的激光雷达模拟器可以应用于渲染新视图，但由于渲染器依赖于显式的 3D 重建和利用游戏引">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E5%BA%A6%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915103955498.png">
-<meta property="og:image" content="http://example.com/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E5%BA%A6%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915104503985.png">
-<meta property="og:image" content="http://example.com/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E5%BA%A6%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915141712128.png">
-<meta property="og:image" content="http://example.com/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E5%BA%A6%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915151841407.png">
-<meta property="og:image" content="http://example.com/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E5%BA%A6%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915151852643.png">
-<meta property="og:image" content="http://example.com/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E5%BA%A6%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915152921994.png">
-<meta property="og:image" content="http://example.com/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E5%BA%A6%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915154914857.png">
-<meta property="og:image" content="http://example.com/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E5%BA%A6%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915160609405.png">
-<meta property="og:image" content="http://example.com/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E5%BA%A6%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915161101947.png">
-<meta property="og:image" content="http://example.com/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E5%BA%A6%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915162053107.png">
-<meta property="og:image" content="http://example.com/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E5%BA%A6%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915164446269.png">
-<meta property="og:image" content="http://example.com/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E5%BA%A6%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915170142448.png">
-<meta property="og:image" content="http://example.com/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E5%BA%A6%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230919104523483.png">
-<meta property="og:image" content="http://example.com/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E5%BA%A6%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230919134527285.png">
+<meta property="og:image" content="http://example.com/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915103955498.png">
+<meta property="og:image" content="http://example.com/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915104503985.png">
+<meta property="og:image" content="http://example.com/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915141712128.png">
+<meta property="og:image" content="http://example.com/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915151841407.png">
+<meta property="og:image" content="http://example.com/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915151852643.png">
+<meta property="og:image" content="http://example.com/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915152921994.png">
+<meta property="og:image" content="http://example.com/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915154914857.png">
+<meta property="og:image" content="http://example.com/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915160609405.png">
+<meta property="og:image" content="http://example.com/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915161101947.png">
+<meta property="og:image" content="http://example.com/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915162053107.png">
+<meta property="og:image" content="http://example.com/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915164446269.png">
+<meta property="og:image" content="http://example.com/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915170142448.png">
+<meta property="og:image" content="http://example.com/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230919104523483.png">
+<meta property="og:image" content="http://example.com/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230919134527285.png">
+<meta property="og:image" content="http://example.com/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230922210431844.png">
+<meta property="og:image" content="http://example.com/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230922221005120.png">
+<meta property="og:image" content="http://example.com/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230922221358071.png">
 <meta property="article:published_time" content="2023-09-15T02:23:45.000Z">
-<meta property="article:modified_time" content="2023-09-19T05:51:54.823Z">
+<meta property="article:modified_time" content="2023-09-22T14:33:18.745Z">
 <meta property="article:author" content="AppZ99">
 <meta property="article:tag" content="SLAM">
 <meta property="article:tag" content="3D Reconstruction">
 <meta property="article:tag" content="NeRF">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E5%BA%A6%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915103955498.png">
+<meta name="twitter:image" content="http://example.com/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915103955498.png">
 
-<link rel="canonical" href="http://example.com/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E5%BA%A6%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/">
+<link rel="canonical" href="http://example.com/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/">
 
 
 <script id="page-configurations">
@@ -70,7 +73,7 @@
   };
 </script>
 
-  <title>论文精度——NeRF+LiDAR SLAM | AppZ99's Blog</title>
+  <title>论文精读——NeRF+LiDAR SLAM | AppZ99's Blog</title>
   
 
 
@@ -219,7 +222,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E5%BA%A6%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -232,7 +235,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          论文精度——NeRF+LiDAR SLAM
+          论文精读——NeRF+LiDAR SLAM
         </h1>
 
         <div class="post-meta">
@@ -249,7 +252,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-19 13:51:54" itemprop="dateModified" datetime="2023-09-19T13:51:54+08:00">2023-09-19</time>
+                <time title="修改时间：2023-09-22 22:33:18" itemprop="dateModified" datetime="2023-09-22T22:33:18+08:00">2023-09-22</time>
               </span>
 
           <br>
@@ -258,14 +261,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>11k</span>
+              <span>16k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>10 分钟</span>
+              <span>14 分钟</span>
             </span>
 
         </div>
@@ -287,7 +290,7 @@
 <h3 id="方法介绍"><a href="#方法介绍" class="headerlink" title="方法介绍"></a>方法介绍</h3><ul>
 <li><strong>Overview</strong></li>
 </ul>
-<p><img src="/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E5%BA%A6%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915103955498.png" alt="image-20230915103955498" style="zoom:80%;"></p>
+<p><img src="/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915103955498.png" alt="image-20230915103955498" style="zoom:80%;"></p>
 <ul>
 <li><strong>问题定义</strong></li>
 </ul>
@@ -295,7 +298,7 @@
 <ul>
 <li><strong>Pipeline</strong></li>
 </ul>
-<p><img src="/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E5%BA%A6%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915104503985.png" alt="image-20230915104503985" style="zoom:80%;"></p>
+<p><img src="/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915104503985.png" alt="image-20230915104503985" style="zoom:80%;"></p>
 <ol>
 <li><strong>LiDAR model and range image representation</strong></li>
 </ol>
@@ -329,7 +332,7 @@
 <ul>
 <li><strong>Pipeline</strong></li>
 </ul>
-<p><img src="/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E5%BA%A6%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915141712128.png" alt="image-20230915141712128" style="zoom:80%;"></p>
+<p><img src="/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915141712128.png" alt="image-20230915141712128" style="zoom:80%;"></p>
 <ol>
 <li><strong>Implicit Neural Map Representation</strong></li>
 </ol>
@@ -362,8 +365,8 @@ L_{\mathrm{incr}}=L_{\mathrm{bce}}+\lambda_{e}L_{\mathrm{eikonal}}+\lambda_{r}L_
 <ul>
 <li><strong>Pipeline</strong></li>
 </ul>
-<p><img src="/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E5%BA%A6%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915151841407.png" alt="image-20230915151841407"></p>
-<p><img src="/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E5%BA%A6%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915151852643.png" alt="image-20230915151852643"></p>
+<p><img src="/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915151841407.png" alt="image-20230915151841407"></p>
+<p><img src="/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915151852643.png" alt="image-20230915151852643"></p>
 <ol>
 <li><strong>Rays and points sampling</strong></li>
 </ol>
@@ -376,7 +379,7 @@ L_{\mathrm{incr}}=L_{\mathrm{bce}}+\lambda_{e}L_{\mathrm{eikonal}}+\lambda_{r}L_
 \Psi(\boldsymbol{p}_s)=F_\theta(\operatorname{TriInpo}(\boldsymbol{p}_s,\boldsymbol{e}_1,...,\boldsymbol{e}_n))</script><ol>
 <li><strong>Training SDF pairs</strong></li>
 </ol>
-<p><img src="/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E5%BA%A6%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915152921994.png" alt="image-20230915152921994"></p>
+<p><img src="/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915152921994.png" alt="image-20230915152921994"></p>
 <p>LiDAR 可以直接获得到物体表面的信息，即 SDF 值，但在 Z 轴上可能出现漂移，即上图中蓝色为真值， 红色为近似值，随着角度越来越小，其偏移量越来越大，故需要将地面分成 <strong>地面和非地面</strong> 两种情况：</p>
 <script type="math/tex; mode=display">
 \Phi(p_s)=\left\{\begin{array}{ll}(\mathbf{p_s-p})\mathbf{n_p}&\text{if}p\in\mathcal{G}\\\|\mathbf{p_s-p}\|&\text{else}\end{array}\right.</script><p>其中 $p_s、p、n_p$ 分别为采样点，激光沿着射线打到的点，激光沿着射线打到的点的法向量。</p>
@@ -398,7 +401,7 @@ L_{\mathrm{incr}}=L_{\mathrm{bce}}+\lambda_{e}L_{\mathrm{eikonal}}+\lambda_{r}L_
 </li>
 </ol>
 <p>通过 Neural Odometry 估计出的位姿可以将当前扫描的点转到世界坐标系中，任何不在现有体素中的点都被分配给新生成的体素，这些体素与对应体素嵌入一起被添加到八叉树中，为了快速定位所需的嵌入，将3D体素坐标编码为唯一的标量值，即莫顿代码。</p>
-<p><img src="/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E5%BA%A6%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915154914857.png" alt="image-20230915154914857" style="zoom:80%;"></p>
+<p><img src="/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915154914857.png" alt="image-20230915154914857" style="zoom:80%;"></p>
 <ol>
 <li>Mesh Reconstruction</li>
 </ol>
@@ -413,19 +416,19 @@ L_{\mathrm{incr}}=L_{\mathrm{bce}}+\lambda_{e}L_{\mathrm{eikonal}}+\lambda_{r}L_
 <ul>
 <li><strong>Pipeline</strong></li>
 </ul>
-<p><img src="/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E5%BA%A6%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915160609405.png" alt="image-20230915160609405"></p>
+<p><img src="/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915160609405.png" alt="image-20230915160609405"></p>
 <ol>
 <li><strong>Implicit Representation with Hash Encoder</strong></li>
 </ol>
 <p>采用多分辨率哈希编码，<strong>对不同分辨率下的特征值采用哈希编码</strong> ，然后将各个特征向量进行累加，传入神经网络中得到网格的 <strong>占据值</strong> 。该策略与 <strong>Instant-ngp</strong> 相同。</p>
-<p><img src="/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E5%BA%A6%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915161101947.png" alt="image-20230915161101947"></p>
+<p><img src="/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915161101947.png" alt="image-20230915161101947"></p>
 <ol>
 <li><strong>Direct Supervision</strong></li>
 </ol>
 <p>为了防止 <strong>观测歧义性（因为激光被遮挡后，物体厚度未知，在某一帧中可能是遮挡，在另一帧中可能是未遮挡）</strong>，对 <strong>BCE损失函数</strong> 进行改进， 这里主要的操作是 <strong>假设遮挡物体的厚度是符合正态分布的</strong>：</p>
 <script type="math/tex; mode=display">
 \mathcal{L}_d(\widetilde{\mathbf{p}}_i(z))=\left\{\begin{array}{ll}-\log(1-f_\theta(\widetilde{\mathbf{p}}_i(z))),&\text{for}~z<z_i\\-P_{occ}(z)\log(f_\theta(\widetilde{\mathbf{p}}_i(z))),&\text{for}~z\geq z_i\end{array}\right. \\
-P_{occ}(z)=P(B>z-z_a)=1-F_B(z-z_a)</script><p><img src="/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E5%BA%A6%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915162053107.png" alt="image-20230915162053107" style="zoom:80%;"></p>
+P_{occ}(z)=P(B>z-z_a)=1-F_B(z-z_a)</script><p><img src="/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915162053107.png" alt="image-20230915162053107" style="zoom:80%;"></p>
 <ol>
 <li><strong>Joint Optimization</strong></li>
 </ol>
@@ -449,7 +452,7 @@ P_{occ}(z)=P(B>z-z_a)=1-F_B(z-z_a)</script><p><img src="/2023/09/15/%E8%AE%BA%E6
 \Psi(\mathbf{p})=\sum_{i=0}^{K-1}triInterp(\psi_{i,j\in\mathcal{N}(\mathbf{p})})</script><p>将位置信息进行 <strong>编码操作</strong>，这里的编码与 NeRF 中的相同。将特征向量与位置编码向量同时输入到神经网络中：</p>
 <script type="math/tex; mode=display">
 s=f_\theta(\Psi(\mathbf{p}),\gamma(\mathbf{p})) \\
-\gamma(\mathbf{p})=\begin{bmatrix}\cos(2^0\pi\mathbf{p}),\sin(2^0\pi\mathbf{p}),\ldots&\cos(2^{L-1}\pi\mathbf{p}),\sin(2^{L-1}\pi\mathbf{p})\end{bmatrix}</script><p><img src="/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E5%BA%A6%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915164446269.png" alt="image-20230915164446269" style="zoom:80%;"></p>
+\gamma(\mathbf{p})=\begin{bmatrix}\cos(2^0\pi\mathbf{p}),\sin(2^0\pi\mathbf{p}),\ldots&\cos(2^{L-1}\pi\mathbf{p}),\sin(2^{L-1}\pi\mathbf{p})\end{bmatrix}</script><p><img src="/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915164446269.png" alt="image-20230915164446269" style="zoom:80%;"></p>
 <ol>
 <li><strong>Differentiable Range Approximation</strong> </li>
 </ol>
@@ -488,7 +491,7 @@ p_h(\theta,\Psi)=\frac{1}{\sigma_h\sqrt{2\pi}}\exp\left\{-\frac{\|\nabla_\mathbf
 <li><strong>Loop Closure without Remapping</strong></li>
 </ol>
 <p>本方法在进行回环后，<strong>仅更新每个子图的原点位置</strong>，然后将子图进行拼接，避免了轨迹更新后的地图重映射。</p>
-<p><img src="/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E5%BA%A6%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915170142448.png" alt="image-20230915170142448"></p>
+<p><img src="/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230915170142448.png" alt="image-20230915170142448"></p>
 <ol>
 <li><strong>On-demand Global Mapping</strong></li>
 </ol>
@@ -509,7 +512,7 @@ s=f_{\theta_l}(\Psi_l(\mathbf{T}_l^{-1}\mathbf{p}^W),\gamma(\mathbf{T}_l^{-1}\ma
 <ul>
 <li><strong>Pipeline</strong> </li>
 </ul>
-<p><img src="/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E5%BA%A6%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230919104523483.png" alt="image-20230919104523483" style="zoom:80%;"></p>
+<p><img src="/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230919104523483.png" alt="image-20230919104523483" style="zoom:80%;"></p>
 <ol>
 <li><strong>Tracking</strong></li>
 </ol>
@@ -534,7 +537,7 @@ w_i=T_i\sigma_i \\
 \mathcal{L}(\Theta)=\mathcal{L}_{JS}+\lambda_1\mathcal{L}_{depth}+\lambda_2\mathcal{L}_{sky}.</script><ul>
 <li><p>JS Loss</p>
 <p>由 LOS Loss修改得到，主要根据目标分布和预测样本分布之间的相似性为每一条射线设置一个动态边界 $\epsilon$ 。学习过的区域设置较低的边距来细化学习到的几何形状，未学习的部分设置较宽的区域加快收敛。</p>
-<p><img src="/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E5%BA%A6%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230919134527285.png" alt="image-20230919134527285" style="zoom:80%;"></p>
+<p><img src="/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230919134527285.png" alt="image-20230919134527285" style="zoom:80%;"></p>
 <script type="math/tex; mode=display">
 \mathcal{L}_{JS}(\Theta)=\underbrace{\|w_i^*-w_i\|_1}_{\text{Primary Loss}}+\underbrace{\|1-\sum_iw_i\|_1}_{\text{Opacity Loss}} \\
 w_{i}^{*}=\mathcal{K}_{\epsilon}(t_{i}-z^{*}) \\
@@ -554,6 +557,112 @@ w_{i}^{*}=\mathcal{K}_{\epsilon}(t_{i}-z^{*}) \\
 <li><strong>Meshing</strong></li>
 </ol>
 <p>采用 Marching cube 算法进行重建。</p>
+<h2 id="7、CLONeR-Camera-Lidar-Fusion-for-Occupancy-Grid-aided-Neural-Representations"><a href="#7、CLONeR-Camera-Lidar-Fusion-for-Occupancy-Grid-aided-Neural-Representations" class="headerlink" title="7、CLONeR: Camera-Lidar Fusion for Occupancy Grid-aided Neural Representations"></a>7、CLONeR: Camera-Lidar Fusion for Occupancy Grid-aided Neural Representations</h2><h3 id="摘要翻译-6"><a href="#摘要翻译-6" class="headerlink" title="摘要翻译"></a>摘要翻译</h3><blockquote>
+<p>NeRF领域的最新进展实现了SOTA级别的新视角合成并促进了场景属性的稠密估计。然而NeRF通常无法再室外、无边界的场景中使用，这些场景实在非常稀疏的视图下拍摄的，同时这些场景内容主要集中在远离相机的位置，这是野外机器人应用的典型情况。特别地，NeRF风格的算法在如下方面表现不佳：（1）当位姿多样性下的视图比较少的时候；（2）当场景包含饱和度和阴影时；（3）当使用精细结构对无边界大场景进行精细采样的时候导致的计算密集时。本文提出了CLONeR，它显著改进了NeRF，允许它对从稀疏输入的传感器视图观察到的大型无界户外驾驶场景建模。这是通过将NeRF框架内的占用和颜色学习解耦为分别使用激光雷达和相机数据训练的单独的多层感知器（MLP）来实现的。此外，本文还提出了一种新的方法，在NeRF模型的基础上构建可微分的3D占用网格图（OGM），并利用该占用网格改进沿射线的点采样，以在度量空间中进行体积绘制。通过对KITTI数据集场景的大量定量和定性实验，本文证明了当在稀疏输入数据上训练时，所提出的方法在新视图合成和密集深度预测任务上都优于SOTA的NeRF模型。</p>
+</blockquote>
+<h3 id="方法介绍-6"><a href="#方法介绍-6" class="headerlink" title="方法介绍"></a>方法介绍</h3><ul>
+<li><strong>问题定义</strong></li>
+</ul>
+<p>设计一种方法，允许它对从稀疏输入的传感器视图观察到的大型无界户外驾驶场景建模。</p>
+<ul>
+<li><strong>Pipeline</strong></li>
+</ul>
+<p><img src="/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230922210431844.png" alt="image-20230922210431844"></p>
+<ol>
+<li><strong>CLONeR World Coordinate System</strong></li>
+</ol>
+<p>这一步与 NeRF 相同，通过外部源如GNSS系统将相机和 LiDAR 的 Z 轴指向相机本身，然后将 LiDAR 数据置于感兴趣的区域内。</p>
+<p>感兴趣区域的定义：通过相机本质参数和用户定义，确定视锥点的八个位置，然后通过计算一个放缩因子，将所有的位姿置于该放缩区域内。</p>
+<ol>
+<li><strong>Integrating LiDAR Measurements into NeRF</strong></li>
+</ol>
+<p>这一步主要是通过激光雷达模型将测量点置于整个世界坐标系下。</p>
+<ol>
+<li><strong>Decoupled NeRF Model</strong></li>
+</ol>
+<p>这部分主要是本论文的核心，借用 Instant-ngp 的框架，拆分成 Sigma MLP 和 RGB MLP 两个网络。LiDAR 数据传入 Sigma MLP 中， 相机数据传入 Sigma MLP 和 RGB MLP 中。其中位置信息编码采用原 NeRF 中的位置编码，观测角度编码采用 Spherical Harmonics 论文中提到的一种编码方式。</p>
+<p>在本文的模型中采用了全针孔模型相机，在多层采样过程中对图像信息进行二次线性插值以得到更高分辨率的像素RGB真值。</p>
+<ol>
+<li><strong>Loss Functions for NeRF MLPs</strong></li>
+</ol>
+<p>主要参考了 URF 中的损失函数。</p>
+<script type="math/tex; mode=display">
+\mathcal{L}(\Theta,\Phi)=\lambda_{1}\mathcal{L}_{\text{sight}}(\Theta)+\mathcal{L}_{\text{opacity}_{1}}(\Theta)+\lambda_{2}\mathcal{L}_{\text{color}}(\Phi) \\
+\mathcal{L}_{\text{sight}}(\Theta)=\|w_i-w_i^*\|_1\\
+\mathcal{L}_{\text{opacity}_1}(\Theta)=\|1-\sum_iw_i\| \\
+\mathcal{L}_{\text{color}}(\Phi)=\|\hat{\vec{C}}(\vec{r})-\vec{C}(\vec{r})\|_1</script><ol>
+<li><strong>Occupancy Grid Mapping</strong></li>
+</ol>
+<p><img src="/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230922221005120.png" alt="image-20230922221005120"></p>
+<p>把OGM作为一个优化问题，使用随机梯度下降法去优化，然后使用这个学习到的OGM去代替原NeRF中的粗糙MLP.</p>
+<p>通过占据网格地图更新公式，改进成优化函数：</p>
+<script type="math/tex; mode=display">
+l_{n,k}=l_{n-1,k}+\mathcal{S}(k,z_n)-l_0 \\
+\gamma_k:=\gamma_k-\alpha\nabla\mathcal{L}(\mathcal{O},z_n) \\
+-\alpha\nabla\mathcal{L}(\mathcal{O},z_n)=\mathcal{S}(k,z_n)-\gamma_0</script><p>采样一共分为两步：1、在射线上采样 N/2 个点；2、对占据区域进行剩下的 N/2 个点的采样：</p>
+<p>LiDAR 射线上的占据概率：</p>
+<script type="math/tex; mode=display">
+p_{\vec\zeta_j}=\frac{1}{1+\exp(-l_{\vec\zeta_j})}</script><p>定义随机梯度函数：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\frac{\partial\mathcal{L}}{\partial l_{\vec{\beta}_{j}}}=g(\beta_{j},z_{n})& =l_{\mathbf{free}}\mathcal{U}((z_{t}-\delta)-\beta_{j})+  \\
+&-l_\text{осс}{ \mathcal{U}}(\beta_j-(z_t-\delta)){\mathcal{U}}((z_t+\delta)-\beta_j)
+\end{aligned}</script><ol>
+<li><strong>Training Details</strong></li>
+</ol>
+<p>训练的三个阶段：1、只输入LiDAR训练S网络；2、冻结1中的权重，只输入相机数据训练C网络；3、两种数据共同训练S、C网络。</p>
+<h2 id="8、Urban-Radiance-Fields"><a href="#8、Urban-Radiance-Fields" class="headerlink" title="8、Urban Radiance Fields"></a>8、Urban Radiance Fields</h2><h3 id="摘要翻译-7"><a href="#摘要翻译-7" class="headerlink" title="摘要翻译"></a>摘要翻译</h3><blockquote>
+<p>本工作的目标是从扫描平台获取到的数据执行三维重建以及新视图合成，这些平台普遍被部署在城市室外环境下的世界映射中。给定一系列从相机和扫描仪通过通过室外场景移动得到的RGB图像和雷达扫描数据，我们生成了一个可以从中提取三维表面并合成新的RGB图像的模型。我们的方法扩展了神经辐射场，它已经被证明可以在可控设定下对小场景生成逼真的新图片，利用异步捕获的激光雷达数据解决捕获图片之间的曝光变化，同时利用预测的图像分割去监测指向天空的光线的体密度。这三个扩展中的每一个在街景数据集上的实验中提供了显著的性能提升。我们的系统产生了SOTA的三维表面重建，并与传统方法和最近的神经表示方法相比我们得到了更高质量的新视角合成图像。</p>
+</blockquote>
+<h3 id="方法介绍-7"><a href="#方法介绍-7" class="headerlink" title="方法介绍"></a>方法介绍</h3><ul>
+<li><strong>问题定义</strong></li>
+</ul>
+<p>如何在给定一系列从相机和扫描仪通过通过室外场景移动得到的RGB图像和雷达扫描数据，生成了一个可以从中提取三维表面并合成新的RGB图像的模型。</p>
+<ul>
+<li><strong>Overview</strong></li>
+</ul>
+<p><img src="/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/image-20230922221358071.png" alt="image-20230922221358071" style="zoom:80%;"></p>
+<ol>
+<li><strong>Loss Function</strong></li>
+</ol>
+<p>总的损失函数：</p>
+<script type="math/tex; mode=display">
+\underset{\boldsymbol{\theta},\{\boldsymbol{\beta}_i\}}{\operatorname*{\arg\min}}\underbrace{\mathcal{L}_{\mathrm{rgb}}(\boldsymbol{\theta},\{\beta_i\})+\mathcal{L}_{\mathrm{seg}}(\boldsymbol{\theta})}_{Sec.4.1}+\underset{Sec.4.2}{\operatorname*{\underbrace{\mathcal{L}_{\mathrm{depth}}(\boldsymbol{\theta})+\mathcal{L}_{\mathrm{sight}}(\boldsymbol{\theta})}}}</script><ol>
+<li><strong>Photometric-based Losses</strong></li>
+</ol>
+<p>RGB损失和 NeRF 中相同：</p>
+<script type="math/tex; mode=display">
+\mathcal{L}_\mathrm{rgb}(\boldsymbol{\theta},\{\beta_i\})=\sum\mathbb{E}_{\mathbf{r}\sim I_i}\left[||\boldsymbol{C}(\mathbf{r};\beta_i)-\boldsymbol{C}_i^\mathrm{gt}(\mathbf{r})||_2^2\right]</script><p>但其中的 RGB 函数有所不同：</p>
+<script type="math/tex; mode=display">
+\boldsymbol{C}(\mathbf{r};\beta_i)=\int_{t_n}^{t_f}w(t)\cdot\underbrace{\Gamma(\beta_i)}_{\text{Sec. B.2}}\cdot\mathbf{c}(t)dt+\underbrace{\mathbf{c}_{\text{sky}}(\mathbf{d})}_{\text{Sec. 4.1.2}}</script><ol>
+<li><strong>Exposure compensation</strong></li>
+</ol>
+<p>对每一张图片进行曝光的潜在编码是过度参数化的，这会影响到非曝光的相关误差。本篇文章的解决方法是利用一个网络生成一个3*3的矩阵，用来对图片的颜色做仿射变换，这个映射将白平衡和曝光参数以更具有约束性的函数去建模。</p>
+<script type="math/tex; mode=display">
+\Gamma(\beta_i)=\Gamma(\beta_i;\boldsymbol{\theta}):\mathbb{R}^B\to\mathbb{R}^{3\times3}</script><ol>
+<li><strong>Sky modeling</strong></li>
+</ol>
+<p>本篇文章使用了spherical radiance map。首先用一个预训练模型语义分割出天空的部分，然后加入一个 Loss，使得其对于天空部分的体密度预测为 0：</p>
+<script type="math/tex; mode=display">
+\mathcal{L}_{seg}(\theta)=\mathbb{E}_{r\sim I_i}[\mathcal{S}_i(r)\int_{t_n}^{t_f}w(t)^2dt]</script><ol>
+<li><strong>Lidar losses</strong></li>
+</ol>
+<p>首先是深度损失：</p>
+<script type="math/tex; mode=display">
+\mathcal{L}_{\mathrm{depth}}(\boldsymbol{\theta})=\mathbb{E}_{\mathbf{r}\sim\mathcal{D}}\left[(\hat{z}-z)^{2}\right]\hat{z}=\int_{t_{n}}^{t_{f}}w(t)\cdot tdt</script><p>接着是 Line-of-sight priors 的设计：</p>
+<p>光路上的介质不影响其最终的颜色，我们期望辐射亮度集中在沿射线的一个点上:</p>
+<script type="math/tex; mode=display">
+C(\mathbf{r}_{\ell})\equiv\mathbf{c}(\mathbf{r}_{\ell})\quad\text{iff}\quad w(t)=\delta(t)\\
+\mathcal{L}_{\mathrm{sight}}(\boldsymbol{\theta})=\mathbb{E}_{\mathbf{r}\sim\mathcal{D}}\left[\int_{t_n}^{t_f}\left(w(t)-\delta(z)\right)^2dt\right]</script><p>将上式分为三个部分：</p>
+<script type="math/tex; mode=display">
+\mathcal{L}_{\mathrm{sight}}(\boldsymbol{\theta})=\underbrace{\mathcal{L}_{\mathrm{empty}}(\boldsymbol{\theta})}_{t\in[t_n,z-\epsilon]}+\underbrace{\mathcal{L}_{\mathrm{near}}(\boldsymbol{\theta})}_{t\in[z-\epsilon,z+\epsilon]}+\underbrace{\mathcal{L}_{\mathrm{dist}}(\boldsymbol{\theta})}_{t\in[z+\epsilon,t_f]}</script><p>目的就是为了在观测到的位置具有更大的权重值。</p>
+<p>为了数值上便于处理，采样积分为1的核函数代替狄拉克函数，该核函数满足正态分布：</p>
+<script type="math/tex; mode=display">
+\mathcal{K}_{\epsilon}(x)=\mathcal{N}(0,(\epsilon/3)^{2})</script><p>给出各个部分的定义：</p>
+<script type="math/tex; mode=display">
+\mathcal{L}_{\text{near}}(\boldsymbol{\theta})=\mathbb{E}_{\mathbf{r}\sim\mathcal{D}}\left[\int_{z-\epsilon}^{z+\epsilon}\left(w(t)-\mathcal{K}_\epsilon(t-z)\right)^2dt\right] \\
+\mathcal{L}_{\mathrm{empty}}(\boldsymbol{\theta})=\mathbb{E}_{\mathbf{r}\sim\mathcal{D}}\left[\int_{t_n}^{z-\epsilon}w(t)^2dt\right] \\
+\mathcal{L}_{\mathrm{dist}}(\boldsymbol{\theta})=\mathbb{E}_{\mathbf{r}\sim\mathcal{D}}\left[\int_{z+\epsilon}^{t_f}w(t)^2dt\right]</script><p>其中最后一项主要是为了保证射线上整个权重值 $w(t)$ 为1。</p>
 
     </div>
 
@@ -569,7 +678,7 @@ w_{i}^{*}=\mathcal{K}_{\epsilon}(t_{i}-z^{*}) \\
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://example.com/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E5%BA%A6%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/" title="论文精度——NeRF+LiDAR SLAM">http://example.com/2023/09/15/论文精度——NeRF-LiDAR-SLAM/</a>
+    <a href="http://example.com/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/" title="论文精读——NeRF+LiDAR SLAM">http://example.com/2023/09/15/论文精读——NeRF-LiDAR-SLAM/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -654,7 +763,7 @@ w_{i}^{*}=\mathcal{K}_{\epsilon}(t_{i}-z^{*}) \\
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1%E3%80%81LiDAR-NeRF-Novel-LiDAR-View-Synthesis-via-Neural-Radiance-Fields"><span class="nav-text">1、LiDAR-NeRF: Novel LiDAR View Synthesis via Neural Radiance Fields</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%91%98%E8%A6%81%E7%BF%BB%E8%AF%91"><span class="nav-text">摘要翻译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D"><span class="nav-text">方法介绍</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%E3%80%81SHINE-Mapping-Large-Scale-3D-Mapping-Using-Sparse-Hierarchical-Implicit-Neural-Representations"><span class="nav-text">2、SHINE-Mapping: Large-Scale 3D Mapping Using Sparse Hierarchical Implicit Neural Representations</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%91%98%E8%A6%81%E7%BF%BB%E8%AF%91-1"><span class="nav-text">摘要翻译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D-1"><span class="nav-text">方法介绍</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3%E3%80%81NeRF-LOAM-Neural-Implicit-Representation-for-Large-Scale-Incremental-LiDAR-Odometry-and-Mapping"><span class="nav-text">3、NeRF-LOAM: Neural Implicit Representation for Large-Scale Incremental LiDAR Odometry and Mapping</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%91%98%E8%A6%81%E7%BF%BB%E8%AF%91-2"><span class="nav-text">摘要翻译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D-2"><span class="nav-text">方法介绍</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4%E3%80%81Efficient-Implicit-Neural-Reconstruction-Using-LiDAR"><span class="nav-text">4、Efficient Implicit Neural Reconstruction Using LiDAR</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%91%98%E8%A6%81%E7%BF%BB%E8%AF%91-3"><span class="nav-text">摘要翻译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D-3"><span class="nav-text">方法介绍</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5%E3%80%81NF-Atlas-Multi-Volume-Neural-Feature-Fields-for-Large-Scale-LiDAR-Mapping"><span class="nav-text">5、NF-Atlas: Multi-Volume Neural Feature Fields for Large Scale LiDAR Mapping</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%91%98%E8%A6%81%E7%BF%BB%E8%AF%91-4"><span class="nav-text">摘要翻译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D-4"><span class="nav-text">方法介绍</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6%E3%80%81LONER-LiDAR-Only-Neural-Representations-for-Real-Time-SLAM"><span class="nav-text">6、LONER: LiDAR Only Neural Representations for Real-Time SLAM</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%91%98%E8%A6%81%E7%BF%BB%E8%AF%91-5"><span class="nav-text">摘要翻译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D-5"><span class="nav-text">方法介绍</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1%E3%80%81LiDAR-NeRF-Novel-LiDAR-View-Synthesis-via-Neural-Radiance-Fields"><span class="nav-text">1、LiDAR-NeRF: Novel LiDAR View Synthesis via Neural Radiance Fields</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%91%98%E8%A6%81%E7%BF%BB%E8%AF%91"><span class="nav-text">摘要翻译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D"><span class="nav-text">方法介绍</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%E3%80%81SHINE-Mapping-Large-Scale-3D-Mapping-Using-Sparse-Hierarchical-Implicit-Neural-Representations"><span class="nav-text">2、SHINE-Mapping: Large-Scale 3D Mapping Using Sparse Hierarchical Implicit Neural Representations</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%91%98%E8%A6%81%E7%BF%BB%E8%AF%91-1"><span class="nav-text">摘要翻译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D-1"><span class="nav-text">方法介绍</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3%E3%80%81NeRF-LOAM-Neural-Implicit-Representation-for-Large-Scale-Incremental-LiDAR-Odometry-and-Mapping"><span class="nav-text">3、NeRF-LOAM: Neural Implicit Representation for Large-Scale Incremental LiDAR Odometry and Mapping</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%91%98%E8%A6%81%E7%BF%BB%E8%AF%91-2"><span class="nav-text">摘要翻译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D-2"><span class="nav-text">方法介绍</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4%E3%80%81Efficient-Implicit-Neural-Reconstruction-Using-LiDAR"><span class="nav-text">4、Efficient Implicit Neural Reconstruction Using LiDAR</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%91%98%E8%A6%81%E7%BF%BB%E8%AF%91-3"><span class="nav-text">摘要翻译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D-3"><span class="nav-text">方法介绍</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5%E3%80%81NF-Atlas-Multi-Volume-Neural-Feature-Fields-for-Large-Scale-LiDAR-Mapping"><span class="nav-text">5、NF-Atlas: Multi-Volume Neural Feature Fields for Large Scale LiDAR Mapping</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%91%98%E8%A6%81%E7%BF%BB%E8%AF%91-4"><span class="nav-text">摘要翻译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D-4"><span class="nav-text">方法介绍</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6%E3%80%81LONER-LiDAR-Only-Neural-Representations-for-Real-Time-SLAM"><span class="nav-text">6、LONER: LiDAR Only Neural Representations for Real-Time SLAM</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%91%98%E8%A6%81%E7%BF%BB%E8%AF%91-5"><span class="nav-text">摘要翻译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D-5"><span class="nav-text">方法介绍</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7%E3%80%81CLONeR-Camera-Lidar-Fusion-for-Occupancy-Grid-aided-Neural-Representations"><span class="nav-text">7、CLONeR: Camera-Lidar Fusion for Occupancy Grid-aided Neural Representations</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%91%98%E8%A6%81%E7%BF%BB%E8%AF%91-6"><span class="nav-text">摘要翻译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D-6"><span class="nav-text">方法介绍</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8%E3%80%81Urban-Radiance-Fields"><span class="nav-text">8、Urban Radiance Fields</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%91%98%E8%A6%81%E7%BF%BB%E8%AF%91-7"><span class="nav-text">摘要翻译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D-7"><span class="nav-text">方法介绍</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -731,12 +840,12 @@ w_{i}^{*}=\mathcal{K}_{\epsilon}(t_{i}-z^{*}) \\
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">97k</span>
+    <span title="站点总字数">102k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">1:28</span>
+    <span title="站点阅读时长">1:33</span>
 </div>
 
         
