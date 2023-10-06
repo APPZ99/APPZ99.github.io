@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+
+
+
+  <meta name="description" content="本文是近期阅读 NeRF + SLAM 相关论文的精读笔记。  1、iNeRF: Inverting Neural Radiance Fields for Pose Estimation摘要翻译 我们提出了 iNeRF，这是一个通过反转一个神经辐射场（NeRF）来执行无网格位姿估计的框架。NeRF 已经被证实在新视图合成任务重令人震撼的效果——合成真实场景或物体的逼真新颖的新视图。在这项工作中，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="论文精读——NeRF-SLAM">
+<meta property="og:url" content="http://example.com/2023/10/06/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-SLAM/index.html">
+<meta property="og:site_name" content="AppZ99&#39;s Blog">
+<meta property="og:description" content="本文是近期阅读 NeRF + SLAM 相关论文的精读笔记。  1、iNeRF: Inverting Neural Radiance Fields for Pose Estimation摘要翻译 我们提出了 iNeRF，这是一个通过反转一个神经辐射场（NeRF）来执行无网格位姿估计的框架。NeRF 已经被证实在新视图合成任务重令人震撼的效果——合成真实场景或物体的逼真新颖的新视图。在这项工作中，">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2023/10/06/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-SLAM/image-20231006152046207.png">
+<meta property="og:image" content="http://example.com/2023/10/06/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-SLAM/image-20231006153039129.png">
+<meta property="og:image" content="http://example.com/2023/10/06/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-SLAM/image-20231006154441494.png">
+<meta property="og:image" content="http://example.com/2023/10/06/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-SLAM/image-20231006155205890.png">
+<meta property="og:image" content="http://example.com/2023/10/06/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-SLAM/image-20231006161233747.png">
+<meta property="og:image" content="http://example.com/2023/10/06/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-SLAM/image-20231006163835564.png">
+<meta property="og:image" content="http://example.com/2023/10/06/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-SLAM/image-20231006164043831.png">
+<meta property="og:image" content="http://example.com/2023/10/06/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-SLAM/image-20231006170017125.png">
+<meta property="og:image" content="http://example.com/2023/10/06/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-SLAM/image-20231006190910960.png">
+<meta property="og:image" content="http://example.com/2023/10/06/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-SLAM/image-20231006191958350.png">
+<meta property="og:image" content="http://example.com/2023/10/06/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-SLAM/image-20231006212353508.png">
+<meta property="og:image" content="http://example.com/2023/10/06/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-SLAM/image-20231006214020941.png">
+<meta property="article:published_time" content="2023-10-06T03:41:14.000Z">
+<meta property="article:modified_time" content="2023-10-06T13:58:25.430Z">
+<meta property="article:author" content="AppZ99">
+<meta property="article:tag" content="SLAM">
+<meta property="article:tag" content="3D Reconstruction">
+<meta property="article:tag" content="NeRF">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2023/10/06/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-SLAM/image-20231006152046207.png">
+
+<link rel="canonical" href="http://example.com/2023/10/06/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-SLAM/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>论文精读——NeRF-SLAM | AppZ99's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">AppZ99's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">OHHHH</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/10/06/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-SLAM/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="AppZ99">
+      <meta itemprop="description" content="TKAW">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AppZ99's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          论文精读——NeRF-SLAM
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-10-06 11:41:14 / 修改时间：21:58:25" itemprop="dateCreated datePublished" datetime="2023-10-06T11:41:14+08:00">2023-10-06</time>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>本文是近期阅读 NeRF + SLAM 相关论文的精读笔记。</p>
+</blockquote>
+<h2 id="1、iNeRF-Inverting-Neural-Radiance-Fields-for-Pose-Estimation"><a href="#1、iNeRF-Inverting-Neural-Radiance-Fields-for-Pose-Estimation" class="headerlink" title="1、iNeRF: Inverting Neural Radiance Fields for Pose Estimation"></a>1、iNeRF: Inverting Neural Radiance Fields for Pose Estimation</h2><h3 id="摘要翻译"><a href="#摘要翻译" class="headerlink" title="摘要翻译"></a>摘要翻译</h3><blockquote>
+<p>我们提出了 iNeRF，这是一个通过反转一个神经辐射场（NeRF）来执行无网格位姿估计的框架。NeRF 已经被证实在新视图合成任务重令人震撼的效果——合成真实场景或物体的逼真新颖的新视图。在这项工作中，我们研究了我们是否可以通过 NeRF 将合成分析应用于无网格，仅有 RGB 的 6自由度位姿估计——给定图像，找到相机相对于三维物体或场景的平移和旋转。我们的方法假设在训练和测试期间是没有可用的物体网格模型的。从初始位姿估计开始，我们使用梯度下降法去最小化从 NeRF 中渲染的像素和观察图像中的像素之间的残差。我们首先研究1）如何在 iNeRF的位姿优化过程中采样射线以收集梯度信息；2）不同批量大小的射线如何影响在合成数据集上的 iNeRF。随后，我们展示了对于 LLFF 数据集的复杂真实世界下，iNeRF 可以通过估计新视图的相机姿态将这些图像用作 NeRF 的额外训练数据集来改进 NeRF。最后，我们展示了 iNeRF 可以通过反转从单个视图推断的 NeRF模型，对 RGB 图像执行类别级的对象姿态估计，包括训练期间未看到的物体实例。</p>
+</blockquote>
+<span id="more"></span>
+<h3 id="方法介绍"><a href="#方法介绍" class="headerlink" title="方法介绍"></a>方法介绍</h3><ul>
+<li><strong>Overview</strong></li>
+</ul>
+<p><img src="/2023/10/06/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-SLAM/image-20231006152046207.png" alt="image-20231006152046207" style="zoom:80%;"></p>
+<ul>
+<li><strong>问题定义</strong></li>
+</ul>
+<p>是否可以通过 NeRF 将合成分析应用于无网格，仅有 RGB 的 6自由度位姿估计——给定图像，找到相机相对于三维物体或场景的平移和旋转。</p>
+<ol>
+<li><strong>Gradient-Based SE(3) Optimization</strong></li>
+</ol>
+<p>在 SE(3) 上进行流形优化，其优化对象为相机位姿：</p>
+<script type="math/tex; mode=display">
+\hat{T}=\underset{T\in\mathrm{SE}(3)}{\operatorname*{\mathrm{argmin}}}\mathcal{L}(T\mid I,\Theta)</script><p>将上述优化问题转化为李代数的形式进行求解：</p>
+<script type="math/tex; mode=display">
+\begin{gathered}\hat{T}_i=e^{[\mathcal{S}_i]\theta_i}\hat{T}_0,\\\mathrm{where}\quad e^{[\mathcal{S}]\theta}=\begin{bmatrix}e^{[\omega]\theta}&K(\mathcal{S},\theta)\\0&1\end{bmatrix}\end{gathered}</script><p>最终的梯度求解问题为：</p>
+<script type="math/tex; mode=display">
+\widehat{\mathcal{S}\theta}=\underset{S\theta\in\mathbb{R}^6}{\operatorname*{\mathrm{argmin}}}\mathcal{L}(e^{[\mathcal{S}]\theta}T_0\mid I,\Theta)</script><ol>
+<li><strong>Sampling Rays</strong></li>
+</ol>
+<p>对全图的所有像素点进行采样的话，其计算量过大，同时也容易采样到无效的区域，所以作者提出了不同的射线采样策略来解决这个问题。</p>
+<p><img src="/2023/10/06/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-SLAM/image-20231006153039129.png" alt="image-20231006153039129" style="zoom:80%;"></p>
+<p>先后采用了三种采样测量：</p>
+<ul>
+<li>随机采样：无效点偏多；</li>
+<li>感兴趣点采样：采用关键点搜索的方法查询关键点，关键点不够时再进行部分随机采样来达到采样点数。</li>
+<li>感兴趣区域采样：防止兴趣点采样进入局部最小值，将兴趣点为中心进行扩张掩模。</li>
+</ul>
+<ol>
+<li><strong>Self-Supervising NeRF with iNeRF</strong></li>
+</ol>
+<p>用 iNeRF 对 NeRF 进行自监督训练：</p>
+<ul>
+<li>通过一组已知位姿和对应图像得到 NeRF 的参数；</li>
+<li>通过 iNeRF 对未知位姿的图像进行位姿优化得到位姿；</li>
+<li>将上一步得到的图片与对应的位姿打上标签送到 NeRF 的训练网络中。</li>
+</ul>
+<h2 id="2、BARF-Bundle-Adjusting-Neural-Radiance-Fields"><a href="#2、BARF-Bundle-Adjusting-Neural-Radiance-Fields" class="headerlink" title="2、BARF : Bundle-Adjusting Neural Radiance Fields"></a>2、BARF : Bundle-Adjusting Neural Radiance Fields</h2><h3 id="摘要翻译-1"><a href="#摘要翻译-1" class="headerlink" title="摘要翻译"></a>摘要翻译</h3><blockquote>
+<p>神经辐射场（NeRF）最近在计算机视觉界已经引起了人们极大的兴趣，因为它有着强大的合成真实世界场景的逼真的新颖视图的能力。然而，NeRF的一个局限性在于它需要精确的相机位姿来学习场景表示。在本文中，我们提出了束调整神经辐射场（BARF）来用于从不完美（甚至不知道）的相机位姿中训练NeRF——学习神经三维表示和配准相机帧的联合问题。我们建立了与经典图像对齐理论的联系，并标明从粗糙到精细配准也使用于NeRF。此外，我们也表明，在NeRF中错误地使用位置编码对基于合成的物体的配准具有负面影响。在合成和真实数据上的实验表明，BARF可以有效地优化神经场景表示，同时解决大型相机位姿偏移问题。这使得能够对来自位置相机姿势的视频序列进行视图合成和定位，为视觉定位系统（即SLAM）和稠密三维建图和重建开辟了全新的道路。</p>
+</blockquote>
+<h3 id="方法介绍-1"><a href="#方法介绍-1" class="headerlink" title="方法介绍"></a>方法介绍</h3><ul>
+<li><strong>问题定义</strong></li>
+</ul>
+<p>我们提出了束调整神经辐射场（BARF）来用于从不完美（甚至不知道）的相机位姿中训练NeRF——学习神经三维表示和配准相机帧的联合问题。</p>
+<ul>
+<li><strong>Overview</strong></li>
+</ul>
+<p><img src="/2023/10/06/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-SLAM/image-20231006154441494.png" alt="image-20231006154441494" style="zoom:80%;"></p>
+<ol>
+<li><strong>Neural Radiance Fields (3D)</strong></li>
+</ol>
+<p>图像渲染方程，即原 NeRF 中的渲染方程：</p>
+<script type="math/tex; mode=display">
+\hat{\mathcal{I}}(\mathbf{u})=\int_{z_\mathrm{near}}^{z_\mathrm{far}}T(\mathbf{u},z)\sigma(z\bar{\mathbf{u}})\mathbf{c}(z\bar{\mathbf{u}})\mathrm{d}z~.</script><p>联合位姿信息后的渲染方程表示：</p>
+<script type="math/tex; mode=display">
+\hat{\mathcal{I}}(\mathbf{u};\mathbf{p})=g\Big(f(\mathcal{W}(z_1\bar{\mathbf{u}};\mathbf{p});\boldsymbol{\Theta}),\ldots,f(\mathcal{W}(z_N\bar{\mathbf{u}};\mathbf{p});\boldsymbol{\Theta})\Big)</script><p>最终图像优化函数：</p>
+<script type="math/tex; mode=display">
+\min_{\mathbf{p}_1,\ldots,\mathbf{p}_M,\boldsymbol{\Theta}}\sum_{i=1}^M\sum_\mathbf{u}{\left\|\hat{\mathcal{I}}(\mathbf{u};\mathbf{p}_i,\boldsymbol{\Theta})-\mathcal{I}_i(\mathbf{u})\right\|_2^2}</script><p>根据二维图像配准推断出来的优化梯度为：</p>
+<script type="math/tex; mode=display">
+\mathbf{J}(\mathbf{u};\mathbf{p})=\sum_{i=1}^N\frac{\partial g(\mathbf{y}_1,\ldots,\mathbf{y}_N)}{\partial\mathbf{y}_i}\frac{\partial\mathbf{y}_i(\mathbf{p})}{\partial\mathbf{x}_i(\mathbf{p})}\frac{\partial\mathcal{W}(z_i\bar{\mathbf{u}};\mathbf{p})}{\partial\mathbf{p}}</script><ol>
+<li><strong>On Positional Encoding and Registration</strong></li>
+</ol>
+<p>为了高效完成反向传播，需要对位置信息进行编码，从而得到光滑的信号，防止进入局部最优。</p>
+<p><img src="/2023/10/06/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-SLAM/image-20231006155205890.png" alt="image-20231006155205890" style="zoom:80%;"></p>
+<p>编码公式：</p>
+<script type="math/tex; mode=display">
+\gamma(\mathbf{x})=\begin{bmatrix}\mathbf{x},\gamma_0(\mathbf{x}),\gamma_1(\mathbf{x}),\ldots,\gamma_{L-1}(\mathbf{x})\end{bmatrix}\in\mathbb{R}^{3+6L} \\
+\gamma_k(\mathbf{x})=\left[\cos(2^k\pi\mathbf{x}),\sin(2^k\pi\mathbf{x})\right]\in\mathbb{R}^6</script><p>编码优化梯度：</p>
+<script type="math/tex; mode=display">
+\frac{\partial\gamma_k(\mathbf{x})}{\partial\mathbf{x}}=2^k\pi\cdot\begin{bmatrix}-\sin(2^k\pi\mathbf{x}),\cos(2^k\pi\mathbf{x})\end{bmatrix}</script><ol>
+<li><strong>Bundle-Adjusting Neural Radiance Fields</strong></li>
+</ol>
+<p>关键思想是在优化过程中，在不同频带（从低到高）的编码上应用平滑掩码，这就像动态低通滤波器一样。修改后的编码公式为：</p>
+<script type="math/tex; mode=display">
+\gamma_k(\mathbf{x};\alpha)=w_k(\alpha)\cdot\left[\cos(2^k\pi\mathbf{x}),\sin(2^k\pi\mathbf{x})\right] \\
+w_k(\alpha)=\begin{cases}0&\text{if }\alpha<k\\\dfrac{1-\cos((\alpha-k)\pi)}{2}&\text{if }0\le\alpha-k<1\\1&\text{if }\alpha-k\ge1\end{cases}</script><p>编码优化梯度：</p>
+<script type="math/tex; mode=display">
+\frac{\partial\gamma_k(\mathbf{x};\alpha)}{\partial\mathbf{x}}=w_k(\alpha)\cdot2^k\pi\cdot\left[-\sin(2^k\pi\mathbf{x}),\cos(2^k\pi\mathbf{x})\right]</script><h2 id="3、iMAP-Implicit-Mapping-and-Positioning-in-Real-Time"><a href="#3、iMAP-Implicit-Mapping-and-Positioning-in-Real-Time" class="headerlink" title="3、iMAP: Implicit Mapping and Positioning in Real-Time"></a>3、iMAP: Implicit Mapping and Positioning in Real-Time</h2><h3 id="摘要翻译-2"><a href="#摘要翻译-2" class="headerlink" title="摘要翻译"></a>摘要翻译</h3><blockquote>
+<p>我们首次展示了多层感知器（MLP）可以作为手持RGB-D相机的实时SLAM系统中的唯一场景表示。我们的网络在没有事先数据的情况下进行实时操作训练，构建了一个密集的、特定场景的占用和颜色隐含3D模型，该模型也可立即用于跟踪。<br>通过针对实时图像流对神经网络进行持续训练来实现实时SLAM需要重大创新。我们的iMAP算法使用关键帧结构和多处理计算流程，动态信息引导像素采样以提高速度，跟踪频率为10Hz，全局地图更新频率为2Hz。隐式MLP相对于标准密集SLAM技术的优势包括具有自动细节控制的有效几何表示，以及对未观察到的区域（如物体的背面）的平滑、合理的填充。</p>
+</blockquote>
+<h3 id="方法介绍-2"><a href="#方法介绍-2" class="headerlink" title="方法介绍"></a>方法介绍</h3><ul>
+<li><strong>问题定义</strong></li>
+</ul>
+<p>在没有事先数据的情况下对网络进行实时操作训练，构建了一个密集的、特定场景的占用和颜色隐含3D模型，该模型也可立即用于跟踪。</p>
+<ul>
+<li><strong>Pipeline</strong></li>
+</ul>
+<p><img src="/2023/10/06/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-SLAM/image-20231006161233747.png" alt="image-20231006161233747"></p>
+<ol>
+<li><strong>Implicit Scene Neural Network</strong></li>
+</ol>
+<p>区别于 NeRF ，本文采用 Gaussian positional encoding 进行编码。</p>
+<ol>
+<li><strong>Depth and Colour Rendering</strong></li>
+</ol>
+<p>采用经典体渲染公式得到深度和光度信息：</p>
+<script type="math/tex; mode=display">
+\hat{D}[u,v]=\sum_{i=1}^Nw_id_i,\quad\hat{I}[u,v]=\sum_{i=1}^Nw_i\mathbf{c}_i</script><p>同时，计算深度协方差信息：</p>
+<script type="math/tex; mode=display">
+\hat{D}_{var}[u,v]=\sum_{i=1}^Nw_i(\hat{D}[u,v]-d_i)^2</script><ol>
+<li><strong>Joint optimisation</strong></li>
+</ol>
+<p>光度损失采用 L1 范数损失，通过深度协方差对不确定的边缘部分进行优化：</p>
+<script type="math/tex; mode=display">
+L_p=\dfrac{1}{M}\sum_{i=1}^{W}\sum_{(u,v)\in s_i}e_i^p[u,v] \\
+L_g=\frac{1}{M}\sum_{i=1}^{W}\sum_{(u,v)\in s_i}\frac{e_i^g[u,v]}{\sqrt{\hat{D}_{var}[u,v]}}</script><p>得到最终的优化损失函数：</p>
+<script type="math/tex; mode=display">
+\min_{\theta,\{T_{i}\}}(L_{g}+\lambda_{p}L_{p})</script><p><strong>相机追踪：</strong> 运行一个并行跟踪线程，在使用相同的损失和优化器的同时，以比联合优化高得多的帧速率持续优化最新帧相对于固定场景网络的姿态。</p>
+<ol>
+<li><strong>Keyframe Selection</strong></li>
+</ol>
+<p>总是选择<strong>第一帧</strong>来初始化网络并固定世界坐标系。每次添加新的关键帧时，我们都会锁定网络的副本，以表示该时间点的3D地图快照。<strong>后续帧将根据此副本进行检查</strong>，如果它们看到明显新的区域，则会被选中。</p>
+<p>为了得到给定区域已经学习过场景的概率是多少，通过以下公式进行计算：</p>
+<script type="math/tex; mode=display">
+P=\frac1{|s|}\sum_{(u,v)\in s}\mathbb{1}\left(\frac{\left|D[u,v]-\hat{D}[u,v]\right|}{D[u,v]}<t_D\right)</script><p>当<strong>学习率小于一定阈值</strong>，则将其添加到关键帧的集合中。</p>
+<ol>
+<li><p><strong>Active Sampling</strong></p>
+<ol>
+<li><p><strong>Image Active Sampling</strong></p>
+<p>利用图像的规律性，在每次迭代中只渲染和优化一组非常稀疏的随机像素（每张图像200个）。渲染后，将图像拆分成 $8\times8$ 的网格，然后对损失高的小网格进行重采样。</p>
+<p><img src="/2023/10/06/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-SLAM/image-20231006163835564.png" alt="image-20231006163835564"></p>
+</li>
+<li><p><strong>Keyframe Active Sampling</strong></p>
+<p>对于关键帧内的采样，使用的与图片采样相同的策略。</p>
+</li>
+<li><p><strong>Bounded Keyframe Selection</strong></p>
+<p>在校正好的关键帧中选择损失较大的三帧，然后和当前帧，最后一个关键帧共5帧，一起进行联合优化。</p>
+<p><img src="/2023/10/06/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-SLAM/image-20231006164043831.png" alt="image-20231006164043831"></p>
+</li>
+</ol>
+</li>
+</ol>
+<h2 id="4、NICE-SLAM-Neural-Implicit-Scalable-Encoding-for-SLAM"><a href="#4、NICE-SLAM-Neural-Implicit-Scalable-Encoding-for-SLAM" class="headerlink" title="4、NICE-SLAM: Neural Implicit Scalable Encoding for SLAM"></a>4、NICE-SLAM: Neural Implicit Scalable Encoding for SLAM</h2><h3 id="摘要翻译-3"><a href="#摘要翻译-3" class="headerlink" title="摘要翻译"></a>摘要翻译</h3><blockquote>
+<p>最近神经隐式表达已经在多个领域获得了令人鼓舞的结果，包括在SLAM领域富有成效的进步。然而，现有的方法会产生过度平滑的场景重建和难以放大到大场景的问题。这些限制主要是由于其简单的全连接网络，该结构没有整合观测的局部信息。本文中，我们提出了 NICE-SLAM，这是一个稠密的SLAM系统，它通过引入多层场景表达来结合多层局部信息。利用预训练的几何先验信息优化这种表示可以对室内大场景进行细致的重建。对比最近的神经隐式SLAM系统，我们的方法更具有可扩展性，高效性和鲁棒性。在五个具有挑战的数据集上的实验结果表明，NICE-SLAM在建图和追踪方面的质量都更具有竞争力。</p>
+</blockquote>
+<h3 id="方法介绍-3"><a href="#方法介绍-3" class="headerlink" title="方法介绍"></a>方法介绍</h3><ul>
+<li><strong>问题定义</strong></li>
+</ul>
+<p>提出了 NICE-SLAM，这是一个稠密的SLAM系统，它通过引入多层场景表达来结合多层局部信息。利用预训练的几何先验信息优化这种表示可以对室内大场景进行细致的重建。</p>
+<ul>
+<li><strong>Overview</strong></li>
+</ul>
+<p><img src="/2023/10/06/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-SLAM/image-20231006170017125.png" alt="image-20231006170017125"></p>
+<ol>
+<li><p><strong>Hierarchical Scene Representation</strong></p>
+<ol>
+<li><p><strong>Mid-&amp;Fine-level Geometric Representation</strong></p>
+<p>其中首先通过优化中级特征网格来重建几何体，然后使用精细层进行细化。</p>
+<script type="math/tex; mode=display">
+o_\mathbf{p}^1=f^1(\mathbf{p},\phi_\theta^1(\mathbf{p}))</script><p>细化层输入中层、细化层特征，输出与中层占据概率的偏差:</p>
+<script type="math/tex; mode=display">
+\Delta o_\mathbf{p}^1=f^2(\mathbf{p},\phi_\theta^1(\mathbf{p}),\phi_\theta^2(\mathbf{p}))</script><p>最终得到：</p>
+<script type="math/tex; mode=display">
+o_{\mathbf{p}}=o_{\mathbf{p}}^1+\Delta o_{\mathbf{p}}^1</script></li>
+<li><p><strong>Coarse-level Geometric Representation</strong></p>
+<p>粗层主要捕获高层的几何特征，并由细化层和中层进行优化:</p>
+<script type="math/tex; mode=display">
+o_\mathbf{p}^0=f^0(\mathbf{p},\phi_\theta^0(\mathbf{p}))</script><p>粗网格的目标是能够预测观察到的几何体（在中/精细级别中编码）之外的近似占用值，即使在仅部分观察到每个粗体素的情况下也是如此。</p>
+</li>
+<li><p><strong>Pre-training Feature Decoders</strong></p>
+<p>采用 ConvONet 正常训练，但最后只采用其中的 MLP层作为渲染部分的 MLP 层网络参数。</p>
+</li>
+<li><p><strong>Color Representation</strong></p>
+<p>体渲染公式</p>
+<script type="math/tex; mode=display">
+\mathbf{c_p}=\mathbf{g}_\omega(\mathbf{p},\psi_\omega(\mathbf{p}))</script></li>
+<li><p><strong>Network Design</strong></p>
+<p>除了粗糙层，其余层输入前采用高斯位置编码对位置 p 进行编码</p>
+</li>
+</ol>
+</li>
+<li><p><strong>Depth and Color Rendering</strong></p>
+<p>同 iMAP 相同，对每个级别的网络做相同的损失定义：</p>
+<script type="math/tex; mode=display">
+\hat{D}^c=\sum_{i=1}^Nw_i^cd_i,\quad\hat{D}^f=\sum_{i=1}^Nw_i^fd_i,\quad\hat{I}=\sum_{i=1}^Nw_i^f\mathbf{c}_i. \\
+\hat{D}_{var}^c=\sum_{i=1}^Nw_i^c(\hat{D}^c-d_i)^2\quad\hat{D}_{var}^f=\sum_{i=1}^Nw_i^f(\hat{D}^f-d_i)^2</script></li>
+<li><p><strong>Mapping and Tracking</strong></p>
+<ol>
+<li><p><strong>Mapping</strong></p>
+<p>几何和光度误差均为 L1 范数：</p>
+<script type="math/tex; mode=display">
+\min_{\theta,\omega,\{\mathbf{R}_i,\mathbf{t}_i\}}(\mathcal{L}_g^c+\mathcal{L}_g^f+\lambda_p\mathcal{L}_p)</script></li>
+<li><p><strong>Camera Tracking</strong></p>
+<p>修改相机追踪的误差：</p>
+<script type="math/tex; mode=display">
+\mathcal{L}_{g\_var}=\frac{1}{M_t}\sum_{m=1}^{M_t}\frac{\left|D_m-\hat{D}_m^c\right|}{\sqrt{\hat{D}_{var}^c}}+\frac{\left|D_m-\hat{D}_m^f\right|}{\sqrt{\hat{D}_{var}^f}}</script><p>最终相机优化误差为：</p>
+<script type="math/tex; mode=display">
+\min_{\mathbf{R},\mathbf{t}}(\mathcal{L}_{g\_var}+\lambda_{pt}\mathcal{L}_p)</script></li>
+<li><p><strong>Robustness to Dynamic Objects</strong></p>
+<p>为了使优化在跟踪过程中对动态对象更具鲁棒性，我们过滤了深度/颜色重渲染损失较大的像素。特别地，我们从优化中移除了所有在等式12的损失大于当前帧所有像素平均损失10倍的像素。</p>
+</li>
+</ol>
+</li>
+<li><p><strong>Keyframe Selection</strong></p>
+<p>区别于 iMAP，在优化场景几何体时，我们只包括与当前帧具有视觉重叠的关键帧。</p>
+</li>
+</ol>
+<h2 id="5、Orbeez-SLAM-A-Real-time-Monocular-Visual-SLAM-with-ORB-Features-and-NeRF-realized-Mapping"><a href="#5、Orbeez-SLAM-A-Real-time-Monocular-Visual-SLAM-with-ORB-Features-and-NeRF-realized-Mapping" class="headerlink" title="5、Orbeez-SLAM: A Real-time Monocular Visual SLAM with ORB Features and NeRF-realized Mapping"></a>5、Orbeez-SLAM: A Real-time Monocular Visual SLAM with ORB Features and NeRF-realized Mapping</h2><h3 id="摘要翻译-4"><a href="#摘要翻译-4" class="headerlink" title="摘要翻译"></a>摘要翻译</h3><blockquote>
+<p>一种能够通过视觉信号执行复杂任务并与人类合作的空间型人工智能受到了极高的关注。为了实现这个目标，我们需要一个视觉SLAM，它无需预训练就可以适应新场景，并且可以为下游任务提供稠密的地图。由于系统内部组件的限制，之前的基于学习和非基于学习的视觉SLAM不能满足所有要求。在本文的工作中，我们开发了一个名为 Orbezz-SLAM的视觉SLAM系统，该系统能够成功地将隐式神经表达和视觉里程计进行融合，以实现我们的目标。此外，OrbeezSLAM可以与弹幕相机配合使用，因为它只需要输入RGB图像，这使得它可以广泛地适用于现实世界。结果表明，我们的SLAM比强基线指标快800倍，具有优异的渲染效果。</p>
+</blockquote>
+<h3 id="方法介绍-4"><a href="#方法介绍-4" class="headerlink" title="方法介绍"></a>方法介绍</h3><ul>
+<li><strong>问题定义</strong></li>
+</ul>
+<p>设计一个视觉SLAM，它无需预训练就可以适应新场景，并且可以为下游任务提供稠密的地图。</p>
+<ul>
+<li><strong>Pipeline</strong></li>
+</ul>
+<p><img src="/2023/10/06/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-SLAM/image-20231006190910960.png" alt="image-20231006190910960"></p>
+<ol>
+<li><p><strong>Optimization</strong></p>
+<p>位姿损失</p>
+<script type="math/tex; mode=display">
+L_{rpj}=\sum_{ij}\left\|u_{ij}-\pi(\mathscr{C}_j,P_i)\right\|_2</script><p>重映射误差优化和BA：</p>
+<script type="math/tex; mode=display">
+\min_{\{[R|t]_j\}}L_{rpj} \\
+\min_{\{[R|t]_j\},\{P_i\}}L_{rpj}</script><p>光度损失</p>
+<script type="math/tex; mode=display">
+L_{pht}=\sum_{ij}\left\|C(\mathbf{r}_{ij})-\hat{C}(\mathbf{r}_{ij})\right\|_2</script></li>
+<li><p><strong>Ray-casting triangulation</strong></p>
+<p>存储每个体素的采样次数。经常阻挡投射光线的体素更有可能是曲面；对于噪声抑制，我们只对位于射线扫描频率足够高的体素内的点进行三角测量。</p>
+<p><img src="/2023/10/06/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-SLAM/image-20231006191958350.png" alt="image-20231006191958350"></p>
+</li>
+</ol>
+<h2 id="6、Co-SLAM-Joint-Coordinate-and-Sparse-Parametric-Encodings-for-Neural-Real-Time-SLAM"><a href="#6、Co-SLAM-Joint-Coordinate-and-Sparse-Parametric-Encodings-for-Neural-Real-Time-SLAM" class="headerlink" title="6、Co-SLAM: Joint Coordinate and Sparse Parametric Encodings for Neural Real-Time SLAM"></a>6、Co-SLAM: Joint Coordinate and Sparse Parametric Encodings for Neural Real-Time SLAM</h2><h3 id="摘要翻译-5"><a href="#摘要翻译-5" class="headerlink" title="摘要翻译"></a>摘要翻译</h3><blockquote>
+<p>我们提出了Co-SLAM，一种基于混合表示的神经RGB-D SLAM系统，它可以实时地执行鲁棒的相机跟踪和高保真的表面重建。Co-SLAM 采用多分辨率hash网格表示场景，以利用它的高收敛速度和表示高频局部特征的能力。此外，Co-SLAM结合了 one-blob 编码以促进未观测区域的表面一致性和完整性。通过两种最佳的领域，这种联合参数坐标编码实现了实时和鲁棒的表现性能：快速收敛性和空洞填充能力。此外，我们的射线采样策略允许Co-SLAM在所有关键帧上去执行全局BA，而不是像其他竞争的神经SLAM方法那样需要选择关键帧来维持少量激活的关键帧。实验结果表明，Co-SLAM以10-17Hz的频率运行，并实现了最先进的场景重建结果，以及在各种数据集和基准测试中表现出具有竞争力的追踪性能。</p>
+</blockquote>
+<h3 id="方法介绍-5"><a href="#方法介绍-5" class="headerlink" title="方法介绍"></a>方法介绍</h3><ul>
+<li><p><strong>问题定义</strong></p>
+<p>设计一种混合表示的神经RGB-D SLAM系统，可以实时地执行鲁棒的相机跟踪和高保真的表面重建。区别于其他方法，Co-SLAM可以在所有关键帧上执行全局BA。</p>
+</li>
+<li><p><strong>Pipeline</strong></p>
+<p><img src="/2023/10/06/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-SLAM/image-20231006212353508.png" alt="image-20231006212353508" style="zoom:80%;"></p>
+</li>
+</ul>
+<ol>
+<li><p><strong>Joint Coordinate and Parametric Encoding</strong></p>
+<p>位置编码有助于保持一致性和光滑性先验，但收敛慢和产生遗忘问题；参数编码能提高效率但缺少空洞填补和光滑性。</p>
+<p>几何编码得到特征向量和 SDF 值：</p>
+<script type="math/tex; mode=display">
+f_\tau(\gamma(\mathbf{x}),\mathcal{V}_\alpha(\mathbf{x}))\mapsto(\mathbf{h},s).</script><p>颜色编码得到对颜色的预测：</p>
+<script type="math/tex; mode=display">
+f_\phi(\gamma(\mathbf{x}),\mathbf{h})\mapsto\mathbf{c}.</script></li>
+<li><p><strong>Depth and Color Rendering</strong></p>
+<p>颜色和深度通过体渲染公式得到：</p>
+<script type="math/tex; mode=display">
+\hat{\mathbf{c}}=\frac{1}{\sum_{i=1}^Mw_i}\sum_{i=1}^Mw_i\mathbf{c}_i,\quad\hat{d}=\frac{1}{\sum_{i=1}^Mw_i}\sum_{i=1}^Mw_id_i</script><p>权重值通过 SDF 转换函数得到，区别于 NeuS 中的权重转换函数，采用简单的 bell-shaped 模型计算：</p>
+<script type="math/tex; mode=display">
+w_i=\sigma\left(\frac{s_i}{tr}\right)\sigma\left(-\frac{s_i}{tr}\right)</script><p><strong>Depth-guided Sampling：</strong>作者发现重要性采样没有显著提升系统的同时反而降低了追踪和建图的速率。所以除了均匀采样之外，还对有效的深度测量点附近做正负 ds 的均匀采样。</p>
+</li>
+<li><p><strong>Tracking and Bundle Adjustment</strong></p>
+<ol>
+<li><p><strong>Objective Functions</strong></p>
+<p>各个损失函数定义如下：</p>
+<script type="math/tex; mode=display">
+\mathcal{L}_{rgb}=\frac{1}{N}\sum_{n=1}^{N}(\hat{\mathbf{c}}_{n}-\mathbf{c}_{n})^{2},\mathcal{L}_{d}=\frac{1}{|R_{d}|}\sum_{r\in R_{d}}(\hat{d}_{r}-D[u,v])^{2}. \\
+\mathcal{L}_{sdf}=\frac{1}{|R_d|}\sum\limits_{r\in R_d}\frac{1}{|S_r^{tr}|}\sum\limits_{p\in S_r^{tr}}\left(s_p-(D[u,v]-d)\right)^2 \\
+\mathcal{L}_{fs}=\frac{1}{|R_d|}\sum_{r\in R_d}\frac{1}{|S_r^{fs}|}\sum_{p\in S_r^{fs}}(s_p-tr)^2 \\
+\mathcal{L}_{smooth}=\frac{1}{|\mathcal{G}|}\sum_{\mathbf{x}\in\mathcal{G}}\Delta_x^2+\Delta_y^2+\Delta_z^2</script></li>
+<li><p><strong>Camera Tracking</strong></p>
+<p>相机初始化采用匀速模型假设：</p>
+<script type="math/tex; mode=display">
+\mathbf{T}_t=\mathbf{T}_{t-1}\mathbf{T}_{t-2}^{-1}\mathbf{T}_{t-1}</script></li>
+<li><p><strong>Bundle Adjustment</strong></p>
+<p>构建一个像素集合，储存每个关键帧约5%的像素，最后对整个像素集合的所有像素进行全局优化。</p>
+</li>
+</ol>
+</li>
+</ol>
+<h2 id="7、GO-SLAM-Global-Optimization-for-Consistent-3D-Instant-Reconstruction"><a href="#7、GO-SLAM-Global-Optimization-for-Consistent-3D-Instant-Reconstruction" class="headerlink" title="7、GO-SLAM: Global Optimization for Consistent 3D Instant Reconstruction"></a>7、GO-SLAM: Global Optimization for Consistent 3D Instant Reconstruction</h2><h3 id="摘要翻译-6"><a href="#摘要翻译-6" class="headerlink" title="摘要翻译"></a>摘要翻译</h3><blockquote>
+<p>最近，神经隐式表达在稠密SLAM领域取得了令人信服的结果，但是仍受限于相机追踪的累计误差和在重建过程中的扭曲变形。我们带有目的地提出GO-SLAM，一种基于深度学习的稠密视觉SLAM框架，用于实时地全局位姿优化和三维重建。鲁棒的位姿估计是其核心，由有效的闭环以及在线全局BA所支持，通过利用输入帧完整的历史的学习全局几何来优化每一帧。同时，我们动态更新隐式和连续曲面表达，以确保三维重建的全局一致性。在各种合成的和真实世界的数据集上的结果表明，GO-SLAM在跟踪鲁棒性和重建精度方面要优于其他SOTA方法。此外，GO-SLAM是通用的，可以输入单目、双目和RGB-D进行运行。</p>
+</blockquote>
+<h3 id="方法介绍-6"><a href="#方法介绍-6" class="headerlink" title="方法介绍"></a>方法介绍</h3><ul>
+<li><p><strong>问题定义</strong></p>
+<p>我们带有目的地提出GO-SLAM，一种基于深度学习的稠密视觉SLAM框架，用于实时地全局位姿优化和三维重建。鲁棒的位姿估计是其核心，由有效的闭环以及在线全局BA所支持，通过利用输入帧完整的历史的学习全局几何来优化每一帧。</p>
+</li>
+<li><p><strong>Overview</strong></p>
+<p><img src="/2023/10/06/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-SLAM/image-20231006214020941.png" alt="image-20231006214020941"></p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>AppZ99
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://example.com/2023/10/06/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-SLAM/" title="论文精读——NeRF-SLAM">http://example.com/2023/10/06/论文精读——NeRF-SLAM/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/SLAM/" rel="tag"><i class="fa fa-tag"></i> SLAM</a>
+              <a href="/tags/3D-Reconstruction/" rel="tag"><i class="fa fa-tag"></i> 3D Reconstruction</a>
+              <a href="/tags/NeRF/" rel="tag"><i class="fa fa-tag"></i> NeRF</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/09/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-LiDAR-SLAM/" rel="prev" title="论文精读——NeRF+LiDAR SLAM">
+      <i class="fa fa-chevron-left"></i> 论文精读——NeRF+LiDAR SLAM
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1%E3%80%81iNeRF-Inverting-Neural-Radiance-Fields-for-Pose-Estimation"><span class="nav-text">1、iNeRF: Inverting Neural Radiance Fields for Pose Estimation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%91%98%E8%A6%81%E7%BF%BB%E8%AF%91"><span class="nav-text">摘要翻译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D"><span class="nav-text">方法介绍</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%E3%80%81BARF-Bundle-Adjusting-Neural-Radiance-Fields"><span class="nav-text">2、BARF : Bundle-Adjusting Neural Radiance Fields</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%91%98%E8%A6%81%E7%BF%BB%E8%AF%91-1"><span class="nav-text">摘要翻译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D-1"><span class="nav-text">方法介绍</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3%E3%80%81iMAP-Implicit-Mapping-and-Positioning-in-Real-Time"><span class="nav-text">3、iMAP: Implicit Mapping and Positioning in Real-Time</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%91%98%E8%A6%81%E7%BF%BB%E8%AF%91-2"><span class="nav-text">摘要翻译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D-2"><span class="nav-text">方法介绍</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4%E3%80%81NICE-SLAM-Neural-Implicit-Scalable-Encoding-for-SLAM"><span class="nav-text">4、NICE-SLAM: Neural Implicit Scalable Encoding for SLAM</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%91%98%E8%A6%81%E7%BF%BB%E8%AF%91-3"><span class="nav-text">摘要翻译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D-3"><span class="nav-text">方法介绍</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5%E3%80%81Orbeez-SLAM-A-Real-time-Monocular-Visual-SLAM-with-ORB-Features-and-NeRF-realized-Mapping"><span class="nav-text">5、Orbeez-SLAM: A Real-time Monocular Visual SLAM with ORB Features and NeRF-realized Mapping</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%91%98%E8%A6%81%E7%BF%BB%E8%AF%91-4"><span class="nav-text">摘要翻译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D-4"><span class="nav-text">方法介绍</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6%E3%80%81Co-SLAM-Joint-Coordinate-and-Sparse-Parametric-Encodings-for-Neural-Real-Time-SLAM"><span class="nav-text">6、Co-SLAM: Joint Coordinate and Sparse Parametric Encodings for Neural Real-Time SLAM</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%91%98%E8%A6%81%E7%BF%BB%E8%AF%91-5"><span class="nav-text">摘要翻译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D-5"><span class="nav-text">方法介绍</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7%E3%80%81GO-SLAM-Global-Optimization-for-Consistent-3D-Instant-Reconstruction"><span class="nav-text">7、GO-SLAM: Global Optimization for Consistent 3D Instant Reconstruction</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%91%98%E8%A6%81%E7%BF%BB%E8%AF%91-6"><span class="nav-text">摘要翻译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D-6"><span class="nav-text">方法介绍</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AppZ99"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">AppZ99</p>
+  <div class="site-description" itemprop="description">TKAW</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/APPZ99" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;APPZ99" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:925455893@qq.com" title="E-Mail → mailto:925455893@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+      <div id="music163player">
+        <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=1872048272&auto=1&height=66">
+        </iframe>
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AppZ99</span>
+
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">109k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:39</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,0' opacity='0.5' zIndex='-1' count='150' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+//    window.MathJax = {
+//      loader: {
+//
+//        source: {
+//          '[tex]/amsCd': '[tex]/amscd',
+//          '[tex]/AMScd': '[tex]/amscd'
+//        }
+//      },
+//      tex: {
+//        inlineMath: {'[+]': [['$', '$']]},
+//
+//        tags: 'ams'
+//      },
+//      options: {
+//        renderActions: {
+//          findScript: [10, doc => {
+//            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+//              const display = !!node.type.match(/; *mode=display/);
+//              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+//              const text = document.createTextNode('');
+//              node.parentNode.replaceChild(text, node);
+//              math.start = {node: text, delim: '', n: 0};
+//              math.end = {node: text, delim: '', n: 0};
+//              doc.math.push(math);
+//            });
+//          }, '', false],
+//          insertedScript: [200, () => {
+//            document.querySelectorAll('mjx-container').forEach(node => {
+//              let target = node.parentNode;
+//              if (target.nodeName.toLowerCase() === 'li') {
+//                target.parentNode.classList.add('has-jax');
+//              }
+//            });
+//          }, '', false]
+//        }
+//      }
+//    };
+    window.MathJax = {
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        processEscapes: true
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@2.7.8/unpacked/MathJax.js?config=TeX-MML-AM_CHTML';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":500},"mobile":{"show":true}});</script></body>
+</html>
