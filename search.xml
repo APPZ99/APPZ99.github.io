@@ -3794,7 +3794,45 @@ w_i=\sigma\left(\frac{s_i}{tr}\right)\sigma\left(-\frac{s_i}{tr}\right)</script>
 <p><img src="/2023/10/06/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-SLAM/image-20231006214020941.png" alt="image-20231006214020941"></p>
 </li>
 </ul>
-]]></content>
+<ol>
+<li><p><strong>Tracking with Global Optimization</strong></p>
+<p><strong>GO-SLAM 整个前端和后端线程均参照 DROID-SLAM 的结构，相对的是加入了新的回环检测和全局BA优化。</strong></p>
+<p>下文主要对新增的这两个模块做解释。</p>
+</li>
+<li><p><strong>Loop Closing &amp; Full BA</strong></p>
+<p>GO-SLAM 的回环检测和BA是基于关键帧的图优化：</p>
+<ol>
+<li>选择最近的 N 个局部关键帧之间的高可视性连接；</li>
+<li>从局部关键帧和局部窗口外的历史帧重检测回环。</li>
+</ol>
+<p>为了提高计算效率，对建立优化边的两两关键帧进行领域抑制，具体而言就是限制每个关键帧可以构建优化边的数量不能超过某一个阈值。</p>
+<p>从共视矩阵的未探索部分按共视程度降序采样，连续检测三个回环候选帧，如果平均流均低于阈值，则认为检测到了回环，然后进行优化。</p>
+<p><img src="/2023/10/06/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%94NeRF-SLAM/image-20231007184819790.png" alt="image-20231007184819790"></p>
+</li>
+<li><p><strong>Instant Mapping</strong></p>
+<p>渲染部分主要参考了 NeuS 模型，具体函数如下：</p>
+<p>输入 hash 编码特征和原位置信息得到 SDF 值和几何特征：</p>
+<script type="math/tex; mode=display">
+\Phi(\mathbf{x}),\mathbf{g}=f_{\Theta_{sdf}}(\mathbf{x},h_{\Theta_{hash}}(\mathbf{x}))</script><p>输入 SDF 值和 SDF 梯度信息以及位置信息得到颜色的预测值：</p>
+<script type="math/tex; mode=display">
+\Omega(\mathbf{x})=f_{\Theta_{color}}(\mathbf{x},\mathbf{n},\mathbf{g})</script><p>体渲染：</p>
+<script type="math/tex; mode=display">
+\hat{\mathbf{c}}=\sum_{i=1}^{N_{ray}}w_i\Omega(\mathbf{x}_i),\quad\hat{\mathbf{D}}=\sum_{i=1}^{N_{ray}}w_iD_i^{ray} \\
+\alpha_i=\max\left(\frac{\sigma(\Phi(\mathbf{x_i}))-\sigma(\Phi(\mathbf{x_{i+1}}))}{\sigma(\Phi(\mathbf{x_i}))},0\right) \\
+w_{i}={\alpha_{i}\Pi_{j=1}^{i-1}}(1-\alpha_{j})</script><p>各个损失函数如下：</p>
+<p>正则项：</p>
+<script type="math/tex; mode=display">
+\mathcal{L}_{eik}=\frac{1}{MN_{ray}}\sum_{m,i}(1-||\mathbf{n}_{m,i}||)^2</script><p>深度损失：</p>
+<script type="math/tex; mode=display">
+\mathcal{L}_{dep}=\frac{1}{M}\sum_{m=1}^M\frac{|\mathbf{D}_m-\hat{\mathbf{D}}_m|}{\sqrt{\hat{\mathbf{D}}_m^{var}}}</script></li>
+</ol>
+<p>   对不同 SDF 采取不同的损失策略：</p>
+<script type="math/tex; mode=display">
+   \mathcal{L}_{near}=|\Phi(\mathbf{x}_{i})-\mathbf{b}(\mathbf{x}_{i})| \\
+   \mathcal{L}_{free}=\max\left(e^{-\beta\Phi(\mathbf{x}_i)}-1,\Phi(\mathbf{x}_i)-\mathbf{b}(\mathbf{x}_i),0\right) \\
+   \left.\mathcal{L}_{sdf}=\frac{1}{MN_{ray}}\sum_{m,i}\left\{\begin{array}{ll}\mathcal{L}_{near}&\mathbf{if}\left|\mathbf{b}(\mathbf{x}_i)\right|\leq\tau_{trunc}\\\mathcal{L}_{free}&\mathbf{otherwise}.\end{array}\right.\right.</script><p>   最终损失函数如下：</p>
+<script type="math/tex; mode=display">
+   \mathcal{L}=\lambda_{c}\mathcal{L}_{c}+\lambda_{dep}\mathcal{L}_{dep}+\lambda_{eik}\mathcal{L}_{eik}+\lambda_{sdf}\mathcal{L}_{sdf}</script>]]></content>
       <tags>
         <tag>SLAM</tag>
         <tag>3D Reconstruction</tag>
