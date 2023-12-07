@@ -3839,4 +3839,75 @@ w_{i}={\alpha_{i}\Pi_{j=1}^{i-1}}(1-\alpha_{j})</script><p>各个损失函数如
         <tag>NeRF</tag>
       </tags>
   </entry>
+  <entry>
+    <title>GAMES101——Rasterization</title>
+    <url>/2023/12/07/GAMES101%E2%80%94%E2%80%94Rasterization/</url>
+    <content><![CDATA[<blockquote>
+<p>本文章是关于GAMES101课程的笔记。</p>
+<p>课程链接：<a href="https://www.bilibili.com/video/BV1X7411F744/?spm_id_from=333.337.search-card.all.click&amp;vd_source=d52cedeeb9ba1847fcbca2ae52f7e478">GAMES101-现代计算机图形学入门-闫令琪</a></p>
+</blockquote>
+<h2 id="一、图形学中的采样伪影"><a href="#一、图形学中的采样伪影" class="headerlink" title="一、图形学中的采样伪影"></a>一、图形学中的采样伪影</h2><ol>
+<li>造成锯齿缺陷的原因：信号变换太快（高频），但是采样速度太慢。</li>
+<li>反锯齿的想法：<strong>先模糊后采样</strong>。</li>
+</ol>
+<p>先模糊后采样：</p>
+<p><img src="/2023/12/07/GAMES101%E2%80%94%E2%80%94Rasterization/image-20231207215943451.png" alt="image-20231207215943451" style="zoom: 67%;"></p>
+<p>先采样后模糊：</p>
+<p><img src="/2023/12/07/GAMES101%E2%80%94%E2%80%94Rasterization/image-20231207220042045.png" alt="image-20231207220042045" style="zoom: 67%;"></p>
+<h2 id="二、图形学中的频域"><a href="#二、图形学中的频域" class="headerlink" title="二、图形学中的频域"></a>二、图形学中的频域</h2><ol>
+<li><p>相同的采样频率，不同的信号频率所恢复的信号。</p>
+<p><img src="/2023/12/07/GAMES101%E2%80%94%E2%80%94Rasterization/image-20231207220304257.png" alt="image-20231207220304257" style="zoom: 67%;"></p>
+</li>
+<li><p>高频信号采样不足反应为低频信号；给定采样频率无法区分两个信号频率。</p>
+<p><img src="/2023/12/07/GAMES101%E2%80%94%E2%80%94Rasterization/image-20231207220557122.png" alt="image-20231207220557122" style="zoom: 67%;"></p>
+</li>
+<li><p>时域中的卷积等于频域中的乘法，反之亦然：</p>
+<ol>
+<li>在时域中通过卷积进行过滤；</li>
+<li>变换到频域 -&gt; 乘以卷积核的傅里叶变换 -&gt; 变换回时域。</li>
+</ol>
+<p><img src="/2023/12/07/GAMES101%E2%80%94%E2%80%94Rasterization/image-20231207221021169.png" alt="image-20231207221021169" style="zoom: 67%;"></p>
+</li>
+<li><p>时域的 box function 等于频域的低通滤波，更大的核等于更低频率的滤波。</p>
+<p><img src="/2023/12/07/GAMES101%E2%80%94%E2%80%94Rasterization/image-20231207221258374.png" alt="image-20231207221258374" style="zoom:50%;"></p>
+<p><img src="/2023/12/07/GAMES101%E2%80%94%E2%80%94Rasterization/image-20231207221312667.png" alt="image-20231207221312667" style="zoom:50%;"></p>
+</li>
+<li><p>采样 = 重复频域内容</p>
+<p><img src="/2023/12/07/GAMES101%E2%80%94%E2%80%94Rasterization/image-20231207221455345.png" alt="image-20231207221455345" style="zoom:67%;"></p>
+<p><img src="/2023/12/07/GAMES101%E2%80%94%E2%80%94Rasterization/image-20231207221550641.png" alt="image-20231207221550641" style="zoom:67%;"></p>
+</li>
+</ol>
+<h2 id="三、减少锯齿问题"><a href="#三、减少锯齿问题" class="headerlink" title="三、减少锯齿问题"></a>三、减少锯齿问题</h2><ol>
+<li><p>增加采样频率</p>
+<ol>
+<li>增加傅里叶域中副本的间的距离；</li>
+<li>更高分辨率的显示器、传感器等设备</li>
+</ol>
+</li>
+<li><p>抗锯齿：<strong>使得傅里叶域的信号“变窄”，即在采样前滤除高频部分。</strong></p>
+<p><img src="/2023/12/07/GAMES101%E2%80%94%E2%80%94Rasterization/image-20231207222348774.png" alt="image-20231207222348774" style="zoom:67%;"></p>
+<p><img src="/2023/12/07/GAMES101%E2%80%94%E2%80%94Rasterization/image-20231207222412323.png" alt="image-20231207222412323" style="zoom:67%;"></p>
+<p><img src="/2023/12/07/GAMES101%E2%80%94%E2%80%94Rasterization/image-20231207222429187.png" alt="image-20231207222429187" style="zoom:67%;"></p>
+</li>
+</ol>
+<h2 id="四、MSAA"><a href="#四、MSAA" class="headerlink" title="四、MSAA"></a>四、MSAA</h2><ol>
+<li><p>方法：将一个像素<strong>分成多份</strong>，计算该像素被覆盖的比例。</p>
+<p><img src="/2023/12/07/GAMES101%E2%80%94%E2%80%94Rasterization/image-20231207222643810.png" alt="image-20231207222643810" style="zoom:67%;"></p>
+<p><img src="/2023/12/07/GAMES101%E2%80%94%E2%80%94Rasterization/image-20231207222656658.png" alt="image-20231207222656658" style="zoom:67%;"></p>
+<p><img src="/2023/12/07/GAMES101%E2%80%94%E2%80%94Rasterization/image-20231207222708507.png" alt="image-20231207222708507" style="zoom:67%;"></p>
+</li>
+<li><p>其他主要方法：</p>
+<ol>
+<li>FXAA（Fast Approximate AA）：得到有锯齿的图片，找到锯齿，修改边界；</li>
+<li>TAA（Temporal AA）：MSAA对应样本分布在时间上</li>
+<li>DLSS（Deep Learning Super Sampling）</li>
+</ol>
+</li>
+</ol>
+]]></content>
+      <tags>
+        <tag>GAMES101</tag>
+        <tag>Computer Graphics</tag>
+      </tags>
+  </entry>
 </search>
