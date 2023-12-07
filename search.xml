@@ -3852,6 +3852,7 @@ w_{i}={\alpha_{i}\Pi_{j=1}^{i-1}}(1-\alpha_{j})</script><p>各个损失函数如
 </ol>
 <p>先模糊后采样：</p>
 <p><img src="/2023/12/07/GAMES101%E2%80%94%E2%80%94Rasterization/image-20231207215943451.png" alt="image-20231207215943451" style="zoom: 67%;"></p>
+<span id="more"></span>
 <p>先采样后模糊：</p>
 <p><img src="/2023/12/07/GAMES101%E2%80%94%E2%80%94Rasterization/image-20231207220042045.png" alt="image-20231207220042045" style="zoom: 67%;"></p>
 <h2 id="二、图形学中的频域"><a href="#二、图形学中的频域" class="headerlink" title="二、图形学中的频域"></a>二、图形学中的频域</h2><ol>

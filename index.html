@@ -223,7 +223,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2023-12-07 21:39:53 / 修改时间：22:33:17" itemprop="dateCreated datePublished" datetime="2023-12-07T21:39:53+08:00">2023-12-07</time>
+              <time title="创建时间：2023-12-07 21:39:53 / 修改时间：22:36:38" itemprop="dateCreated datePublished" datetime="2023-12-07T21:39:53+08:00">2023-12-07</time>
             </span>
 
           <br>
@@ -261,59 +261,14 @@
 </ol>
 <p>先模糊后采样：</p>
 <p><img src="/2023/12/07/GAMES101%E2%80%94%E2%80%94Rasterization/image-20231207215943451.png" alt="image-20231207215943451" style="zoom: 67%;"></p>
-<p>先采样后模糊：</p>
-<p><img src="/2023/12/07/GAMES101%E2%80%94%E2%80%94Rasterization/image-20231207220042045.png" alt="image-20231207220042045" style="zoom: 67%;"></p>
-<h2 id="二、图形学中的频域"><a href="#二、图形学中的频域" class="headerlink" title="二、图形学中的频域"></a>二、图形学中的频域</h2><ol>
-<li><p>相同的采样频率，不同的信号频率所恢复的信号。</p>
-<p><img src="/2023/12/07/GAMES101%E2%80%94%E2%80%94Rasterization/image-20231207220304257.png" alt="image-20231207220304257" style="zoom: 67%;"></p>
-</li>
-<li><p>高频信号采样不足反应为低频信号；给定采样频率无法区分两个信号频率。</p>
-<p><img src="/2023/12/07/GAMES101%E2%80%94%E2%80%94Rasterization/image-20231207220557122.png" alt="image-20231207220557122" style="zoom: 67%;"></p>
-</li>
-<li><p>时域中的卷积等于频域中的乘法，反之亦然：</p>
-<ol>
-<li>在时域中通过卷积进行过滤；</li>
-<li>变换到频域 -&gt; 乘以卷积核的傅里叶变换 -&gt; 变换回时域。</li>
-</ol>
-<p><img src="/2023/12/07/GAMES101%E2%80%94%E2%80%94Rasterization/image-20231207221021169.png" alt="image-20231207221021169" style="zoom: 67%;"></p>
-</li>
-<li><p>时域的 box function 等于频域的低通滤波，更大的核等于更低频率的滤波。</p>
-<p><img src="/2023/12/07/GAMES101%E2%80%94%E2%80%94Rasterization/image-20231207221258374.png" alt="image-20231207221258374" style="zoom:50%;"></p>
-<p><img src="/2023/12/07/GAMES101%E2%80%94%E2%80%94Rasterization/image-20231207221312667.png" alt="image-20231207221312667" style="zoom:50%;"></p>
-</li>
-<li><p>采样 = 重复频域内容</p>
-<p><img src="/2023/12/07/GAMES101%E2%80%94%E2%80%94Rasterization/image-20231207221455345.png" alt="image-20231207221455345" style="zoom:67%;"></p>
-<p><img src="/2023/12/07/GAMES101%E2%80%94%E2%80%94Rasterization/image-20231207221550641.png" alt="image-20231207221550641" style="zoom:67%;"></p>
-</li>
-</ol>
-<h2 id="三、减少锯齿问题"><a href="#三、减少锯齿问题" class="headerlink" title="三、减少锯齿问题"></a>三、减少锯齿问题</h2><ol>
-<li><p>增加采样频率</p>
-<ol>
-<li>增加傅里叶域中副本的间的距离；</li>
-<li>更高分辨率的显示器、传感器等设备</li>
-</ol>
-</li>
-<li><p>抗锯齿：<strong>使得傅里叶域的信号“变窄”，即在采样前滤除高频部分。</strong></p>
-<p><img src="/2023/12/07/GAMES101%E2%80%94%E2%80%94Rasterization/image-20231207222348774.png" alt="image-20231207222348774" style="zoom:67%;"></p>
-<p><img src="/2023/12/07/GAMES101%E2%80%94%E2%80%94Rasterization/image-20231207222412323.png" alt="image-20231207222412323" style="zoom:67%;"></p>
-<p><img src="/2023/12/07/GAMES101%E2%80%94%E2%80%94Rasterization/image-20231207222429187.png" alt="image-20231207222429187" style="zoom:67%;"></p>
-</li>
-</ol>
-<h2 id="四、MSAA"><a href="#四、MSAA" class="headerlink" title="四、MSAA"></a>四、MSAA</h2><ol>
-<li><p>方法：将一个像素<strong>分成多份</strong>，计算该像素被覆盖的比例。</p>
-<p><img src="/2023/12/07/GAMES101%E2%80%94%E2%80%94Rasterization/image-20231207222643810.png" alt="image-20231207222643810" style="zoom:67%;"></p>
-<p><img src="/2023/12/07/GAMES101%E2%80%94%E2%80%94Rasterization/image-20231207222656658.png" alt="image-20231207222656658" style="zoom:67%;"></p>
-<p><img src="/2023/12/07/GAMES101%E2%80%94%E2%80%94Rasterization/image-20231207222708507.png" alt="image-20231207222708507" style="zoom:67%;"></p>
-</li>
-<li><p>其他主要方法：</p>
-<ol>
-<li>FXAA（Fast Approximate AA）：得到有锯齿的图片，找到锯齿，修改边界；</li>
-<li>TAA（Temporal AA）：MSAA对应样本分布在时间上</li>
-<li>DLSS（Deep Learning Super Sampling）</li>
-</ol>
-</li>
-</ol>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/12/07/GAMES101%E2%80%94%E2%80%94Rasterization/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
