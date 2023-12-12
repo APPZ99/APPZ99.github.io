@@ -3925,6 +3925,7 @@ w_{i}={\alpha_{i}\Pi_{j=1}^{i-1}}(1-\alpha_{j})</script><p>各个损失函数如
 <li>环境照明</li>
 </ul>
 <p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231212154202690.png" alt="image-20231212154202690" style="zoom:50%;"></p>
+<span id="more"></span>
 <p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231212221605433.png" alt="image-20231212221605433" style="zoom:67%;"></p>
 <p><strong>局部 shading：</strong></p>
 <ul>

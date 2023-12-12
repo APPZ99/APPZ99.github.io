@@ -223,7 +223,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2023-12-12 15:36:08 / 修改时间：22:30:55" itemprop="dateCreated datePublished" datetime="2023-12-12T15:36:08+08:00">2023-12-12</time>
+              <time title="创建时间：2023-12-12 15:36:08 / 修改时间：22:50:24" itemprop="dateCreated datePublished" datetime="2023-12-12T15:36:08+08:00">2023-12-12</time>
             </span>
 
           <br>
@@ -262,47 +262,14 @@
 <li>环境照明</li>
 </ul>
 <p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231212154202690.png" alt="image-20231212154202690" style="zoom:50%;"></p>
-<p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231212221605433.png" alt="image-20231212221605433" style="zoom:67%;"></p>
-<p><strong>局部 shading：</strong></p>
-<ul>
-<li>观测角度</li>
-<li>表面法向量</li>
-<li>光照方向</li>
-<li>表面材质、颜色等参数</li>
-</ul>
-<p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231212154434973.png" alt="image-20231212154434973" style="zoom:50%;"></p>
-<h2 id="二、漫反射-Diffuse-Term"><a href="#二、漫反射-Diffuse-Term" class="headerlink" title="二、漫反射(Diffuse Term)"></a>二、漫反射(Diffuse Term)</h2><p><strong>观测不变性：</strong> 表面颜色从任何方向观测都是相同的</p>
-<p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231212155032437.png" alt="image-20231212155032437" style="zoom:50%;"></p>
-<p><strong>Lambert 余弦定律：</strong> 物体表面接收到的光照能量与光线方向和法线方向的夹角成正比。</p>
-<p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231212155230821.png" alt="image-20231212155230821" style="zoom:50%;"></p>
-<p><strong>光线衰减模型：</strong> 光线能量和距离的平方成反比</p>
-<p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231212155425427.png" alt="image-20231212155425427" style="zoom:50%;"></p>
-<p><strong>Lambertian Shading ：</strong></p>
-<p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231212155526417.png" alt="image-20231212155526417" style="zoom: 67%;"></p>
-<h2 id="三、高光反射-Specular-Term"><a href="#三、高光反射-Specular-Term" class="headerlink" title="三、高光反射(Specular Term)"></a>三、高光反射(Specular Term)</h2><p><strong>反射方向：</strong> 高光反射近似镜面反射</p>
-<p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231212220942398.png" alt="image-20231212220942398" style="zoom:50%;"></p>
-<p><strong>计算高光角度：</strong> 计算半程向量与法向量的夹角确定</p>
-<p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231212221159569.png" alt="image-20231212221159569" style="zoom:50%;"></p>
-<p><strong>减少高光反射观测位置：</strong> 增大指数 $p$ </p>
-<p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231212221310927.png" alt="image-20231212221310927" style="zoom:50%;"></p>
-<h2 id="四、环境光照-Ambient-Term"><a href="#四、环境光照-Ambient-Term" class="headerlink" title="四、环境光照(Ambient Term)"></a>四、环境光照(Ambient Term)</h2><p><strong>近似性：</strong> Blinn-Phong 反射模型将环境光照近似为一个常量</p>
-<p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231212221529108.png" alt="image-20231212221529108" style="zoom:50%;"></p>
-<h2 id="五、着色频率-Shading-Frequencies"><a href="#五、着色频率-Shading-Frequencies" class="headerlink" title="五、着色频率(Shading Frequencies)"></a>五、着色频率(Shading Frequencies)</h2><p><strong>Flat shading：</strong> 着色三角面片</p>
-<p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231212221934432.png" alt="image-20231212221934432" style="zoom:50%;"></p>
-<p><strong>Gouraud shading：</strong> 插值三角面片的顶点</p>
-<p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231212222103854.png" alt="image-20231212222103854" style="zoom: 50%;"></p>
-<p><strong>Phong shading：</strong> 着色每一个像素</p>
-<p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231212222139957.png" alt="image-20231212222139957" style="zoom:50%;"></p>
-<p><strong>定义顶点的法向量：</strong> 顶点相邻面片的法向量加权求和</p>
-<p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231212222255605.png" alt="image-20231212222255605" style="zoom:67%;"></p>
-<p><strong>定义像素的法向量：</strong> Barycentric interpolation</p>
-<p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231212222445736.png" alt="image-20231212222445736" style="zoom:50%;"></p>
-<h2 id="六、图形学管线-Graphics-Pipeline"><a href="#六、图形学管线-Graphics-Pipeline" class="headerlink" title="六、图形学管线(Graphics Pipeline)"></a>六、图形学管线(Graphics Pipeline)</h2><p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231212222627948.png" alt="image-20231212222627948"></p>
-<h2 id="七、纹理映射-Texture-Mapping"><a href="#七、纹理映射-Texture-Mapping" class="headerlink" title="七、纹理映射(Texture Mapping)"></a>七、纹理映射(Texture Mapping)</h2><p><strong>纹理：</strong> 每个三维物体表面的一个点在二维图像（纹理）中都有所对应。</p>
-<p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231212222947212.png" alt="image-20231212222947212" style="zoom:50%;"></p>
-<p><strong>对应关系：</strong> 每个三角点都会在纹理坐标上有所对应</p>
-<p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231212223051664.png" alt="image-20231212223051664" style="zoom:50%;"></p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
