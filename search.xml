@@ -3966,6 +3966,26 @@ w_{i}={\alpha_{i}\Pi_{j=1}^{i-1}}(1-\alpha_{j})</script><p>各个损失函数如
 <p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231212222947212.png" alt="image-20231212222947212" style="zoom:50%;"></p>
 <p><strong>对应关系：</strong> 每个三角点都会在纹理坐标上有所对应</p>
 <p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231212223051664.png" alt="image-20231212223051664" style="zoom:50%;"></p>
+<h2 id="八、重心坐标-Barycentric-Coordinates"><a href="#八、重心坐标-Barycentric-Coordinates" class="headerlink" title="八、重心坐标(Barycentric Coordinates)"></a>八、重心坐标(Barycentric Coordinates)</h2><p><strong>三角形内任意点的坐标表示：</strong> 三个顶点向量加权值</p>
+<p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231213223757931.png" alt="image-20231213223757931" style="zoom:50%;"></p>
+<p><strong>重心坐标公式：</strong> </p>
+<p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231213223909194.png" alt="image-20231213223909194" style="zoom:50%;"></p>
+<h2 id="九、纹理问题-Texture-Magnification"><a href="#九、纹理问题-Texture-Magnification" class="headerlink" title="九、纹理问题(Texture Magnification)"></a>九、纹理问题(Texture Magnification)</h2><p><strong>纹理图太小问题：</strong> 纹理图太小，多个像素对应同一个纹理坐标。解决办法：<strong>插值采样</strong> 。</p>
+<p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231213224730080.png" alt="image-20231213224730080" style="zoom:50%;"></p>
+<p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231213224753836.png" alt="image-20231213224753836" style="zoom:67%;"></p>
+<p><strong>纹理图太大问题：</strong> 纹理图太大，一个像素包含诸多纹理图坐标，但表示能力有限。解决办法：<strong>Mipmap</strong> 。</p>
+<p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231213225044868.png" alt="image-20231213225044868" style="zoom:50%;"></p>
+<p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231213225054737.png" alt="image-20231213225054737" style="zoom:50%;"></p>
+<p><strong>Mipmap：</strong> 图像金字塔，缩小分辨率，缩小后的像素颜色用缩小范围内的所有像素的平均值代替。</p>
+<p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231213225402470.png" alt="image-20231213225402470" style="zoom:50%;"></p>
+<p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231213225420910.png" alt="image-20231213225420910" style="zoom: 50%;"></p>
+<p><strong>Anisotropic Filtering：</strong> Mipmap 存在过模糊问题（Overblur），这是由于其本质是以正方形进行像素放缩，采用各向异性过滤可以缓解这个问题。</p>
+<p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231213225655504.png" alt="image-20231213225655504" style="zoom:50%;"></p>
+<p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231213225708301.png" alt="image-20231213225708301" style="zoom:50%;"></p>
+<p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231213225720237.png" alt="image-20231213225720237" style="zoom:67%;"></p>
+<p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231213225739198.png" alt="image-20231213225739198" style="zoom: 80%;"></p>
+<p><strong>EWA filtering：</strong> 在 Anisotropic Filtering 上做进一步改进，可以表示任意方向的差异性。</p>
+<p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231213225915834.png" alt="image-20231213225915834"></p>
 ]]></content>
       <tags>
         <tag>GAMES101</tag>

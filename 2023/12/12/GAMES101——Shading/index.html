@@ -53,8 +53,21 @@
 <meta property="og:image" content="http://example.com/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231212222627948.png">
 <meta property="og:image" content="http://example.com/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231212222947212.png">
 <meta property="og:image" content="http://example.com/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231212223051664.png">
+<meta property="og:image" content="http://example.com/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231213223757931.png">
+<meta property="og:image" content="http://example.com/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231213223909194.png">
+<meta property="og:image" content="http://example.com/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231213224730080.png">
+<meta property="og:image" content="http://example.com/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231213224753836.png">
+<meta property="og:image" content="http://example.com/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231213225044868.png">
+<meta property="og:image" content="http://example.com/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231213225054737.png">
+<meta property="og:image" content="http://example.com/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231213225402470.png">
+<meta property="og:image" content="http://example.com/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231213225420910.png">
+<meta property="og:image" content="http://example.com/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231213225655504.png">
+<meta property="og:image" content="http://example.com/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231213225708301.png">
+<meta property="og:image" content="http://example.com/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231213225720237.png">
+<meta property="og:image" content="http://example.com/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231213225739198.png">
+<meta property="og:image" content="http://example.com/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231213225915834.png">
 <meta property="article:published_time" content="2023-12-12T07:36:08.000Z">
-<meta property="article:modified_time" content="2023-12-12T14:50:24.398Z">
+<meta property="article:modified_time" content="2023-12-13T14:59:16.876Z">
 <meta property="article:author" content="AppZ99">
 <meta property="article:tag" content="GAMES101">
 <meta property="article:tag" content="Computer Graphics">
@@ -245,10 +258,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2023-12-12 15:36:08 / 修改时间：22:50:24" itemprop="dateCreated datePublished" datetime="2023-12-12T15:36:08+08:00">2023-12-12</time>
+              <time title="创建时间：2023-12-12 15:36:08" itemprop="dateCreated datePublished" datetime="2023-12-12T15:36:08+08:00">2023-12-12</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-12-13 22:59:16" itemprop="dateModified" datetime="2023-12-13T22:59:16+08:00">2023-12-13</time>
+              </span>
 
           <br>
             <span class="post-meta-item" title="本文字数">
@@ -256,7 +275,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>604</span>
+              <span>958</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -327,6 +346,26 @@
 <p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231212222947212.png" alt="image-20231212222947212" style="zoom:50%;"></p>
 <p><strong>对应关系：</strong> 每个三角点都会在纹理坐标上有所对应</p>
 <p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231212223051664.png" alt="image-20231212223051664" style="zoom:50%;"></p>
+<h2 id="八、重心坐标-Barycentric-Coordinates"><a href="#八、重心坐标-Barycentric-Coordinates" class="headerlink" title="八、重心坐标(Barycentric Coordinates)"></a>八、重心坐标(Barycentric Coordinates)</h2><p><strong>三角形内任意点的坐标表示：</strong> 三个顶点向量加权值</p>
+<p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231213223757931.png" alt="image-20231213223757931" style="zoom:50%;"></p>
+<p><strong>重心坐标公式：</strong> </p>
+<p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231213223909194.png" alt="image-20231213223909194" style="zoom:50%;"></p>
+<h2 id="九、纹理问题-Texture-Magnification"><a href="#九、纹理问题-Texture-Magnification" class="headerlink" title="九、纹理问题(Texture Magnification)"></a>九、纹理问题(Texture Magnification)</h2><p><strong>纹理图太小问题：</strong> 纹理图太小，多个像素对应同一个纹理坐标。解决办法：<strong>插值采样</strong> 。</p>
+<p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231213224730080.png" alt="image-20231213224730080" style="zoom:50%;"></p>
+<p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231213224753836.png" alt="image-20231213224753836" style="zoom:67%;"></p>
+<p><strong>纹理图太大问题：</strong> 纹理图太大，一个像素包含诸多纹理图坐标，但表示能力有限。解决办法：<strong>Mipmap</strong> 。</p>
+<p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231213225044868.png" alt="image-20231213225044868" style="zoom:50%;"></p>
+<p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231213225054737.png" alt="image-20231213225054737" style="zoom:50%;"></p>
+<p><strong>Mipmap：</strong> 图像金字塔，缩小分辨率，缩小后的像素颜色用缩小范围内的所有像素的平均值代替。</p>
+<p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231213225402470.png" alt="image-20231213225402470" style="zoom:50%;"></p>
+<p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231213225420910.png" alt="image-20231213225420910" style="zoom: 50%;"></p>
+<p><strong>Anisotropic Filtering：</strong> Mipmap 存在过模糊问题（Overblur），这是由于其本质是以正方形进行像素放缩，采用各向异性过滤可以缓解这个问题。</p>
+<p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231213225655504.png" alt="image-20231213225655504" style="zoom:50%;"></p>
+<p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231213225708301.png" alt="image-20231213225708301" style="zoom:50%;"></p>
+<p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231213225720237.png" alt="image-20231213225720237" style="zoom:67%;"></p>
+<p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231213225739198.png" alt="image-20231213225739198" style="zoom: 80%;"></p>
+<p><strong>EWA filtering：</strong> 在 Anisotropic Filtering 上做进一步改进，可以表示任意方向的差异性。</p>
+<p><img src="/2023/12/12/GAMES101%E2%80%94%E2%80%94Shading/image-20231213225915834.png" alt="image-20231213225915834"></p>
 
     </div>
 
@@ -426,7 +465,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81Blinn-Phong-%E5%8F%8D%E5%B0%84%E6%A8%A1%E5%9E%8B"><span class="nav-text">一、Blinn-Phong 反射模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%BC%AB%E5%8F%8D%E5%B0%84-Diffuse-Term"><span class="nav-text">二、漫反射(Diffuse Term)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E9%AB%98%E5%85%89%E5%8F%8D%E5%B0%84-Specular-Term"><span class="nav-text">三、高光反射(Specular Term)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E7%8E%AF%E5%A2%83%E5%85%89%E7%85%A7-Ambient-Term"><span class="nav-text">四、环境光照(Ambient Term)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E7%9D%80%E8%89%B2%E9%A2%91%E7%8E%87-Shading-Frequencies"><span class="nav-text">五、着色频率(Shading Frequencies)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E5%9B%BE%E5%BD%A2%E5%AD%A6%E7%AE%A1%E7%BA%BF-Graphics-Pipeline"><span class="nav-text">六、图形学管线(Graphics Pipeline)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E7%BA%B9%E7%90%86%E6%98%A0%E5%B0%84-Texture-Mapping"><span class="nav-text">七、纹理映射(Texture Mapping)</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81Blinn-Phong-%E5%8F%8D%E5%B0%84%E6%A8%A1%E5%9E%8B"><span class="nav-text">一、Blinn-Phong 反射模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%BC%AB%E5%8F%8D%E5%B0%84-Diffuse-Term"><span class="nav-text">二、漫反射(Diffuse Term)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E9%AB%98%E5%85%89%E5%8F%8D%E5%B0%84-Specular-Term"><span class="nav-text">三、高光反射(Specular Term)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E7%8E%AF%E5%A2%83%E5%85%89%E7%85%A7-Ambient-Term"><span class="nav-text">四、环境光照(Ambient Term)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E7%9D%80%E8%89%B2%E9%A2%91%E7%8E%87-Shading-Frequencies"><span class="nav-text">五、着色频率(Shading Frequencies)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E5%9B%BE%E5%BD%A2%E5%AD%A6%E7%AE%A1%E7%BA%BF-Graphics-Pipeline"><span class="nav-text">六、图形学管线(Graphics Pipeline)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E7%BA%B9%E7%90%86%E6%98%A0%E5%B0%84-Texture-Mapping"><span class="nav-text">七、纹理映射(Texture Mapping)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E9%87%8D%E5%BF%83%E5%9D%90%E6%A0%87-Barycentric-Coordinates"><span class="nav-text">八、重心坐标(Barycentric Coordinates)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81%E7%BA%B9%E7%90%86%E9%97%AE%E9%A2%98-Texture-Magnification"><span class="nav-text">九、纹理问题(Texture Magnification)</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
