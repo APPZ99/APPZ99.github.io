@@ -3992,4 +3992,97 @@ w_{i}={\alpha_{i}\Pi_{j=1}^{i-1}}(1-\alpha_{j})</script><p>各个损失函数如
         <tag>Computer Graphics</tag>
       </tags>
   </entry>
+  <entry>
+    <title>GAMES101——Geometry</title>
+    <url>/2023/12/14/GAMES101%E2%80%94%E2%80%94Geometry/</url>
+    <content><![CDATA[<p>本文章是关于GAMES101课程的笔记。</p>
+<p>课程链接：<a href="https://www.bilibili.com/video/BV1X7411F744/?spm_id_from=333.337.search-card.all.click&amp;vd_source=d52cedeeb9ba1847fcbca2ae52f7e478">GAMES101-现代计算机图形学入门-闫令琪</a></p>
+<h2 id="一、曲线（Curves）"><a href="#一、曲线（Curves）" class="headerlink" title="一、曲线（Curves）"></a>一、曲线（Curves）</h2><p><strong>贝塞尔曲线：</strong> 重复对切线进行线性插值得到光滑曲线。</p>
+<p><img src="/2023/12/14/GAMES101%E2%80%94%E2%80%94Geometry/image-20231216190419104.png" alt="image-20231216190419104" style="zoom:67%;"></p>
+<p><img src="/2023/12/14/GAMES101%E2%80%94%E2%80%94Geometry/image-20231216190437090.png" alt="image-20231216190437090" style="zoom:50%;"></p>
+<span id="more"></span>
+<p><strong>卡斯特里奥算法：</strong> 给定了系数的金字塔。</p>
+<p><img src="/2023/12/14/GAMES101%E2%80%94%E2%80%94Geometry/image-20231216190550025.png" alt="image-20231216190550025" style="zoom:80%;"></p>
+<p><strong>贝塞尔曲线本质：</strong> 多项式加权求和</p>
+<p><img src="/2023/12/14/GAMES101%E2%80%94%E2%80%94Geometry/image-20231216190715027.png" alt="image-20231216190715027" style="zoom: 67%;"></p>
+<p><img src="/2023/12/14/GAMES101%E2%80%94%E2%80%94Geometry/image-20231216190731569.png" alt="image-20231216190731569" style="zoom:67%;"></p>
+<p><strong>贝塞尔曲线性质：</strong> </p>
+<ul>
+<li>插值末端点；</li>
+<li>与末端段相切；</li>
+<li>仿射变化：控制点在进行仿射变换后绘制的贝塞尔曲线与之前的贝塞尔曲线相同；</li>
+<li>凸包性质：曲线位于控制点的凸包内。</li>
+</ul>
+<p><strong>分段贝塞尔曲线的两种连续性：</strong></p>
+<ol>
+<li><p>$C^0$ 连续： 前一段末端端点和下一段第一端点相等</p>
+<p><img src="/2023/12/14/GAMES101%E2%80%94%E2%80%94Geometry/image-20231216191558831.png" alt="image-20231216191558831" style="zoom:50%;"></p>
+</li>
+<li><p>$C^1$ 连续：前一段末端端点和下一段第一端点相等，同时前一段倒数第二控制点和下一段第二控制点关于最后控制点对称。</p>
+<p><img src="/2023/12/14/GAMES101%E2%80%94%E2%80%94Geometry/image-20231216191716120.png" alt="image-20231216191716120" style="zoom:50%;"></p>
+</li>
+</ol>
+<p><strong>样条：</strong> 构造为穿过给定点集并具有一定数量的连续导数的连续曲线。</p>
+<p><strong>B-样条：</strong> 构成样条的基本单元（类似基函数）。</p>
+<h2 id="二、曲面（Surfaces）"><a href="#二、曲面（Surfaces）" class="headerlink" title="二、曲面（Surfaces）"></a>二、曲面（Surfaces）</h2><p><strong>贝塞尔曲面：</strong> 对一个二维平面进行两次贝塞尔变化。（以 $4\times4$ 为例）</p>
+<ol>
+<li>使用 <em>de Casteljau</em> 计算 $u$中 4 条贝塞尔曲线中每一条上的点 $u$。 这为“移动”贝塞尔曲线提供了 4 个控制点；</li>
+<li>使用一维 <em>de Casteljau</em> 评估“移动”曲线上的 v 点。</li>
+</ol>
+<p><img src="/2023/12/14/GAMES101%E2%80%94%E2%80%94Geometry/image-20231216192308737.png" alt="image-20231216192308737" style="zoom:67%;"></p>
+<p><img src="/2023/12/14/GAMES101%E2%80%94%E2%80%94Geometry/image-20231216192321157.png" alt="image-20231216192321157" style="zoom:67%;"></p>
+<h2 id="三、细分（Subdivison）"><a href="#三、细分（Subdivison）" class="headerlink" title="三、细分（Subdivison）"></a>三、细分（Subdivison）</h2><p><strong>Loop Subdivision：</strong> 分割三角形的一种方法，对每条边的新的顶点进行 <strong>加权平均</strong>  ， 形成新的三角形。</p>
+<p><img src="/2023/12/14/GAMES101%E2%80%94%E2%80%94Geometry/image-20231220214228741.png" alt="image-20231220214228741" style="zoom:50%;"></p>
+<p><img src="/2023/12/14/GAMES101%E2%80%94%E2%80%94Geometry/image-20231220214239280.png" alt="image-20231220214239280" style="zoom:50%;"></p>
+<p><strong>Catmull-Clark Subdivision：</strong></p>
+<ol>
+<li>在每个平面添加新的端点；</li>
+<li>在每条边添加中点；</li>
+<li>连接所有新的端点。</li>
+</ol>
+<p><strong>奇异点（Extraordinary vertex）：</strong> 度不为 4 的点</p>
+<p><img src="/2023/12/14/GAMES101%E2%80%94%E2%80%94Geometry/image-20231220214537606.png" alt="image-20231220214537606" style="zoom:50%;"></p>
+<ol>
+<li>每个非四边形面会产生新的奇异点；</li>
+<li>奇异点对应的度小于 4；</li>
+<li>增加了新的四边形面。</li>
+</ol>
+<p><img src="/2023/12/14/GAMES101%E2%80%94%E2%80%94Geometry/image-20231220214830278.png" alt="image-20231220214830278" style="zoom:50%;"></p>
+<p><strong>更新公式：</strong> </p>
+<p><img src="/2023/12/14/GAMES101%E2%80%94%E2%80%94Geometry/image-20231220214929354.png" alt="image-20231220214929354" style="zoom:50%;"></p>
+<h2 id="四、简化（Simplification）"><a href="#四、简化（Simplification）" class="headerlink" title="四、简化（Simplification）"></a>四、简化（Simplification）</h2><p><strong>边缘塌陷（Edge Collapsing）：</strong> 将多条边进行合并</p>
+<p><img src="/2023/12/14/GAMES101%E2%80%94%E2%80%94Geometry/image-20231220215054933.png" alt="image-20231220215054933" style="zoom:50%;"></p>
+<p><strong>二次误差度量（Quadric Error Metrics）：</strong> 如何进行边缘塌陷的一种优化方法——最小化二次误差。</p>
+<p><img src="/2023/12/14/GAMES101%E2%80%94%E2%80%94Geometry/image-20231220215235175.png" alt="image-20231220215235175" style="zoom:50%;"></p>
+]]></content>
+      <tags>
+        <tag>GAMES101</tag>
+        <tag>Computer Graphics</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>GAMES101——Ray Tracing</title>
+    <url>/2023/12/20/GAMES101%E2%80%94%E2%80%94Ray-Tracing/</url>
+    <content><![CDATA[<blockquote>
+<p> 本文章是关于GAMES101课程的笔记。</p>
+<p>课程链接：<a href="https://www.bilibili.com/video/BV1X7411F744/?spm_id_from=333.337.search-card.all.click&amp;vd_source=d52cedeeb9ba1847fcbca2ae52f7e478">GAMES101-现代计算机图形学入门-闫令琪</a></p>
+</blockquote>
+<h2 id="一、影子映射（Shadow-Mapping）"><a href="#一、影子映射（Shadow-Mapping）" class="headerlink" title="一、影子映射（Shadow Mapping）"></a>一、影子映射（Shadow Mapping）</h2><p><strong>算法核心：</strong> 光源估计深度与相机重映射的深度是否相等？</p>
+<p><img src="/2023/12/20/GAMES101%E2%80%94%E2%80%94Ray-Tracing/image-20231220215733008.png" alt="image-20231220215733008" style="zoom:50%;"></p>
+<p><img src="/2023/12/20/GAMES101%E2%80%94%E2%80%94Ray-Tracing/image-20231220215743193.png" alt="image-20231220215743193" style="zoom:50%;"></p>
+<span id="more"></span>
+<p><strong>存在问题：</strong> </p>
+<ul>
+<li>硬阴影（仅限点光源）</li>
+<li>质量取决于阴影图分辨率（基于图像的技术的一般问题）</li>
+<li>涉及浮点深度值的相等比较意味着规模、偏差、容差问题</li>
+</ul>
+<p><strong>硬阴影与软阴影：</strong></p>
+<p><img src="/2023/12/20/GAMES101%E2%80%94%E2%80%94Ray-Tracing/image-20231220215936776.png" alt="image-20231220215936776" style="zoom:50%;"></p>
+]]></content>
+      <tags>
+        <tag>GAMES101</tag>
+        <tag>Computer Graphics</tag>
+      </tags>
+  </entry>
 </search>
