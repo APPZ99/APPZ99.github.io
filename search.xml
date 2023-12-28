@@ -4228,9 +4228,60 @@ w_{i}={\alpha_{i}\Pi_{j=1}^{i-1}}(1-\alpha_{j})</script><p>各个损失函数如
 </li>
 <li><p><strong>光线追踪与折射：</strong> 光线追踪最终可以拆解为光源发射和多次折射光的累加</p>
 <p><img src="/2023/12/20/GAMES101%E2%80%94%E2%80%94Ray-Tracing/image-20231224213825450.png" alt="image-20231224213825450" style="zoom:67%;"></p>
+<h2 id="八、蒙特卡洛积分（Monte-Carlo-Integration）"><a href="#八、蒙特卡洛积分（Monte-Carlo-Integration）" class="headerlink" title="八、蒙特卡洛积分（Monte Carlo Integration）"></a>八、蒙特卡洛积分（Monte Carlo Integration）</h2></li>
+</ol>
+<ol>
+<li><p><strong>意义：</strong> 对于一个复杂函数较难得到其积分，故采用蒙特卡洛的随机性近似得到复杂函数的积分。</p>
+</li>
+<li><p><strong>求解：</strong> 取随机采样的积分的平均值。</p>
+<p><img src="/2023/12/20/GAMES101%E2%80%94%E2%80%94Ray-Tracing/image-20231228110012849.png" alt="image-20231228110012849" style="zoom:50%;"></p>
+<p><img src="/2023/12/20/GAMES101%E2%80%94%E2%80%94Ray-Tracing/image-20231228110026597.png" alt="image-20231228110026597" style="zoom:50%;"></p>
 </li>
 </ol>
-<p>​     </p>
+<h2 id="九、路径追踪（Path-Tracing）"><a href="#九、路径追踪（Path-Tracing）" class="headerlink" title="九、路径追踪（Path Tracing）"></a>九、路径追踪（Path Tracing）</h2><ol>
+<li><p><strong>Ray Tracing 的局限性：</strong> </p>
+<ol>
+<li>始终执行镜面反射或折射；</li>
+<li>在漫反射表面停止。</li>
+</ol>
+</li>
+<li><p><strong>路径追综于蒙特卡洛积分 ：</strong> 路径追踪可以看成某个半球内的所有光线对某一出射方向的积分和，但该积分较难求得解析解，故此时可以使用蒙特卡洛积分进行近似求解。</p>
+<p><img src="/2023/12/20/GAMES101%E2%80%94%E2%80%94Ray-Tracing/image-20231228110533218.png" alt="image-20231228110533218" style="zoom:67%;"></p>
+</li>
+<li><p><strong>直接光照的路径追踪：</strong></p>
+<p><img src="/2023/12/20/GAMES101%E2%80%94%E2%80%94Ray-Tracing/image-20231228110702397.png" alt="image-20231228110702397" style="zoom: 50%;"></p>
+<p><img src="/2023/12/20/GAMES101%E2%80%94%E2%80%94Ray-Tracing/image-20231228110724044.png" alt="image-20231228110724044" style="zoom:50%;"></p>
+</li>
+<li><p><strong>引入全局光照：</strong> 对于经过一次或多次折射的光线，可以以入射点反向观测，直至形成新的直接光照。</p>
+<p><img src="/2023/12/20/GAMES101%E2%80%94%E2%80%94Ray-Tracing/image-20231228110920467.png" alt="image-20231228110920467" style="zoom:67%;"></p>
+</li>
+<li><p><strong>全局光照的指数爆炸问题：</strong> 到达入射点的光线可以是无限多，若每一条光线进行反向传播则会导致指数爆炸，计算量过大。</p>
+<p><img src="/2023/12/20/GAMES101%E2%80%94%E2%80%94Ray-Tracing/image-20231228111046036.png" alt="image-20231228111046036" style="zoom:50%;"></p>
+</li>
+<li><p><strong>俄罗斯轮盘赌（Russian Roulette，RR）：</strong> </p>
+<p><img src="/2023/12/20/GAMES101%E2%80%94%E2%80%94Ray-Tracing/image-20231228111218893.png" alt="image-20231228111218893" style="zoom:50%;"></p>
+</li>
+<li><p><strong>RR 解决指数爆炸问题：</strong> </p>
+<p><img src="/2023/12/20/GAMES101%E2%80%94%E2%80%94Ray-Tracing/image-20231228111553069.png" alt="image-20231228111553069" style="zoom:67%;"></p>
+</li>
+<li><p><strong>对光源采样：</strong> 某一被观测点，其“打中”光源所需的射线会由于光源大小而产生不同，此时如果对光源位置进行采样，则可以避免资源的浪费。</p>
+<p><img src="/2023/12/20/GAMES101%E2%80%94%E2%80%94Ray-Tracing/image-20231228121633524.png" alt="image-20231228121633524" style="zoom:67%;"></p>
+</li>
+<li><p><strong>光源采样模型：</strong> 将对半球的积分转移到对光源到半球某一面积上的积分。</p>
+<p><img src="/2023/12/20/GAMES101%E2%80%94%E2%80%94Ray-Tracing/image-20231228121743334.png" alt="image-20231228121743334" style="zoom:67%;"></p>
+<p><img src="/2023/12/20/GAMES101%E2%80%94%E2%80%94Ray-Tracing/image-20231228121757385.png" alt="image-20231228121757385" style="zoom:67%;"></p>
+</li>
+<li><p><strong>最终采样模型：</strong> </p>
+<ol>
+<li>光源（无需使用RR）</li>
+<li>间接反射（需要RR）</li>
+</ol>
+<p><img src="/2023/12/20/GAMES101%E2%80%94%E2%80%94Ray-Tracing/image-20231228121904776.png" alt="image-20231228121904776" style="zoom:50%;"></p>
+</li>
+<li><p><strong>直接光源是否被遮挡：</strong> 对光线进行采样积分时先检测光源与入射点之间是否存在遮挡关系。</p>
+<p><img src="/2023/12/20/GAMES101%E2%80%94%E2%80%94Ray-Tracing/image-20231228122025298.png" alt="image-20231228122025298" style="zoom:67%;"></p>
+</li>
+</ol>
 ]]></content>
       <tags>
         <tag>GAMES101</tag>
