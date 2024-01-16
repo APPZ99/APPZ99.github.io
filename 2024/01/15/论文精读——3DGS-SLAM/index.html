@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+
+
+
+  <meta name="description" content="本文是近期阅读 3D Gaussian Splatting SLAM 相关论文的精度笔记。 本文主要关注各个 GS-SLAM 的实现方法。  一、GS-SLAM: Dense Visual SLAM with 3D Gaussian Splatting摘要翻译 本文中，我们介绍了GS-SLAM，一种首先使用3D高斯表达的SLAM系统。它有助于更好地平衡效率和精度。以最近其他使用神经隐式表达的SL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="论文精读——3DGS-SLAM">
+<meta property="og:url" content="http://example.com/2024/01/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%943DGS-SLAM/index.html">
+<meta property="og:site_name" content="AppZ99&#39;s Blog">
+<meta property="og:description" content="本文是近期阅读 3D Gaussian Splatting SLAM 相关论文的精度笔记。 本文主要关注各个 GS-SLAM 的实现方法。  一、GS-SLAM: Dense Visual SLAM with 3D Gaussian Splatting摘要翻译 本文中，我们介绍了GS-SLAM，一种首先使用3D高斯表达的SLAM系统。它有助于更好地平衡效率和精度。以最近其他使用神经隐式表达的SL">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2024/01/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%943DGS-SLAM/image-20240116110242802.png">
+<meta property="og:image" content="http://example.com/2024/01/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%943DGS-SLAM/image-20240116111213151.png">
+<meta property="og:image" content="http://example.com/2024/01/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%943DGS-SLAM/image-20240116112910856.png">
+<meta property="og:image" content="http://example.com/2024/01/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%943DGS-SLAM/image-20240116153655573.png">
+<meta property="og:image" content="http://example.com/2024/01/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%943DGS-SLAM/image-20240116164048996.png">
+<meta property="og:image" content="http://example.com/2024/01/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%943DGS-SLAM/image-20240116164412259.png">
+<meta property="og:image" content="http://example.com/2024/01/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%943DGS-SLAM/image-20240116220056764.png">
+<meta property="article:published_time" content="2024-01-15T11:06:24.000Z">
+<meta property="article:modified_time" content="2024-01-16T14:31:54.936Z">
+<meta property="article:author" content="AppZ99">
+<meta property="article:tag" content="SLAM">
+<meta property="article:tag" content="NeRF">
+<meta property="article:tag" content="3D Gaussian Splatting">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2024/01/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%943DGS-SLAM/image-20240116110242802.png">
+
+<link rel="canonical" href="http://example.com/2024/01/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%943DGS-SLAM/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>论文精读——3DGS-SLAM | AppZ99's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">AppZ99's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">OHHHH</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/01/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%943DGS-SLAM/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="AppZ99">
+      <meta itemprop="description" content="TKAW">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AppZ99's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          论文精读——3DGS-SLAM
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-01-15 19:06:24" itemprop="dateCreated datePublished" datetime="2024-01-15T19:06:24+08:00">2024-01-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-01-16 22:31:54" itemprop="dateModified" datetime="2024-01-16T22:31:54+08:00">2024-01-16</time>
+              </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>本文是近期阅读 3D Gaussian Splatting SLAM 相关论文的精度笔记。</p>
+<p><strong>本文主要关注各个 GS-SLAM 的实现方法。</strong></p>
+</blockquote>
+<h2 id="一、GS-SLAM-Dense-Visual-SLAM-with-3D-Gaussian-Splatting"><a href="#一、GS-SLAM-Dense-Visual-SLAM-with-3D-Gaussian-Splatting" class="headerlink" title="一、GS-SLAM: Dense Visual SLAM with 3D Gaussian Splatting"></a>一、GS-SLAM: Dense Visual SLAM with 3D Gaussian Splatting</h2><h3 id="摘要翻译"><a href="#摘要翻译" class="headerlink" title="摘要翻译"></a>摘要翻译</h3><blockquote>
+<p>本文中，我们介绍了GS-SLAM，一种首先使用3D高斯表达的SLAM系统。它有助于更好地平衡效率和精度。以最近其他使用神经隐式表达的SLAM方法相比，我们的方法使用了实时可微分的抛洒渲染管线，它可以打打加快荼毒优化和RGB-D重渲染。具体来说，我们提出了一种自适应扩展策略，该策略添加新的或删除带有噪声的3D高斯，以有效的地重建新的观测场景几何结构并改进先前观测区域的建图。这个策略对于扩展3D高斯表达以重建整个场景而不是现有方法的合成静态物体是至关重要的。此外，在位姿跟踪线程中，我们设计了一种有效的由粗到精的技术去选择可靠的3D高斯表达来优化相机位姿，从而减少了运行时间并实现了鲁棒的估计。与Replica、TUM-RGBD数据集上现有的SOTA实时方法相比，我们的方法实现了具有竞争力的性能。源代码将会很快发布。</p>
+</blockquote>
+<h3 id="方法介绍"><a href="#方法介绍" class="headerlink" title="方法介绍"></a>方法介绍</h3><p><strong>Overview</strong></p>
+<p><img src="/2024/01/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%943DGS-SLAM/image-20240116110242802.png" alt="image-20240116110242802" style="zoom:67%;"></p>
+<span id="more"></span>
+<p><strong>1、3D Gaussian Scene Representation</strong></p>
+<p>这部分直接沿用 3DGS 的场景表达。</p>
+<p><strong>2、Adaptive 3D Gaussian Expanding Mapping</strong></p>
+<p>本文提出一种自适应的高斯扩展策略，具体来说分为 <strong>添加</strong> 和 <strong>删除</strong> 两个步骤。</p>
+<ol>
+<li><p>添加步骤：当某个像素的累计不透明度太低，或者渲染深度与观测深度差距太多时则添加 Gaussian。</p>
+<script type="math/tex; mode=display">
+T<\tau_T\quad\text{or}\quad|D-\hat{D}|>\tau_D</script></li>
+<li><p>删除步骤：通过相机的观测截台面，如果 Gaussian 不在物体表面附近，则降低其不透明度。</p>
+<script type="math/tex; mode=display">
+G_i:\Lambda_i\Rightarrow G_i:\eta\Lambda_i,\text{if}D-dist(\mathbf{X}_i,\mathbf{P}_{uv})>\gamma</script><p><img src="/2024/01/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%943DGS-SLAM/image-20240116111213151.png" alt="image-20240116111213151" style="zoom:67%;"></p>
+</li>
+</ol>
+<p><strong>3、Tracking and Bundle Adjustment</strong></p>
+<ol>
+<li><p>Tracking：</p>
+<p>本文的 Tracking 部分主要采用 <strong>匀速模型</strong> 作为假设进行初始化。通过光度损失对 Tracking 进行优化：</p>
+<script type="math/tex; mode=display">
+\mathcal{L}_{track}=\sum_{m=1}^M\left|\mathbf{C}_m-\hat{\mathbf{C}}_m\right|_1,\min_{\mathbf{R},\mathbf{t}}(\mathcal{L}_{track})</script><p>同时，本文为了 <strong>加速位姿优化</strong> 的速度，推导了位姿估计的微分方程：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\frac{d\mathcal{L}_{\mathbf{c}}}{d\mathbf{P}}& =\frac{d\mathcal{L}_{\mathbf{c}}}{d\mathbf{C}}\frac{d\mathbf{C}}{d\mathbf{P}}=\frac{d\mathcal{L}_{\mathbf{c}}}{d\mathbf{C}}\left(\frac{d\mathbf{C}}{d\mathbf{c}_{i}}\frac{d\mathbf{c}_{i}}{d\mathbf{P}}+\frac{d\mathbf{C}}{d\alpha_{i}}\frac{d\alpha_{i}}{d\mathbf{P}}\right)  \\
+&=\frac{d\mathcal{L}_{\mathbf{c}}}{d\mathbf{C}}\frac{d\mathbf{C}}{d\alpha_{i}}\left(\frac{d\alpha_{i}}{d\boldsymbol{\Sigma}\prime}\frac{d\boldsymbol{\Sigma}\prime}{d\mathbf{P}}+\frac{d\alpha_{i}}{d\mathbf{m_{i}}}\frac{d\mathbf{m_{i}}}{d\mathbf{P}}\right) \\
+&=\frac{d\mathcal{L}_{\mathbf{c}}}{d\mathbf{C}}\frac{d\mathbf{C}}{d\alpha_{i}}\left(\frac{d\alpha_{i}}{d\mathbf{\Sigma}\prime}\frac{d(\mathbf{J}\mathbf{P}^{-1}\mathbf{\Sigma}\mathbf{P}^{-T}\mathbf{J}^{T})}{d\mathbf{P}}+\frac{d(\mathbf{K}\mathbf{P}\mathbf{X}_{i})}{d\mathbf{P}D_{i}}\right)
+\end{aligned}</script><p>实际过程中，由于 $\frac{d(\mathbf{KPX}_i)}{d\mathbf{P}D_i}$ 起到决定作用，故忽略 $\frac{d(\mathbf{JP}^{-1}\mathbf{\Sigma P}^{-T}\mathbf{J}^T)}{d\mathbf{P}}$ 项以加速。</p>
+</li>
+<li><p>Coarse-to-Fine Camera Tracking:</p>
+<p>本文提出的粗糙到精细的策略：</p>
+<ol>
+<li>Coarse：首先在均匀采样的图像坐标上渲染一个分辨率为 $H/2 × W/2$的粗略图像 $\hat{I}_c$，然后优化公式中的跟踪损失，进行 $T_c$ 次迭代，得到相机姿态 $P_c$。</li>
+<li>Fine：通过 Adaptive 3D Gaussian Expanding Mapping 所提出的方法进行进一步的优化迭代。</li>
+</ol>
+</li>
+<li><p>Bundle Adjustment：</p>
+<p>迭代过程前半部分<strong>仅优化场景表达</strong>，后半部分则<strong>场景和位姿联合优化</strong>。最终精确相机位姿的优化：</p>
+<script type="math/tex; mode=display">
+\mathcal{L}_{ba}=\frac{1}{K}\sum\limits_{k=1}^{K}\sum\limits_{m=1}^{HW}\left|D_{m}-\hat{D}_{m}\right|_{1}+\lambda_{m}\left|\mathbf{C}_{m}-\hat{\mathbf{C}}_{m}\right|_{1},\min\limits_{\mathbf{R},\mathbf{t},\mathbf{S}}(\mathcal{L}_{ba}).</script></li>
+</ol>
+<h2 id="二、Gaussian-SLAM-Photo-realistic-Dense-SLAM-with-Gaussian-Splatting"><a href="#二、Gaussian-SLAM-Photo-realistic-Dense-SLAM-with-Gaussian-Splatting" class="headerlink" title="二、Gaussian-SLAM: Photo-realistic Dense SLAM with Gaussian Splatting"></a>二、Gaussian-SLAM: Photo-realistic Dense SLAM with Gaussian Splatting</h2><h3 id="摘要翻译-1"><a href="#摘要翻译-1" class="headerlink" title="摘要翻译"></a>摘要翻译</h3><blockquote>
+<p>我们提出了一种新的稠密SLAM方法，该方法使用高斯飞溅作为场景表达。这种新的表示方式实现了交互时间重建以及真实世界和合成场景的图像真实渲染。我们提出了一种播种和优化高斯飞溅的新策略，以将其使用范围从多视点离线场景扩展到顺序单目RGB-D的输入数据设置。此外，我们扩展了高斯飞溅的编码几何体，并对这种场景表示进行了跟踪实验。我们的方法在真实世界和合成数据集上实现了SOTA的渲染质量，同时在在重建性能和运行时间方面都具有竞争力。</p>
+</blockquote>
+<h3 id="方法介绍-1"><a href="#方法介绍-1" class="headerlink" title="方法介绍"></a>方法介绍</h3><p><strong>Overview</strong></p>
+<p><img src="/2024/01/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%943DGS-SLAM/image-20240116112910856.png" alt="image-20240116112910856" style="zoom:80%;"></p>
+<p><strong>1、3D Gaussian-based Map</strong></p>
+<p>本文为了 <strong>提高计算效率</strong> 以及 <strong>防止遗忘问题</strong> ，地图表示采用 <strong>多个子图</strong> 拼接的方式表达。后续的添加和优化 <strong>仅在当前 Active sub-map</strong> 进行。</p>
+<ol>
+<li><p>Building Sub-maps Progressively：</p>
+<p>播种高斯策略：在 <strong>物体表面以及物体表面后面</strong> 各播种一个。</p>
+</li>
+<li><p>Sub-map Optimization：</p>
+<p>每次有新的高斯就优化子图，新的子图添加所优化的次数取决于深度和颜色；本文方法不使用原高斯的 clone 和 prune，应该是为了加速，同时为了不破坏深度传感器获取的几何信息。</p>
+<p>原高斯对整个场景进行优化会造成优化时间过长，对于SLAM系统来说过短的优化时间又有可能造成优化效果不佳。所以本文是在 active 子图中的所有关键帧进行优化的。</p>
+</li>
+</ol>
+<p><strong>2、Encoding Geometry and Color</strong></p>
+<p>对颜色和深度的损失如下：</p>
+<script type="math/tex; mode=display">
+L_{\mathrm{color}}=(1-\lambda)\cdot|\hat{I}-I|_1+\lambda\big(1-\mathrm{SSIM}(\hat{I},I)\big) \\
+D_{\mathrm{pix}}=\sum_{i\in S}z_if_{i,\mathrm{pix}}^{2\mathrm{D}}\prod_{j}^{i-1}\left(1-f_{j,\mathrm{pix}}^{2\mathrm{D}}\right) \\
+L_\text{depth}=|\hat{D}-D|_1</script><p>除了上述损失外，本文添加了 <strong>正则项损失，以抑制高斯尺度爆炸问题</strong> ，该损失 <strong>限制 Gaussian 尺度不能超过阈值 $\gamma$ </strong> ，最终损失如下：</p>
+<script type="math/tex; mode=display">
+L=L_\text{color}+\alpha\cdot L_\text{depth}+\beta\cdot L_\text{reg}</script><p><strong>3、Tracking</strong></p>
+<p>本文采用 <strong>匀速运动模型</strong> 假设进行初始化。</p>
+<p>后续因为 Tracking 的性能不足，<strong>使用了 GT 先映射位姿然后再 Tracking 的方法。这里是否不合理？</strong></p>
+<h2 id="三、SplaTAM-Splat-Track-amp-Map-3D-Gaussians-for-Dense-RGB-D-SLAM"><a href="#三、SplaTAM-Splat-Track-amp-Map-3D-Gaussians-for-Dense-RGB-D-SLAM" class="headerlink" title="三、SplaTAM: Splat, Track &amp; Map 3D Gaussians for Dense RGB-D SLAM"></a>三、SplaTAM: Splat, Track &amp; Map 3D Gaussians for Dense RGB-D SLAM</h2><h3 id="摘要翻译-2"><a href="#摘要翻译-2" class="headerlink" title="摘要翻译"></a>摘要翻译</h3><blockquote>
+<p>稠密SLAM对于具体场景的理解是至关重要的。最近的工作表明，3D高斯可以使用多个位姿的相机进行高质量的场景重建和实时渲染。在这种情况下，我们首次展示了通过3D高斯表示场景可以使用单个不具位姿的单目RGB-D相机实现稠密SLAM。我们的方法SplaTAM解决了先前基于辐射场表示的局限性，包括快速渲染和优化、确定区域是否先前已经被建图的能力，以及通过添加更多的高斯来进行结构化地图扩展。我们使用在线跟踪和建图的管道，同时对其进行裁剪，以专门使用底层高斯表示和借助微分渲染进行轮廓引导优化。大量实验表明，SplaTAM在相机位姿估计、地图重建和新视图合唱方面实现了高达2倍的先进性能，证明了其由于现有方法，同时允许实时渲染高分辨率稠密三维地图。</p>
+</blockquote>
+<h3 id="方法介绍-2"><a href="#方法介绍-2" class="headerlink" title="方法介绍"></a>方法介绍</h3><p><strong>Overview</strong></p>
+<p><img src="/2024/01/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%943DGS-SLAM/image-20240116153655573.png" alt="image-20240116153655573" style="zoom:80%;"></p>
+<p><strong>1、Gaussian Map Representation</strong></p>
+<p>所作的简化：只使用视图独立的颜色并强制高斯的各向同性。</p>
+<p>根据不透明度加权的标准高斯方程，得到每个高斯影响 3D 空间中的一个点 $x$ ：</p>
+<script type="math/tex; mode=display">
+f(\mathbf{x})=o\exp\left(-\frac{\|\mathbf{x}-\mathbf{\mu}\|^2}{2r^2}\right)</script><p><strong>2、Differentiable Rendering via Splatting</strong></p>
+<p>颜色和深度的渲染方程不变：</p>
+<script type="math/tex; mode=display">
+C(\mathbf{p})=\sum_{i=1}^n\mathbf{c}_if_i(\mathbf{p})\prod_{j=1}^{i-1}(1-f_j(\mathbf{p}))\\
+D(\mathbf{p})=\sum_{i=1}^nd_if_i(\mathbf{p})\prod_{j=1}^{i-1}(1-f_j(\mathbf{p}))</script><p>额外多了一项 silhouetee image 项，去辨别轮廓的可见性，其实就是不透明度的累加：</p>
+<script type="math/tex; mode=display">
+S(\mathbf{p})=\sum_{i=1}^nf_i(\mathbf{p})\prod_{j=1}^{i-1}(1-f_j(\mathbf{p}))</script><p><strong>3、Initialization</strong></p>
+<p>第一帧跳过 Tracking 过程，然后将位姿设为单位矩阵。在 densification 过程，由于渲染轮廓都是空，故所有像素都用于初始化新的高斯。</p>
+<p><strong>4、Camera Tracking</strong></p>
+<p>本文采用 <strong>匀速运动模型</strong> 作为下一帧的初始化位姿。然后通过优化损失函数进行 Tracking，这部分 $S(p)$ 部分是为了仅优化可见性轮廓较好的部分，<strong>这部分步骤了地图认知的不确定性</strong> 。</p>
+<script type="math/tex; mode=display">
+L_t=\sum_{\mathbf{p}}\left(S(\mathbf{p})>0.99\right)\left(\mathcal{L}_1\left(D(\mathbf{p})\right)+0.5\mathcal{L}_1\left(C(\mathbf{p})\right)\right)</script><p><strong>5、Gaussian Densification</strong></p>
+<p>这部分需要对地图密度不足的部分添加新的 Gaussian，添加的条件主要有两个，轮廓可见性 $S(p)$ ，以及深度误差，对于 Gaussian 较好的部分采用掩码标注，不对这部分进行添加：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+M(\mathbf{p})& =\left(S(\mathbf{p})<0.5\right)+\left(D_{\mathrm{GT}}(\mathbf{p})<D(\mathbf{p})\right)\left(\mathcal{L}_{1}\left(D(\mathbf{p})\right)>50\mathrm{MDE}\right)
+\end{aligned}</script><p><strong>6、Gaussian Map Updating</strong></p>
+<p>对于地图更新，此时 <strong>相机位姿进行固定，不参与优化</strong> 。</p>
+<p>优化过程选取：当前帧、前一帧以及k-2个与当前最相似（重叠度高）的帧；</p>
+<p>相似（重叠）程度判定：深度图中的点云以及视锥中的点的数量。</p>
+<h2 id="四、Photo-SLAM-Real-time-Simultaneous-Localization-and-Photorealistic-Mapping-for-Monocular-Stereo-and-RGB-D-Cameras"><a href="#四、Photo-SLAM-Real-time-Simultaneous-Localization-and-Photorealistic-Mapping-for-Monocular-Stereo-and-RGB-D-Cameras" class="headerlink" title="四、Photo-SLAM: Real-time Simultaneous Localization and Photorealistic Mapping for Monocular, Stereo, and RGB-D Cameras"></a>四、Photo-SLAM: Real-time Simultaneous Localization and Photorealistic Mapping for Monocular, Stereo, and RGB-D Cameras</h2><h3 id="摘要翻译-3"><a href="#摘要翻译-3" class="headerlink" title="摘要翻译"></a>摘要翻译</h3><blockquote>
+<p>神经渲染和SLAM的系统的集成最近在联合定位和真实感视图重建方面展示了具有前景的结果。然而，现存的方法完全依赖隐式表达，同时庞大的资源需求使得它们无法再便携设备上运行，着偏离SLAM的初衷。在本文中，我们提出了Photo-SLAM，一种具有超原语建图的新的SLAM框架。具体而言，我们同事利用了显示几何特征进行定位，并学习隐式光度特征来表示观测环境的纹理信息。除了基于几何特征主动稠密超原语外，我们进一步引入一种基于高斯金字塔的训练方法来逐步学习多层次特征，以增强真实感建图性能。对单目、双目和RGB-D数据集的广泛实验证明我们提出的Photo-SLAM在在线真实建图方面显著优于当前SOTA的SLAM系统，例如在Replica数据集中，PSNR高出30%，渲染速度快数百倍。此外，Photo-SLAM可以使用Jetson AGX Orin等嵌入式平台实时运行，展示了其在机器人应用方面的潜力。</p>
+</blockquote>
+<h3 id="方法介绍-3"><a href="#方法介绍-3" class="headerlink" title="方法介绍"></a>方法介绍</h3><p><strong>1、Hyper Primitives Map</strong></p>
+<p>地图表示与原 Gaussian 相同。</p>
+<p><strong>2、Localization and Geometry Mapping</strong></p>
+<ol>
+<li><p>定位线程：构造 <strong>因子图</strong> 进行位姿优化：</p>
+<script type="math/tex; mode=display">
+\{\mathbf{R},\mathbf{t}\}=\arg\min\limits_{\mathbf{R},\mathbf{t}}\rho\left(\|\mathbf{p}_i-\pi(\mathbf{R}\mathbf{P}_i+\mathbf{t})\|_{\Sigma_g}^2\right)</script></li>
+<li><p>几何建图线程：同定位线程，也是 <strong>最小化重投影误差</strong> ：</p>
+<script type="math/tex; mode=display">
+\{\mathbf{P}_i,\mathbf{R}_l,\mathbf{t}_l|i\in\mathcal{P}_L,l\in\mathcal{K}_L\}=\arg\min_{\mathbf{P}_i,\mathbf{R}_l,\mathbf{t}_l}\sum_{k\in\mathcal{K}}\sum_{j\in\mathcal{X}_k}\rho(E(k,j)) \\
+E(k,j)=\|\mathbf{p}_j-\pi(\mathbf{R}_k\mathbf{P}_j+\mathbf{t}_k)\|_{\Sigma_g}^2</script></li>
+</ol>
+<p><strong>3、Photorealistic Mapping</strong></p>
+<p>渲染和损失与原 Gaussian 相同：</p>
+<script type="math/tex; mode=display">
+C(\mathbf{R},\mathbf{t})=\sum_{i\in N}\mathbf{c}_i\alpha_i\prod_{j=1}^{i-1}(1-\alpha_i)\\
+\mathcal{L}=(1-\lambda)\left|I_\mathrm{r}-I_\mathrm{gt}\right|_1+\lambda\frac{1-\mathrm{SSIM}(I_\mathrm{r},I_\mathrm{gt})}2</script><ol>
+<li><p>Geometry-based Densification：</p>
+<p>粗糙的原语不能较好表示，所以在photorealistic阶段需要对其进行优化和稠密（增加参数）。除了3DGS中的分裂和克隆外，还提出一种基于几何的稠密策略。</p>
+<p>作者认为特征点多的地方正是表示复杂几何的纹理的地方，根据该假设，添加额外的超原语。</p>
+<p><img src="/2024/01/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%943DGS-SLAM/image-20240116164048996.png" alt="image-20240116164048996" style="zoom:80%;"></p>
+</li>
+</ol>
+<p><strong>4、Gaussian-Pyramid-Based Learning</strong></p>
+<p>本文提出一种 Gaussian 金字塔用于不同尺度、不同训练阶段的训练方法。</p>
+<p>通过 <strong>高斯平滑和下采样</strong> 得到的粗糙图像训练出来的模型，会用于初始化较高分辨率的模型，但不保留用于最终的推断。</p>
+<p><img src="/2024/01/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%943DGS-SLAM/image-20240116164412259.png" alt="image-20240116164412259" style="zoom:80%;"></p>
+<p><strong>5、Loop Closure</strong></p>
+<p>文章中没有具体说明如何进行回环。仅提到通过相似变换进行回环可以有效解决伪影。</p>
+<h2 id="五、Gaussian-Splatting-SLAM"><a href="#五、Gaussian-Splatting-SLAM" class="headerlink" title="五、Gaussian Splatting SLAM"></a>五、Gaussian Splatting SLAM</h2><h3 id="摘要翻译-4"><a href="#摘要翻译-4" class="headerlink" title="摘要翻译"></a>摘要翻译</h3><blockquote>
+<p>我们提出了第一个使用单个移动单目或RGB-D相机将3D高斯飞溅用于增量式3D重建的应用。我们的SLAM方法以3fps实时运行，使用了高斯作为唯一的3D表达，统一了准确、高效跟踪、建图和高质量渲染所需要的表示。<br>需要一些创新来不断地从实时相机重建你高保真的3D场景。首先，要超越原有的3DGS算法，该算法需要从离线的SfM系统获取紧缺的位姿，我们对3DGS使用直接优化对3D高斯来制定相机的跟踪，这表明其使得快速和鲁棒的跟踪具有广阔的收敛域。齐次，通过利用高斯的显示表达，我们引入了几何验证和正则化去处理增量3D稠密重建中出现的歧义问题。最后，我们引入了完整的SLAM系统，该系统不仅在新视图合成和轨迹估计方面取得了SOTA的结果，同时也可以重建细小甚至透明的物体。</p>
+</blockquote>
+<h3 id="方法介绍-4"><a href="#方法介绍-4" class="headerlink" title="方法介绍"></a>方法介绍</h3><p><strong>Overview</strong></p>
+<p><img src="/2024/01/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%943DGS-SLAM/image-20240116220056764.png" alt="image-20240116220056764" style="zoom:80%;"></p>
+<p><strong>1、Gaussian Splatting</strong></p>
+<p>渲染和场景表示与原 Gaussian 相同。</p>
+<p><strong>2、Camera Pose Optimisation</strong></p>
+<p>这里本文提出参数对位姿的雅可比矩阵以对位姿进行求导优化。</p>
+<script type="math/tex; mode=display">
+\begin{aligned}\frac{\partial\boldsymbol{\mu}_I}{\partial\boldsymbol{T}_{CW}}&=\frac{\partial\boldsymbol{\mu}_I}{\partial\boldsymbol{\mu}_C}\frac{\mathcal{D}\boldsymbol{\mu}_C}{\mathcal{D}\boldsymbol{T}_{CW}},\\\frac{\partial\boldsymbol{\Sigma}_I}{\partial\boldsymbol{T}_{CW}}&=\frac{\partial\boldsymbol{\Sigma}_I}{\partial\mathbf{J}}\frac{\partial\mathbf{J}}{\partial\boldsymbol{\mu}_C}\frac{\mathcal{D}\boldsymbol{\mu}_C}{\mathcal{D}\boldsymbol{T}_{CW}}+\frac{\partial\boldsymbol{\Sigma}_I}{\partial\mathbf{W}}\frac{\mathcal{D}\mathbf{W}}{\mathcal{D}\boldsymbol{T}_{CW}}\end{aligned}</script><script type="math/tex; mode=display">
+\frac{\mathcal{D}\boldsymbol{\mu}_C}{\mathcal{D}\boldsymbol{T}_{CW}}=\begin{bmatrix}\boldsymbol{I}&-\boldsymbol{\mu}_C^\times\end{bmatrix},\frac{\mathcal{D}\mathbf{W}}{\mathcal{D}\boldsymbol{T}_{CW}}=\begin{bmatrix}\mathbf{0}&-\mathbf{W}_{\vdots,1}^\times\\\mathbf{0}&-\mathbf{W}_{\vdots,2}^\times\\\mathbf{0}&-\mathbf{W}_{\vdots,3}^\times\end{bmatrix}</script><p><strong>3、Tracking</strong></p>
+<p>Tracking 部分通过优化光度和深度两个误差进行优化。</p>
+<script type="math/tex; mode=display">
+E_{pho}=\left\|I(\mathcal{G},\boldsymbol{T}_{CW})-\bar{I}\right\|_1 \\
+E_{geo}=\left\|D(\mathcal{G},\boldsymbol{T}_{CW})-\bar{D}\right\|_1</script><p><strong>4、Keyframing</strong></p>
+<p>本文理想的关键帧管理将选择观察同一区域的非冗余关键帧，跨越宽基线以提供更好的多视图约束。</p>
+<ol>
+<li><p>Selection and Management：</p>
+<p>添加关键帧策略：共视关系低于某阈值，或是相对深度低于平均深度。</p>
+</li>
+<li><p>Gaussian Covisibility：</p>
+<p>因为3D高斯是沿着相机光线排序的。由于遮挡是通过设计处理的，因此这种特性对于共视性估计是可取的。如果在光栅化中使用，并且光线的累积α尚未达到0.5，则高斯被标记为从视图可见。</p>
+</li>
+<li><p>Gaussian Insertion and Pruning：</p>
+<p>修剪策略：在最近三个关键帧没有被观察，则对他们进行修剪。</p>
+<p>插入策略：深度测量可用时，则通过反向投影深度来初始化 Gaussian。对于具有深度估计的像素，$μ_W$是在那些具有低方差的深度周围初始化的；对于没有深度估计的像素，我们在具有高方差的渲染图像的中值深度周围初始化$μ_W$ 。</p>
+</li>
+</ol>
+<p><strong>5、Mapping</strong></p>
+<ol>
+<li><p>遗忘问题：过去的关键帧随机选取进行联合优化。</p>
+</li>
+<li><p>光栅化3DG的无约束会在SLAM的连续观察下造成拖拽的伪影问题：</p>
+<p>通过各向异性正则化约束防止尺度爆炸：</p>
+<script type="math/tex; mode=display">
+E_{iso}=\sum_{i=1}^{|\mathcal{G}|}\|\mathbf{s}_i-\tilde{\mathbf{s}_i}\cdot\mathbf{1}\|_1</script><p>上式中的 $s_i$ 表示 Gaussian 的椭球拉伸程度。将每个 3D Gaussian 与所有尺度参数的平均值进行对比。</p>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>AppZ99
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://example.com/2024/01/15/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E2%80%94%E2%80%943DGS-SLAM/" title="论文精读——3DGS-SLAM">http://example.com/2024/01/15/论文精读——3DGS-SLAM/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/SLAM/" rel="tag"><i class="fa fa-tag"></i> SLAM</a>
+              <a href="/tags/NeRF/" rel="tag"><i class="fa fa-tag"></i> NeRF</a>
+              <a href="/tags/3D-Gaussian-Splatting/" rel="tag"><i class="fa fa-tag"></i> 3D Gaussian Splatting</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/12/20/GAMES101%E2%80%94%E2%80%94Ray-Tracing/" rel="prev" title="GAMES101——Ray Tracing">
+      <i class="fa fa-chevron-left"></i> GAMES101——Ray Tracing
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81GS-SLAM-Dense-Visual-SLAM-with-3D-Gaussian-Splatting"><span class="nav-text">一、GS-SLAM: Dense Visual SLAM with 3D Gaussian Splatting</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%91%98%E8%A6%81%E7%BF%BB%E8%AF%91"><span class="nav-text">摘要翻译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D"><span class="nav-text">方法介绍</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81Gaussian-SLAM-Photo-realistic-Dense-SLAM-with-Gaussian-Splatting"><span class="nav-text">二、Gaussian-SLAM: Photo-realistic Dense SLAM with Gaussian Splatting</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%91%98%E8%A6%81%E7%BF%BB%E8%AF%91-1"><span class="nav-text">摘要翻译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D-1"><span class="nav-text">方法介绍</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81SplaTAM-Splat-Track-amp-Map-3D-Gaussians-for-Dense-RGB-D-SLAM"><span class="nav-text">三、SplaTAM: Splat, Track &amp; Map 3D Gaussians for Dense RGB-D SLAM</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%91%98%E8%A6%81%E7%BF%BB%E8%AF%91-2"><span class="nav-text">摘要翻译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D-2"><span class="nav-text">方法介绍</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81Photo-SLAM-Real-time-Simultaneous-Localization-and-Photorealistic-Mapping-for-Monocular-Stereo-and-RGB-D-Cameras"><span class="nav-text">四、Photo-SLAM: Real-time Simultaneous Localization and Photorealistic Mapping for Monocular, Stereo, and RGB-D Cameras</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%91%98%E8%A6%81%E7%BF%BB%E8%AF%91-3"><span class="nav-text">摘要翻译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D-3"><span class="nav-text">方法介绍</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81Gaussian-Splatting-SLAM"><span class="nav-text">五、Gaussian Splatting SLAM</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%91%98%E8%A6%81%E7%BF%BB%E8%AF%91-4"><span class="nav-text">摘要翻译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D-4"><span class="nav-text">方法介绍</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="AppZ99"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">AppZ99</p>
+  <div class="site-description" itemprop="description">TKAW</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">34</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/APPZ99" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;APPZ99" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:925455893@qq.com" title="E-Mail → mailto:925455893@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+      <div id="music163player">
+        <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=1872048272&auto=1&height=66">
+        </iframe>
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">AppZ99</span>
+
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">118k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:47</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,0' opacity='0.5' zIndex='-1' count='150' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+//    window.MathJax = {
+//      loader: {
+//
+//        source: {
+//          '[tex]/amsCd': '[tex]/amscd',
+//          '[tex]/AMScd': '[tex]/amscd'
+//        }
+//      },
+//      tex: {
+//        inlineMath: {'[+]': [['$', '$']]},
+//
+//        tags: 'ams'
+//      },
+//      options: {
+//        renderActions: {
+//          findScript: [10, doc => {
+//            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+//              const display = !!node.type.match(/; *mode=display/);
+//              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+//              const text = document.createTextNode('');
+//              node.parentNode.replaceChild(text, node);
+//              math.start = {node: text, delim: '', n: 0};
+//              math.end = {node: text, delim: '', n: 0};
+//              doc.math.push(math);
+//            });
+//          }, '', false],
+//          insertedScript: [200, () => {
+//            document.querySelectorAll('mjx-container').forEach(node => {
+//              let target = node.parentNode;
+//              if (target.nodeName.toLowerCase() === 'li') {
+//                target.parentNode.classList.add('has-jax');
+//              }
+//            });
+//          }, '', false]
+//        }
+//      }
+//    };
+    window.MathJax = {
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        processEscapes: true
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@2.7.8/unpacked/MathJax.js?config=TeX-MML-AM_CHTML';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":500},"mobile":{"show":true}});</script></body>
+</html>
