@@ -4462,7 +4462,7 @@ E_{geo}=\left\|D(\mathcal{G},\boldsymbol{T}_{CW})-\bar{D}\right\|_1</script><p><
 <li><p>光栅化3DG的无约束会在SLAM的连续观察下造成拖拽的伪影问题：</p>
 <p>通过各向异性正则化约束防止尺度爆炸：</p>
 <script type="math/tex; mode=display">
-E_{iso}=\sum_{i=1}^{|\mathcal{G}|}\|\mathbf{s}_i-\tilde{\mathbf{s}_i}\cdot\mathbf{1}\|_1</script><p>上式中的 $s_i$ 表示 Gaussian 的椭球拉伸程度。将每个 3D Gaussian 与所有尺度参数的平均值进行对比。</p>
+E_{iso}=\sum_{i=1}^{|\mathcal{G}|}\|\mathbf{s}_i-\tilde{\mathbf{s}_i}\cdot\mathbf{1}\|_1</script><p>上式中的 $s_i$ 表示 Gaussian 的椭球拉伸程度。将每个 3D Gaussian 与所有尺度参数的平均值进行对比。 </p>
 </li>
 </ol>
 ]]></content>
